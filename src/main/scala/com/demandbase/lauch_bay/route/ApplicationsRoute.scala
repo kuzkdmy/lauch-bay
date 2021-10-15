@@ -1,6 +1,6 @@
 package com.demandbase.lauch_bay.route
 
-import com.demandbase.lauch_bay.domain.types.{AppId, QueryLimit}
+import com.demandbase.lauch_bay.domain.types.{AppId, ProjectId, QueryLimit}
 import com.demandbase.lauch_bay.dto._
 import com.demandbase.lauch_bay.route.middleware.syntax._
 import com.demandbase.lauch_bay.service.ApplicationsService
@@ -35,10 +35,11 @@ object ApplicationsRoute {
         oneOfMappingFromMatchType(StatusCode.NotFound, jsonBody[NotFound].description("not found"))
       )
     )
-  private val listE: Endpoint[(List[AppId], Option[QueryLimit], Ctx), Unit, List[ApiApplication], Any] = endpoint.get
+  private val listE: Endpoint[(List[AppId], List[ProjectId], Option[QueryLimit], Ctx), Unit, List[ApiApplication], Any] = endpoint.get
     .in("api" / "v1.0" / "application")
     .out(jsonBody[List[ApiApplication]])
     .in(query[List[AppId]]("id"))
+    .in(query[List[ProjectId]]("project_id"))
     .in(query[Option[QueryLimit]]("limit"))
     .withRequestContext()
   private val deleteE: Endpoint[(AppId, Ctx), NotFound, Unit, Any] = endpoint.delete
@@ -60,7 +61,7 @@ object ApplicationsRoute {
 trait ApplicationsRouteService {
   def upsert(input: (ApiApplication, Ctx)): Task[Either[Unit, ApiApplication]]
   def get(input: (AppId, Ctx)): Task[Either[NotFound, ApiApplication]]
-  def list(input: (List[AppId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]]
+  def list(input: (List[AppId], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]]
   def delete(input: (AppId, Ctx)): Task[Either[NotFound, Unit]]
 }
 object ApplicationsRouteService extends Accessible[ApplicationsRouteService]
@@ -81,10 +82,10 @@ class ApplicationsRouteServiceLive(service: ApplicationsService) extends Applica
       case None    => Left(notFound(id))
     }
   }
-  override def list(input: (List[AppId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]] = {
-    val (ids, queryLimit, ctx) = input
+  override def list(input: (List[AppId], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]] = {
+    val (ids, projectIds, queryLimit, ctx) = input
     for {
-      res <- service.list(toListApplicationFilter(ids, queryLimit))(ctx)
+      res <- service.list(toListApplicationFilter(ids, projectIds, queryLimit))(ctx)
     } yield Right(res.map(r => toApiApplication(r)))
   }
   override def delete(input: (AppId, Ctx)): Task[Either[NotFound, Unit]] = {

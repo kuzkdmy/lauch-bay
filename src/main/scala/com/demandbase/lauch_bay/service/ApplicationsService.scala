@@ -1,10 +1,10 @@
 package com.demandbase.lauch_bay.service
 
-import cats.implicits.toShow
+import cats.implicits.{catsSyntaxOptionId, toShow}
 import com.demandbase.lauch_bay.domain.AppConfigDetails
 import com.demandbase.lauch_bay.domain.filter.ListApplicationsFilter
 import com.demandbase.lauch_bay.domain.types.AppId
-import com.demandbase.lauch_bay.trace.{Ctx, log}
+import com.demandbase.lauch_bay.trace.{log, Ctx}
 import org.slf4j.LoggerFactory
 import zio._
 
@@ -31,7 +31,14 @@ case class ApplicationsServiceLive(ref: Ref[Map[AppId, AppConfigDetails]]) exten
   override def list(filter: ListApplicationsFilter)(implicit ctx: Ctx): Task[List[AppConfigDetails]] = {
     for {
       data <- ref.get
-    } yield data.values.toList.sortBy(_.name.value)
+      res <- ZIO.succeed {
+               val idsF      = filter.ids.map(_.toList.toSet)
+               val projectsF = filter.projectIds.map(_.toList.toSet)
+               data.values.toList
+                 .flatMap(t => if (idsF.forall(_.contains(t.id))) t.some else None)
+                 .flatMap(t => if (projectsF.forall(_.contains(t.projectId))) t.some else None)
+             }
+    } yield res.sortBy(_.name.value).take(filter.limit.map(_.value).getOrElse(res.size))
   }
   override def delete(id: AppId)(implicit ctx: Ctx): Task[Option[AppConfigDetails]] = {
     for {

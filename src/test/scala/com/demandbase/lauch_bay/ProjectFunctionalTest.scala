@@ -1,7 +1,7 @@
 package com.demandbase.lauch_bay
 
 import com.demandbase.lauch_bay.MainApp.appLayer
-import com.demandbase.lauch_bay.domain.types.{AppId, AppName, EnvVarKey, ProjectId}
+import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
 import io.circe.parser._
 import io.circe.syntax.EncoderOps
@@ -12,43 +12,42 @@ import zio.Task
 import zio.test.Assertion.equalTo
 import zio.test.assert
 
-object ApplicationFunctionalTest extends BaseFunTest {
+object ProjectFunctionalTest extends BaseFunTest {
 
-  override def spec = suite("Application")(
+  override def spec = suite("Project")(
     testM("check crud") {
       (for {
         _ <- MainApp.appProgramResource
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
         for {
-          created1   <- c.post(baseUri).body(application1.asJson.noSpaces).send(b).flatMap(toApiModel)
-          loaded1    <- c.get(baseUri.addPath(application1.id.toString)).send(b).flatMap(toApiModel)
+          created1   <- c.post(baseUri).body(project1.asJson.noSpaces).send(b).flatMap(toApiModel)
+          loaded1    <- c.get(baseUri.addPath(project1.id.toString)).send(b).flatMap(toApiModel)
           list1      <- c.get(baseUri).send(b).flatMap(toApiModelList)
-          created2   <- c.post(baseUri).body(application2.asJson.noSpaces).send(b).flatMap(toApiModel)
-          loaded2    <- c.get(baseUri.addPath(application2.id.toString)).send(b).flatMap(toApiModel)
+          created2   <- c.post(baseUri).body(project2.asJson.noSpaces).send(b).flatMap(toApiModel)
+          loaded2    <- c.get(baseUri.addPath(project2.id.toString)).send(b).flatMap(toApiModel)
           list2      <- c.get(baseUri).send(b).flatMap(toApiModelList)
-          removeCode <- c.delete(baseUri.addPath(application2.id.toString)).send(b).map(_.code.code)
+          removeCode <- c.delete(baseUri.addPath(project2.id.toString)).send(b).map(_.code.code)
           list3      <- c.get(baseUri).send(b).flatMap(toApiModelList)
         } yield {
-          assert(created1)(equalTo(application1)) &&
-          assert(created2)(equalTo(application2)) &&
+          assert(created1)(equalTo(project1)) &&
+          assert(created2)(equalTo(project2)) &&
           assert(created1)(equalTo(loaded1)) &&
           assert(created2)(equalTo(loaded2)) &&
-          assert(list1)(equalTo(List(application1))) &&
-          assert(list2)(equalTo(List(application1, application2))) &&
+          assert(list1)(equalTo(List(project1))) &&
+          assert(list2)(equalTo(List(project1, project2))) &&
           assert(removeCode)(equalTo(200)) &&
-          assert(list3)(equalTo(List(application1)))
+          assert(list3)(equalTo(List(project1)))
         }
       }).use(identity).provideLayer(appLayer)
     }
   )
 
-  val baseUri = uri"http://localhost:8193/api/v1.0/application"
+  val baseUri = uri"http://localhost:8193/api/v1.0/project"
 
-  private val application1 = ApiApplication(
-    id        = AppId("app-1"),
-    projectId = ProjectId("project-1"),
-    name      = AppName("app-name-1"),
+  private val project1 = ApiProject(
+    id   = ProjectId("project-1"),
+    name = ProjectName("project-name-1"),
     envConf = List(
       ApiEnvVarConf(
         envKey  = EnvVarKey("ENV_KEY_1"),
@@ -62,10 +61,9 @@ object ApplicationFunctionalTest extends BaseFunTest {
     ),
     deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None))
   )
-  private val application2 = ApiApplication(
-    id        = AppId("app-2"),
-    projectId = ProjectId("project-1"),
-    name      = AppName("app-name-2"),
+  private val project2 = ApiProject(
+    id   = ProjectId("project-2"),
+    name = ProjectName("project-name-2"),
     envConf = List(
       ApiEnvVarConf(
         envKey  = EnvVarKey("ENV_KEY_BOOLEAN_VALUE"),
@@ -79,9 +77,9 @@ object ApplicationFunctionalTest extends BaseFunTest {
     ),
     deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None))
   )
-  def toApiModel(resp: Response[String]): Task[ApiApplication] =
-    Task.fromEither(parse(resp.body).flatMap(_.as[ApiApplication]))
-  def toApiModelList(resp: Response[String]): Task[List[ApiApplication]] =
-    Task.fromEither(parse(resp.body).flatMap(_.as[List[ApiApplication]]))
+  def toApiModel(resp: Response[String]): Task[ApiProject] =
+    Task.fromEither(parse(resp.body).flatMap(_.as[ApiProject]))
+  def toApiModelList(resp: Response[String]): Task[List[ApiProject]] =
+    Task.fromEither(parse(resp.body).flatMap(_.as[List[ApiProject]]))
 
 }

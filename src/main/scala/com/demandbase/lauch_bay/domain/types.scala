@@ -7,6 +7,8 @@ import io.estatico.newtype.macros.newtype
 import sttp.tapir.derevo.schema
 
 object types {
+  @derive(show, order, schema, encoder, decoder) @newtype case class ProjectId(value: String)
+  @derive(show, order, schema, encoder, decoder) @newtype case class ProjectName(value: String)
   @derive(show, order, schema, encoder, decoder) @newtype case class AppId(value: String)
   @derive(show, order, schema, encoder, decoder) @newtype case class AppName(value: String)
   @derive(show, order, schema, encoder, decoder) @newtype case class AppEnv(value: String)

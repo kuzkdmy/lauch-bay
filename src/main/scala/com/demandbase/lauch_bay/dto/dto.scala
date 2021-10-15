@@ -5,7 +5,8 @@ import derevo.circe.{decoder, encoder}
 import derevo.derive
 import sttp.tapir.derevo.schema
 
-@derive(schema, encoder, decoder) case class ApiApplication(id: AppId, name: AppName, envConf: List[ApiEnvVarConf], deployConf: List[ApiDeploymentConf])
+@derive(schema, encoder, decoder) case class ApiProject(id: ProjectId, name: ProjectName, envConf: List[ApiEnvVarConf], deployConf: List[ApiDeploymentConf])
+@derive(schema, encoder, decoder) case class ApiApplication(id: AppId, projectId: ProjectId, name: AppName, envConf: List[ApiEnvVarConf], deployConf: List[ApiDeploymentConf])
 @derive(schema, encoder, decoder) case class ApiEnvVarConf(envKey: EnvVarKey, default: Option[ApiEnvVarValue], envOverride: ApiEnvOverride)
 @derive(schema, encoder, decoder) case class ApiEnvOverride(dev: Option[ApiEnvVarValue], stage: Option[ApiEnvVarValue], prod: Option[ApiEnvVarValue])
 
