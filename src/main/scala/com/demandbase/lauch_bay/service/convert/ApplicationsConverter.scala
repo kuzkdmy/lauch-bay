@@ -22,7 +22,8 @@ object ApplicationsConverter {
       projectId  = api.projectId,
       name       = api.name,
       envConf    = api.envConf.map(toEnvVarConf),
-      deployConf = api.deployConf.map(toDeploymentConf)
+      deployConf = api.deployConf.map(toDeploymentConf),
+      version    = api.version
     )
   }
   def toApiApplication(r: AppConfigDetails): ApiApplication = {
@@ -31,7 +32,8 @@ object ApplicationsConverter {
       projectId  = r.projectId,
       name       = r.name,
       envConf    = r.envConf.map(toApiEnvVarConf),
-      deployConf = r.deployConf.map(toApiDeploymentConf)
+      deployConf = r.deployConf.map(toApiDeploymentConf),
+      version    = r.version
     )
   }
 }

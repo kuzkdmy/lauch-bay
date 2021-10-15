@@ -59,7 +59,8 @@ object ProjectFunctionalTest extends BaseFunTest {
         )
       )
     ),
-    deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None))
+    deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None)),
+    version    = IntVersion(0)
   )
   private val project2 = ApiProject(
     id   = ProjectId("project-2"),
@@ -75,7 +76,8 @@ object ProjectFunctionalTest extends BaseFunTest {
         )
       )
     ),
-    deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None))
+    deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None)),
+    version    = IntVersion(0)
   )
   def toApiModel(resp: Response[String]): Task[ApiProject] =
     Task.fromEither(parse(resp.body).flatMap(_.as[ApiProject]))

@@ -1,7 +1,7 @@
 package com.demandbase.lauch_bay
 
 import com.demandbase.lauch_bay.MainApp.appLayer
-import com.demandbase.lauch_bay.domain.types.{AppId, AppName, EnvVarKey, ProjectId}
+import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
 import io.circe.parser._
 import io.circe.syntax.EncoderOps
@@ -60,7 +60,8 @@ object ApplicationFunctionalTest extends BaseFunTest {
         )
       )
     ),
-    deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None))
+    deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None)),
+    version    = IntVersion(0)
   )
   private val application2 = ApiApplication(
     id        = AppId("app-2"),
@@ -77,7 +78,8 @@ object ApplicationFunctionalTest extends BaseFunTest {
         )
       )
     ),
-    deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None))
+    deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None)),
+    version    = IntVersion(0)
   )
   def toApiModel(resp: Response[String]): Task[ApiApplication] =
     Task.fromEither(parse(resp.body).flatMap(_.as[ApiApplication]))

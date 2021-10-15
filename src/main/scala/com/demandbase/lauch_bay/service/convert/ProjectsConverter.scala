@@ -20,7 +20,8 @@ object ProjectsConverter {
       id         = api.id,
       name       = api.name,
       envConf    = api.envConf.map(toEnvVarConf),
-      deployConf = api.deployConf.map(toDeploymentConf)
+      deployConf = api.deployConf.map(toDeploymentConf),
+      version    = api.version
     )
   }
   def toApiProject(r: ProjectConfigDetails): ApiProject = {
@@ -28,7 +29,8 @@ object ProjectsConverter {
       id         = r.id,
       name       = r.name,
       envConf    = r.envConf.map(toApiEnvVarConf),
-      deployConf = r.deployConf.map(toApiDeploymentConf)
+      deployConf = r.deployConf.map(toApiDeploymentConf),
+      version    = r.version
     )
   }
 }
