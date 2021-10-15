@@ -4,7 +4,7 @@ import cats.implicits.toShow
 import com.demandbase.lauch_bay.domain.GlobalConfigDetails
 import com.demandbase.lauch_bay.domain.error.EntryModifiedError
 import com.demandbase.lauch_bay.domain.types.IntVersion
-import com.demandbase.lauch_bay.trace.{Ctx, log}
+import com.demandbase.lauch_bay.trace.{log, Ctx}
 import org.slf4j.LoggerFactory
 import zio._
 
@@ -24,9 +24,7 @@ case class GlobalConfigServiceLive(ref: Ref[GlobalConfigDetails]) extends Global
              else
                ref.get.flatMap { sv =>
                  log.info(s"upsert global config fail server version:[$sv], cmd version:[${cmd.version}]")
-               } *> IO.fail(
-                 EntryModifiedError("Global Config")
-               )
+               } *> IO.fail(EntryModifiedError("Global Config"))
       _ <- log.info(s"upsert global config, new version: ${res.version}, upsert cmd: ${cmd.show}")
     } yield res
   }

@@ -14,7 +14,7 @@ import sttp.tapir
 import sttp.tapir.derevo.schema
 import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.server.ziohttp.ZioHttpInterpreter
-import zhttp.http.{HttpApp, Endpoint => _}
+import zhttp.http.{Endpoint => _, HttpApp}
 import zio._
 
 object GlobalConfigRoute {

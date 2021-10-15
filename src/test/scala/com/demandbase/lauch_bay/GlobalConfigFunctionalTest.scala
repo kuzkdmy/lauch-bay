@@ -8,9 +8,9 @@ import io.circe.syntax.EncoderOps
 import sttp.client3.Response
 import sttp.client3.asynchttpclient.zio.AsyncHttpClientZioBackend
 import sttp.client3.quick._
-import zio.Task
 import zio.test.Assertion.equalTo
 import zio.test.assert
+import zio.{Task, ZIO}
 
 object GlobalConfigFunctionalTest extends BaseFunTest {
 
@@ -61,6 +61,8 @@ object GlobalConfigFunctionalTest extends BaseFunTest {
   )
 
   def toApiModel(resp: Response[String]): Task[ApiGlobalConfig] =
-    Task.fromEither(parse(resp.body).flatMap(_.as[ApiGlobalConfig]))
+    Task
+      .fromEither(parse(resp.body).flatMap(_.as[ApiGlobalConfig]))
+      .tapError(err => ZIO(logger.error(resp.body + err.toString)))
 
 }

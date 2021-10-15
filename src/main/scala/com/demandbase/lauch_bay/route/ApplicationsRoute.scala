@@ -1,5 +1,6 @@
 package com.demandbase.lauch_bay.route
 
+import cats.implicits.catsSyntaxEitherId
 import com.demandbase.lauch_bay.domain.types.{AppId, ProjectId, QueryLimit}
 import com.demandbase.lauch_bay.dto._
 import com.demandbase.lauch_bay.route.ApplicationsRoute.{DeleteErr, GetErr, UpdateErr}
@@ -15,7 +16,7 @@ import sttp.tapir.codec.newtype._
 import sttp.tapir.derevo.schema
 import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.server.ziohttp.ZioHttpInterpreter
-import zhttp.http.{HttpApp, Endpoint => _}
+import zhttp.http.{Endpoint => _, HttpApp}
 import zio._
 
 object ApplicationsRoute {
@@ -46,8 +47,9 @@ object ApplicationsRoute {
     .in(query[List[ProjectId]]("project_id"))
     .in(query[Option[QueryLimit]]("limit"))
     .withRequestContext()
-  private val deleteE: Endpoint[(AppId, Ctx), DeleteErr, Unit, Any] = endpoint.delete
+  private val deleteE: Endpoint[(AppId, ApiHasVersion, Ctx), DeleteErr, Unit, Any] = endpoint.delete
     .in("api" / "v1.0" / "application" / path[AppId]("id"))
+    .in(jsonBody[ApiHasVersion])
     .out(emptyOutput)
     .withRequestContext()
     .errorOut(
@@ -88,7 +90,7 @@ trait ApplicationsRouteService {
   def upsert(input: (ApiApplication, Ctx)): Task[Either[UpdateErr, ApiApplication]]
   def get(input: (AppId, Ctx)): Task[Either[GetErr, ApiApplication]]
   def list(input: (List[AppId], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]]
-  def delete(input: (AppId, Ctx)): Task[Either[DeleteErr, Unit]]
+  def delete(input: (AppId, ApiHasVersion, Ctx)): Task[Either[DeleteErr, Unit]]
 }
 object ApplicationsRouteService extends Accessible[ApplicationsRouteService]
 class ApplicationsRouteServiceLive(service: ApplicationsService) extends ApplicationsRouteService {
@@ -96,8 +98,13 @@ class ApplicationsRouteServiceLive(service: ApplicationsService) extends Applica
     val (apiCmd, ctx) = input
     for {
       domainCmd <- ZIO.succeed(toUpsertApplication(apiCmd))
-      res       <- service.upsert(domainCmd)(ctx)
-    } yield Right(toApiApplication(res))
+      res <- service
+               .upsert(domainCmd)(ctx)
+               .foldM(
+                 err => ZIO.left(UpdateErr.Conflict(err.getMessage)),
+                 res => ZIO.right(toApiApplication(res))
+               )
+    } yield res
   }
   override def get(input: (AppId, Ctx)): Task[Either[GetErr, ApiApplication]] = {
     val (id, ctx) = input
@@ -114,14 +121,19 @@ class ApplicationsRouteServiceLive(service: ApplicationsService) extends Applica
       res <- service.list(toListApplicationFilter(ids, projectIds, queryLimit))(ctx)
     } yield Right(res.map(r => toApiApplication(r)))
   }
-  override def delete(input: (AppId, Ctx)): Task[Either[DeleteErr, Unit]] = {
-    val (id, ctx) = input
+  override def delete(input: (AppId, ApiHasVersion, Ctx)): Task[Either[DeleteErr, Unit]] = {
+    val (id, hasV, ctx) = input
     for {
-      deleteOpt <- service.delete(id)(ctx)
-    } yield deleteOpt match {
-      case Some(_) => Right(())
-      case None    => Left(DeleteErr.NotFound(notFound(id)))
-    }
+      res <- service
+               .delete(id, hasV.version)(ctx)
+               .foldM(
+                 err => ZIO.succeed(DeleteErr.Conflict(err.getMessage).asLeft[Unit]),
+                 {
+                   case Some(_) => ZIO.succeed(().asRight[DeleteErr])
+                   case None    => ZIO.left(DeleteErr.NotFound(notFound(id)))
+                 }
+               )
+    } yield res
   }
   private def notFound(id: AppId) = s"application with GitLab id:$id not found"
 }

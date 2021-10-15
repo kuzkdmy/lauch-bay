@@ -6,7 +6,7 @@ import sttp.tapir.server.interceptor.ValuedEndpointOutput
 import sttp.tapir.server.interceptor.exception.{ExceptionContext, ExceptionHandler}
 import sttp.tapir.{statusCode, stringBody}
 import com.demandbase.lauch_bay.route.middleware.XRequestIdInterceptor.X_REQUEST_ID
-import com.demandbase.lauch_bay.trace.{Ctx, log}
+import com.demandbase.lauch_bay.trace._
 
 case class AppExceptionHandler(response: (StatusCode, String) => ValuedEndpointOutput[_]) extends ExceptionHandler {
   implicit private val logger: org.slf4j.Logger = LoggerFactory.getLogger(this.getClass)
