@@ -21,13 +21,22 @@ object GlobalConfigFunctionalTest extends BaseFunTest {
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
         for {
-          loaded1 <- c.get(baseUri).send(b).flatMap(toApiModel)
-          updated <- c.put(baseUri).body(globalConf.asJson.noSpaces).send(b).flatMap(toApiModel)
-          loaded2 <- c.get(baseUri).send(b).flatMap(toApiModel)
+          loaded1     <- c.get(baseUri).send(b).flatMap(toApiModel)
+          updated1    <- c.put(baseUri).body(globalConf.asJson.noSpaces).send(b).flatMap(toApiModel)
+          expect409_1 <- c.put(baseUri).body(globalConf.asJson.noSpaces).send(b).map(_.code.code)
+          loaded2     <- c.get(baseUri).send(b).flatMap(toApiModel)
+          updated2    <- c.put(baseUri).body(updated1.asJson.noSpaces).send(b).flatMap(toApiModel)
+          expect409_2 <- c.put(baseUri).body(globalConf.asJson.noSpaces).send(b).map(_.code.code)
+          loaded3     <- c.get(baseUri).send(b).flatMap(toApiModel)
         } yield {
           assert(loaded1)(equalTo(ApiGlobalConfig(List.empty, List.empty, IntVersion(0)))) &&
-          assert(updated)(equalTo(globalConf)) &&
-          assert(loaded2)(equalTo(globalConf))
+          assert(updated1)(equalTo(globalConf.copy(version = globalConf.version.inc))) &&
+          assert(loaded2)(equalTo(globalConf.copy(version = globalConf.version.inc))) &&
+          assert(updated2)(equalTo(globalConf.copy(version = globalConf.version.inc.inc))) &&
+          assert(loaded3)(equalTo(globalConf.copy(version = globalConf.version.inc.inc))) &&
+          assert(expect409_1)(equalTo(409)) &&
+          assert(expect409_2)(equalTo(409)) &&
+          assert(loaded2)(equalTo(globalConf.copy(version = globalConf.version.inc)))
         }
       }).use(identity).provideLayer(appLayer)
     }
@@ -48,7 +57,7 @@ object GlobalConfigFunctionalTest extends BaseFunTest {
       )
     ),
     deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None)),
-    version    = IntVersion(1)
+    version    = IntVersion(0)
   )
 
   def toApiModel(resp: Response[String]): Task[ApiGlobalConfig] =

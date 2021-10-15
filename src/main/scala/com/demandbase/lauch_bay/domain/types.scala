@@ -15,4 +15,8 @@ object types {
   @derive(show, order, schema, encoder, decoder) @newtype case class EnvVarKey(value: String)
   @derive(show, order, schema, encoder, decoder) @newtype case class IntVersion(value: Int)
   @derive(show, order, schema, encoder, decoder) @newtype case class QueryLimit(value: Int)
+
+  implicit class IntVersionExt(intVersion: IntVersion) {
+    def inc: IntVersion = IntVersion(intVersion.value + 1)
+  }
 }
