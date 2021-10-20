@@ -1,12 +1,12 @@
 package com.demandbase.lauch_bay.domain.filter
 
 import cats.data.NonEmptyList
-import com.demandbase.lauch_bay.domain.types.{AppId, ProjectId, QueryLimit}
+import com.demandbase.lauch_bay.domain.types.{SubProjectName, ProjectId, QueryLimit}
 
 case class ListApplicationsFilter(
-    ids: Option[NonEmptyList[AppId]]            = None,
-    projectIds: Option[NonEmptyList[ProjectId]] = None,
-    limit: Option[QueryLimit]                   = None
+                                   ids: Option[NonEmptyList[SubProjectName]]            = None,
+                                   projectIds: Option[NonEmptyList[ProjectId]] = None,
+                                   limit: Option[QueryLimit]                   = None
 )
 
 case class ListProjectsFilter(

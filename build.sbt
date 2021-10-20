@@ -25,6 +25,7 @@ lazy val root = (project in file("."))
       "com.softwaremill.sttp.tapir"   %% "tapir-swagger-ui-zio-http"     % "0.19.0-M4", // why they don't publish all, not clear
       "com.softwaremill.sttp.tapir"   %% "tapir-zio-http"                % "0.19.0-M9",
       "dev.zio"                       %% "zio"                           % "1.0.12",
+      "dev.zio"                       %% "zio-s3"                        % "0.3.7",
       "dev.zio"                       %% "zio-interop-cats"              % "3.1.1.0",
       "dev.zio"                       %% "zio-metrics-prometheus"        % "1.0.12",
       "dev.zio"                       %% "zio-test"                      % "1.0.12" % "test",

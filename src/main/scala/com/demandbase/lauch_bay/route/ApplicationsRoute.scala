@@ -1,7 +1,7 @@
 package com.demandbase.lauch_bay.route
 
 import cats.implicits.catsSyntaxEitherId
-import com.demandbase.lauch_bay.domain.types.{AppId, ProjectId, QueryLimit}
+import com.demandbase.lauch_bay.domain.types.{SubProjectName, ProjectId, QueryLimit}
 import com.demandbase.lauch_bay.dto._
 import com.demandbase.lauch_bay.route.ApplicationsRoute.{DeleteErr, GetErr, UpdateErr}
 import com.demandbase.lauch_bay.route.middleware.syntax._
@@ -31,8 +31,8 @@ object ApplicationsRoute {
 
   lazy val swaggerEndpoints = List(getE, deleteE, upsertE, listE)
 
-  private val getE: Endpoint[(AppId, Ctx), GetErr, ApiApplication, Any] = endpoint.get
-    .in("api" / "v1.0" / "application" / path[AppId]("id"))
+  private val getE: Endpoint[(SubProjectName, Ctx), GetErr, ApiApplication, Any] = endpoint.get
+    .in("api" / "v1.0" / "application" / path[SubProjectName]("id"))
     .out(jsonBody[ApiApplication])
     .withRequestContext()
     .errorOut(
@@ -40,15 +40,15 @@ object ApplicationsRoute {
         oneOfMappingFromMatchType(StatusCode.NotFound, jsonBody[GetErr.NotFound].description("not found"))
       )
     )
-  private val listE: Endpoint[(List[AppId], List[ProjectId], Option[QueryLimit], Ctx), Unit, List[ApiApplication], Any] = endpoint.get
+  private val listE: Endpoint[(List[SubProjectName], List[ProjectId], Option[QueryLimit], Ctx), Unit, List[ApiApplication], Any] = endpoint.get
     .in("api" / "v1.0" / "application")
     .out(jsonBody[List[ApiApplication]])
-    .in(query[List[AppId]]("id"))
+    .in(query[List[SubProjectName]]("id"))
     .in(query[List[ProjectId]]("project_id"))
     .in(query[Option[QueryLimit]]("limit"))
     .withRequestContext()
-  private val deleteE: Endpoint[(AppId, ApiHasVersion, Ctx), DeleteErr, Unit, Any] = endpoint.delete
-    .in("api" / "v1.0" / "application" / path[AppId]("id"))
+  private val deleteE: Endpoint[(SubProjectName, ApiHasVersion, Ctx), DeleteErr, Unit, Any] = endpoint.delete
+    .in("api" / "v1.0" / "application" / path[SubProjectName]("id"))
     .in(jsonBody[ApiHasVersion])
     .out(emptyOutput)
     .withRequestContext()
@@ -88,9 +88,9 @@ object ApplicationsRoute {
 
 trait ApplicationsRouteService {
   def upsert(input: (ApiApplication, Ctx)): Task[Either[UpdateErr, ApiApplication]]
-  def get(input: (AppId, Ctx)): Task[Either[GetErr, ApiApplication]]
-  def list(input: (List[AppId], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]]
-  def delete(input: (AppId, ApiHasVersion, Ctx)): Task[Either[DeleteErr, Unit]]
+  def get(input: (SubProjectName, Ctx)): Task[Either[GetErr, ApiApplication]]
+  def list(input: (List[SubProjectName], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]]
+  def delete(input: (SubProjectName, ApiHasVersion, Ctx)): Task[Either[DeleteErr, Unit]]
 }
 object ApplicationsRouteService extends Accessible[ApplicationsRouteService]
 class ApplicationsRouteServiceLive(service: ApplicationsService) extends ApplicationsRouteService {
@@ -106,7 +106,7 @@ class ApplicationsRouteServiceLive(service: ApplicationsService) extends Applica
                )
     } yield res
   }
-  override def get(input: (AppId, Ctx)): Task[Either[GetErr, ApiApplication]] = {
+  override def get(input: (SubProjectName, Ctx)): Task[Either[GetErr, ApiApplication]] = {
     val (id, ctx) = input
     for {
       resOpt <- service.get(id)(ctx)
@@ -115,13 +115,13 @@ class ApplicationsRouteServiceLive(service: ApplicationsService) extends Applica
       case None    => Left(GetErr.NotFound(notFound(id)))
     }
   }
-  override def list(input: (List[AppId], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]] = {
+  override def list(input: (List[SubProjectName], List[ProjectId], Option[QueryLimit], Ctx)): Task[Either[Unit, List[ApiApplication]]] = {
     val (ids, projectIds, queryLimit, ctx) = input
     for {
       res <- service.list(toListApplicationFilter(ids, projectIds, queryLimit))(ctx)
     } yield Right(res.map(r => toApiApplication(r)))
   }
-  override def delete(input: (AppId, ApiHasVersion, Ctx)): Task[Either[DeleteErr, Unit]] = {
+  override def delete(input: (SubProjectName, ApiHasVersion, Ctx)): Task[Either[DeleteErr, Unit]] = {
     val (id, hasV, ctx) = input
     for {
       res <- service
@@ -135,7 +135,7 @@ class ApplicationsRouteServiceLive(service: ApplicationsService) extends Applica
                )
     } yield res
   }
-  private def notFound(id: AppId) = s"application with GitLab id:$id not found"
+  private def notFound(id: SubProjectName) = s"application with GitLab id:$id not found"
 }
 object ApplicationsRouteServiceLive {
   val layer = ZLayer.fromService[ApplicationsService, ApplicationsRouteService](new ApplicationsRouteServiceLive(_))

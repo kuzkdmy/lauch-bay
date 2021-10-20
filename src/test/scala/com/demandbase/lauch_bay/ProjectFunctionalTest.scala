@@ -1,6 +1,6 @@
 package com.demandbase.lauch_bay
 
-import com.demandbase.lauch_bay.MainApp.appLayer
+import com.demandbase.lauch_bay.MainApp.appLayerS3
 import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
 import io.circe.parser._
@@ -17,6 +17,7 @@ object ProjectFunctionalTest extends BaseFunTest {
   override def spec = suite("Project")(
     testM("check create") {
       (for {
+        _ <- clearS3().toManaged_
         _ <- MainApp.appProgramResource
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
@@ -25,10 +26,11 @@ object ProjectFunctionalTest extends BaseFunTest {
         } yield {
           assert(created1)(equalTo(project1.copy(version = project1.version.inc)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(appLayerS3)
     },
     testM("check update") {
       (for {
+        _ <- clearS3().toManaged_
         _ <- MainApp.appProgramResource
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
@@ -41,10 +43,11 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(conflict)(equalTo(409)) &&
           assert(updated)(equalTo(updateValidReqBody.copy(version = updated.version)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(appLayerS3)
     },
     testM("check load") {
       (for {
+        _ <- clearS3().toManaged_
         _ <- MainApp.appProgramResource
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
@@ -56,10 +59,11 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(notFound)(equalTo(404)) &&
           assert(created1)(equalTo(loaded1))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(appLayerS3)
     },
     testM("check delete") {
       (for {
+        _ <- clearS3().toManaged_
         _ <- MainApp.appProgramResource
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
@@ -73,10 +77,11 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(deleted)(equalTo(200)) &&
           assert(notFound)(equalTo(404))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(appLayerS3)
     },
     testM("check list") {
       (for {
+        _ <- clearS3().toManaged_
         _ <- MainApp.appProgramResource
         b <- AsyncHttpClientZioBackend().toManaged_
       } yield {
@@ -93,7 +98,7 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(list2)(equalTo(List(created1, created2))) &&
           assert(list3)(equalTo(List(created2)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(appLayerS3)
     }
   )
 

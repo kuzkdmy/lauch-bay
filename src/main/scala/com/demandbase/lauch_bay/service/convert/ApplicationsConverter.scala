@@ -9,7 +9,7 @@ import com.demandbase.lauch_bay.service.convert.DeploymentConfConverter._
 import com.demandbase.lauch_bay.service.convert.EnvVarConverter._
 
 object ApplicationsConverter {
-  def toListApplicationFilter(ids: List[AppId], projectIds: List[ProjectId], queryLimit: Option[QueryLimit]): ListApplicationsFilter = {
+  def toListApplicationFilter(ids: List[SubProjectName], projectIds: List[ProjectId], queryLimit: Option[QueryLimit]): ListApplicationsFilter = {
     ListApplicationsFilter(
       ids        = ids.toNel,
       projectIds = projectIds.toNel,
