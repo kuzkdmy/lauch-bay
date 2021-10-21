@@ -1,17 +1,17 @@
 package com.demandbase.lauch_bay.service
 
-import cats.implicits.toShow
+import com.demandbase.lauch_bay.config.MainConfig
 import com.demandbase.lauch_bay.domain.GlobalConfigDetails
 import com.demandbase.lauch_bay.domain.error.EntryModifiedError
 import com.demandbase.lauch_bay.domain.types.IntVersion
-import com.demandbase.lauch_bay.trace.{log, Ctx}
-import io.circe.{parser, Json}
+import com.demandbase.lauch_bay.trace.{Ctx, log}
 import io.circe.syntax.EncoderOps
+import io.circe.{Json, parser}
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.services.s3.model.S3Exception
-import zio.{IO, _}
 import zio.s3.{S3, UploadOptions}
 import zio.stream.{ZSink, ZStream}
+import zio.{IO, _}
 
 trait GlobalConfigService {
   def upsert(cmd: GlobalConfigDetails)(implicit ctx: Ctx): IO[EntryModifiedError, GlobalConfigDetails]
@@ -19,35 +19,9 @@ trait GlobalConfigService {
 }
 object GlobalConfigService extends Accessible[GlobalConfigService]
 
-case class GlobalConfigServiceLive(ref: Ref[GlobalConfigDetails]) extends GlobalConfigService {
+
+case class GlobalConfigServiceLive(s3: S3.Service, bucketName: String) extends GlobalConfigService {
   implicit private val logger: org.slf4j.Logger = LoggerFactory.getLogger(this.getClass)
-
-  override def upsert(cmd: GlobalConfigDetails)(implicit ctx: Ctx): IO[EntryModifiedError, GlobalConfigDetails] = {
-    for {
-      updated <- ref.modify(cur => if (cur.version == cmd.version) (true, cmd.copy(version = cur.version.inc)) else (false, cur))
-      res <- if (updated) ref.get
-             else
-               ref.get.flatMap { sv =>
-                 log.info(s"upsert global config fail server version:[$sv], cmd version:[${cmd.version}]")
-               } *> IO.fail(EntryModifiedError("Global Config"))
-      _ <- log.info(s"upsert global config, new version: ${res.version}, upsert cmd: ${cmd.show}")
-    } yield res
-  }
-  override def get()(implicit ctx: Ctx): Task[GlobalConfigDetails] = {
-    ref.get
-  }
-}
-
-object GlobalConfigServiceLive {
-  val layer = (for {
-    ref <- Ref.makeManaged(GlobalConfigDetails(List.empty, List.empty, IntVersion(0)))
-  } yield GlobalConfigServiceLive(ref)).toLayer[GlobalConfigService]
-}
-
-case class GlobalConfigServiceS3Live(s3: S3.Service) extends GlobalConfigService {
-  implicit private val logger: org.slf4j.Logger = LoggerFactory.getLogger(this.getClass)
-
-  private val bucketName = "config-store"
 
   private val key = "config"
 
@@ -107,7 +81,9 @@ case class GlobalConfigServiceS3Live(s3: S3.Service) extends GlobalConfigService
       .tapError(s3e => log.error(s"Getting global config fail with error: ${s3e.getMessage}", s3e))
 }
 
-object GlobalConfigServiceS3Live {
-  val layer: ZLayer[S3, Nothing, Has[GlobalConfigService]] = ZLayer.fromService[S3.Service, GlobalConfigService](s3 => GlobalConfigServiceS3Live(s3))
+object GlobalConfigServiceLive {
+  val layer: ZLayer[S3 with Has[MainConfig], Nothing, Has[GlobalConfigService]] = ZLayer.fromServices[S3.Service, MainConfig, GlobalConfigService] {
+    case (s3, config) => GlobalConfigServiceLive(s3, config.storage.bucketName)
+  }
 
 }

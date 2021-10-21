@@ -4,8 +4,9 @@ import zio.{Has, TaskLayer, ZIO}
 
 import scala.util.control.NoStackTrace
 
-case class MainConfig(server: AppHttpServerConf)
+case class MainConfig(server: AppHttpServerConf, storage: S3Conf)
 case class AppHttpServerConf(port: Int)
+case class S3Conf(host: String, bucketName: String, region: String, accessKeyId: String, secretAccessKey: String)
 
 object MainConfig {
   import pureconfig._
