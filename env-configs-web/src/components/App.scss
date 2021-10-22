@@ -1,0 +1,35 @@
+.App {
+  display: flex;
+  justify-content: space-around;
+
+  .main-content {
+    margin-top: 2em;
+    display: flex;
+    width: 70em;
+    height: 750px;
+
+    .side-bar {
+      flex: 1;
+
+      .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+        height: 49px;
+        &:hover {}
+      }
+
+      .side-bar-menu {
+        margin-top: 30px;
+        border: 1px solid #cecbcb;
+        border-radius: 5px;
+        height: 689px;
+        overflow-y: scroll;
+      }
+    }
+
+    .content {
+      margin-left: 10px;
+      flex: 3;
+      border: 1px solid #cecbcb;
+      border-radius: 5px;
+    }
+  }
+}
