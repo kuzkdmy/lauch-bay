@@ -1,0 +1,1 @@
+export const getSideBarItems = store => store.sideBarItemReducer.items ? store.sideBarItemReducer.items : []
