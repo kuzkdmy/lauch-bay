@@ -1,6 +1,5 @@
 package com.demandbase.lauch_bay
 
-import com.demandbase.lauch_bay.MainApp.appLayer
 import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
 import io.circe.parser._
@@ -39,7 +38,7 @@ object GlobalConfigFunctionalTest extends BaseFunTest {
           assert(expect409_2)(equalTo(409)) &&
           assert(loaded2)(equalTo(globalConf.copy(version = globalConf.version.inc)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(testLayer)
     }
   )
 

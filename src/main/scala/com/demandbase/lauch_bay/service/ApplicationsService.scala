@@ -35,7 +35,7 @@ case class ApplicationServiceLive(s3: S3.Service, bucketName: String) extends Ap
       Chunk.fromArray(cmd.asJson.toString().getBytes)
 
     def toMetadata: Map[String, String] =
-      Map("app_id" -> cmd.id.value, "project_id" -> cmd.projectId.value, "version" -> cmd.version.value.toString)
+      Map("appid" -> cmd.id.value, "projectid" -> cmd.projectId.value, "version" -> cmd.version.value.toString)
   }
 
   private def uploadAppConfigDetails(cmd: AppConfigDetails)(implicit ctx: Ctx): ZIO[Any, S3Exception, Unit] = {
@@ -50,9 +50,9 @@ case class ApplicationServiceLive(s3: S3.Service, bucketName: String) extends Ap
   }
 
   implicit private class ObjectMetadataOts(metadata: ObjectMetadata) {
-    def projectId: Option[ProjectId] = metadata.metadata.get("project_id").map(ProjectId.apply)
+    def projectId: Option[ProjectId] = metadata.metadata.get("projectid").map(ProjectId.apply)
 
-    def subProjectName: Option[SubProjectName] = metadata.metadata.get("app_id").map(SubProjectName.apply)
+    def subProjectName: Option[SubProjectName] = metadata.metadata.get("appid").map(SubProjectName.apply)
 
   }
 
@@ -107,7 +107,7 @@ case class ApplicationServiceLive(s3: S3.Service, bucketName: String) extends Ap
           .collectAll(
             objectList.objectSummaries
               .filter(_.key.contains("project/application/"))
-              .map(objSummary => s3.getObjectMetadata(objSummary.bucketName, objSummary.key))
+              .map(objSummary => s3.getObjectMetadata(objSummary.bucketName, objSummary.key).debug(s"OS: $objSummary, MT:"))
           )
           .map(
             _.filter(metadata => {

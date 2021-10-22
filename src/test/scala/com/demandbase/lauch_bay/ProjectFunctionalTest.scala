@@ -1,6 +1,5 @@
 package com.demandbase.lauch_bay
 
-import com.demandbase.lauch_bay.MainApp.appLayer
 import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
 import io.circe.parser._
@@ -26,7 +25,7 @@ object ProjectFunctionalTest extends BaseFunTest {
         } yield {
           assert(created1)(equalTo(project1.copy(version = project1.version.inc)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(testLayer)
     },
     testM("check update") {
       (for {
@@ -43,7 +42,7 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(conflict)(equalTo(409)) &&
           assert(updated)(equalTo(updateValidReqBody.copy(version = updated.version)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(testLayer)
     },
     testM("check load") {
       (for {
@@ -59,7 +58,7 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(notFound)(equalTo(404)) &&
           assert(created1)(equalTo(loaded1))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(testLayer)
     },
     testM("check delete") {
       (for {
@@ -77,7 +76,7 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(deleted)(equalTo(200)) &&
           assert(notFound)(equalTo(404))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(testLayer)
     },
     testM("check list") {
       (for {
@@ -98,7 +97,7 @@ object ProjectFunctionalTest extends BaseFunTest {
           assert(list2)(equalTo(List(created1, created2))) &&
           assert(list3)(equalTo(List(created2)))
         }
-      }).use(identity).provideLayer(appLayer)
+      }).use(identity).provideLayer(testLayer)
     }
   )
 

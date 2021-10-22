@@ -33,7 +33,7 @@ case class ProjectsServiceLive(s3: S3.Service, bucketName: String) extends Proje
       Chunk.fromArray(cmd.asJson.toString().getBytes)
 
     def toMetadata: Map[String, String] =
-      Map("project_id" -> cmd.id.value, "version" -> cmd.version.value.toString)
+      Map("projectid" -> cmd.id.value, "version" -> cmd.version.value.toString)
   }
 
   private def uploadProjectConfigDetails(cmd: ProjectConfigDetails)(implicit ctx: Ctx): ZIO[Any, S3Exception, Unit] = {
@@ -43,7 +43,7 @@ case class ProjectsServiceLive(s3: S3.Service, bucketName: String) extends Proje
   }
 
   implicit private class ObjectMetadataOts(metadata: ObjectMetadata) {
-    val projectId: Option[ProjectId] = metadata.metadata.get("project_id").map(ProjectId.apply)
+    val projectId: Option[ProjectId] = metadata.metadata.get("projectid").map(ProjectId.apply)
 
   }
 
