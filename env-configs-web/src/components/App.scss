@@ -1,3 +1,7 @@
+$bgColor: #fafafa;
+$bdColor: #cecbcb;
+$selectedTabColor: #0e0e0e;
+
 .App {
   display: flex;
   justify-content: space-around;
@@ -5,20 +9,21 @@
   .main-content {
     margin-top: 2em;
     display: flex;
-    width: 70em;
+    width: 1160px;
     height: 750px;
+    background-color: $bgColor;
+
+    .check-box span {
+      font-size: 14px;
+    }
 
     .side-bar {
       flex: 1;
 
-      .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-        height: 49px;
-        &:hover {}
-      }
-
       .side-bar-menu {
-        margin-top: 30px;
-        border: 1px solid #cecbcb;
+        margin-top: 15px;
+        border: 1px solid $bdColor;
+        background-color: $bgColor;
         border-radius: 5px;
         height: 689px;
         overflow-y: scroll;
@@ -28,7 +33,7 @@
     .content {
       margin-left: 10px;
       flex: 3;
-      border: 1px solid #cecbcb;
+      border: 1px solid $bdColor;
       border-radius: 5px;
     }
   }
