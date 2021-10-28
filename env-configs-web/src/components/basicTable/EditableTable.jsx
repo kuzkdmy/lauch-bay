@@ -7,10 +7,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import {Input} from "@mui/material";
+import {useState} from "react";
 
 const columns = [
-    { id: 'name', label: 'Name', minWidth: 120 },
-    { id: 'type', label: 'Type', minWidth: 80 },
+    {id: 'name', label: 'Name', minWidth: 120},
+    {id: 'type', label: 'Type', minWidth: 80},
     {
         id: 'dev',
         label: 'Dev',
@@ -34,9 +36,10 @@ const columns = [
     },
 ];
 
-export default function BasicTable({rows}) {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+export default function EditableTable({isEdit, rows}) {
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [tableRows, setTableRows] = useState(rows);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -47,17 +50,50 @@ export default function BasicTable({rows}) {
         setPage(0);
     };
 
+    const onRowsChange = (event, row, colId) => {
+        setTableRows(
+            tableRows.map(r => {
+                if (r.id === row.id) {
+                    return {...r, [colId]: event.target.value};
+                }
+                return r;
+            })
+        );
+    }
+
+    const getTableCell = (value, row, column) => {
+        return isEdit ?
+            <Input
+                sx={{fontSize: 14}}
+                value={value}
+                name={row.name}
+                onChange={e => onRowsChange(e, row, column.id)}
+            /> :
+            <>
+                {column.format && typeof value === 'number'
+                    ? column.format(value)
+                    : value}
+            </>;
+    }
+
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 240, maxWidth: 800}}>
+        <Paper sx={{width: '100%', overflow: 'hidden'}}>
+            <TableContainer sx={{maxHeight: 240, maxWidth: 800}}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth }}
+                                    align='center'
+                                    style={
+                                        {
+                                            minWidth: column.minWidth,
+                                            backgroundColor: '#585959',
+                                            color: 'white',
+                                            fontSize: 16
+                                        }
+                                    }
                                 >
                                     {column.label}
                                 </TableCell>
@@ -65,18 +101,15 @@ export default function BasicTable({rows}) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows
+                        {tableRows
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row) => {
+                            .map((row, idx) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code} sx={{backgroundColor: idx%2 !== 0 ? '#f5f5f5' : ''}}>
                                         {columns.map((column) => {
-                                            const value = row[column.id];
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
+                                                    {getTableCell(row[column.id], row, column)}
                                                 </TableCell>
                                             );
                                         })}

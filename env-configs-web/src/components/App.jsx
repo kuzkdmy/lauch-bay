@@ -1,21 +1,29 @@
 import './App.scss';
-import {debounce, TextField} from "@mui/material";
+import {TextField} from "@mui/material";
 import TabsPanel from "./tabsPanel/TabsPanel";
 import SideBar from "./sideBar/SideBar";
 import {connect} from "react-redux";
 import {findItem} from "../redux/actions";
 
-const App = () => {
+const App = (props) => {
+
+    const onSearch = (event) => {
+        if(event.key === 'Enter') {
+            props.findItem(event.target.value);
+        }
+    }
 
     return (
             <div className="App">
                 <div className='main-content'>
                     <div className='side-bar'>
                         <TextField
-                            sx={{width: 300, height: 29}}
+                            sx={{width: 300}}
+                            size='small'
                             id="outlined-basic"
                             label="search by menu"
                             variant="outlined"
+                            onKeyPress={(event) => onSearch(event)}
                         />
                         <div className='side-bar-menu'>
                             <SideBar />
