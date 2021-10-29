@@ -8,7 +8,12 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {Input} from "@mui/material";
-import {useState} from "react";
+import {FC, useState} from "react";
+
+interface EditableTableProps {
+    isEdit: boolean;
+    rows: any[];
+}
 
 const columns = [
     {id: 'name', label: 'Name', minWidth: 120},
@@ -18,39 +23,39 @@ const columns = [
         label: 'Dev',
         minWidth: 150,
         align: 'right',
-        format: (value) => value.toLocaleString('en-US'),
+        format: (value: any) => value.toLocaleString('en-US'),
     },
     {
         id: 'stage',
         label: 'Stage',
         minWidth: 150,
         align: 'right',
-        format: (value) => value.toLocaleString('en-US'),
+        format: (value: any) => value.toLocaleString('en-US'),
     },
     {
         id: 'prod',
         label: 'Prod',
         minWidth: 120,
         align: 'right',
-        format: (value) => value.toFixed(2),
+        format: (value: any) => value.toFixed(2),
     },
 ];
 
-export default function EditableTable({isEdit, rows}) {
+const EditableTable: FC<EditableTableProps> = ({isEdit, rows}) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [tableRows, setTableRows] = useState(rows);
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
     };
 
-    const handleChangeRowsPerPage = (event) => {
+    const handleChangeRowsPerPage = (event: any) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
-    const onRowsChange = (event, row, colId) => {
+    const onRowsChange = (event: any, row: any, colId: number) => {
         setTableRows(
             tableRows.map(r => {
                 if (r.id === row.id) {
@@ -61,7 +66,7 @@ export default function EditableTable({isEdit, rows}) {
         );
     }
 
-    const getTableCell = (value, row, column) => {
+    const getTableCell = (value: any, row: any, column: any) => {
         return isEdit ?
             <Input
                 sx={{fontSize: 14}}
@@ -105,10 +110,13 @@ export default function EditableTable({isEdit, rows}) {
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, idx) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code} sx={{backgroundColor: idx%2 !== 0 ? '#f5f5f5' : ''}}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}
+                                              sx={{backgroundColor: idx % 2 !== 0 ? '#f5f5f5' : ''}}>
                                         {columns.map((column) => {
                                             return (
-                                                <TableCell key={column.id} align={column.align}>
+                                                <TableCell
+                                                    key={column.id}
+                                                    align='center'>
                                                     {getTableCell(row[column.id], row, column)}
                                                 </TableCell>
                                             );
@@ -131,3 +139,5 @@ export default function EditableTable({isEdit, rows}) {
         </Paper>
     );
 }
+
+export default EditableTable;

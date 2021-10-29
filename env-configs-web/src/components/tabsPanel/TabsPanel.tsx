@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from "react";
+import {FC, useState} from "react";
 import {connect} from "react-redux";
 import {Button, Checkbox, FormControlLabel, FormGroup, IconButton} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
@@ -9,8 +9,13 @@ import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditableTable from "../basicTable/EditableTable";
+import {RootState} from "../../types/Types";
 
-function TabPanel(props) {
+interface TabsPanelProps {
+    items: any[];
+}
+
+function TabPanel(props: any) {
     const {children, value, index, ...other} = props;
 
     return (
@@ -30,18 +35,18 @@ function TabPanel(props) {
     );
 }
 
-function a11yProps(index) {
+function a11yProps(index: number) {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
 
-const TabsPanel = ({items}) => {
+const TabsPanel: FC<TabsPanelProps> = ({items}) => {
     const [value, setValue] = useState(0);
     const [isEdit, setIsEdit] = useState(false);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (event: any, newValue: number) => {
         setIsEdit(false);
         setValue(newValue);
     };
@@ -90,9 +95,9 @@ const TabsPanel = ({items}) => {
     ) : null;
 }
 
-const mapPropertyState = (state) => {
+const mapPropertyState = (state: RootState) => {
     return {
-        items: state.sideBarItemReducer.openedItems
+        items: state.menuItems.openedItems
     }
 }
 

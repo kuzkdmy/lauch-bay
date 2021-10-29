@@ -3,8 +3,14 @@ import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import SideBarItem from './SideBarItem';
 import {connect} from 'react-redux';
+import {RootState} from "../../types/Types";
+import {FC} from "react";
 
-const SideBar = (props) => {
+interface SideBarProps {
+    items: any;
+}
+
+const SideBar: FC<SideBarProps> = ({items}) => {
     return (
         <List
             sx={{width: '100%', maxWidth: 360, maxHeight: 300}}
@@ -16,14 +22,14 @@ const SideBar = (props) => {
                 </ListSubheader>
             }
         >
-            <SideBarItem {...props.items}/>
+            <SideBarItem {...items}/>
         </List>
     );
 }
 
-const mapPropertyState = (state) => {
+const mapPropertyState = (state: RootState) => {
     return {
-        items: state.sideBarItemReducer.items
+        items: state.menuItems.items
     }
 }
 
