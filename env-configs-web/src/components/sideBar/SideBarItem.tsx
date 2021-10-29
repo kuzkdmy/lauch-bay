@@ -1,4 +1,5 @@
 import * as React from "react";
+import {FC, useEffect, useState} from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -6,11 +7,25 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
 import {addItem} from "../../redux/actions";
 import {connect} from "react-redux";
-import {useEffect, useState} from "react";
 import {styled} from "@mui/material/styles";
 
-const SideBarItem = (props) => {
-    const {name, nestedItems, pl, addItem, topLevel, isOpened} = props;
+interface SideBarItemProps {
+    name: string;
+    nestedItems: any[];
+    addItem: (name: string) => void;
+    topLevel: boolean;
+    isOpened: boolean;
+    pl: number;
+}
+
+const SideBarItem: FC<SideBarItemProps> = ({
+        name,
+        nestedItems,
+        pl,
+        addItem,
+        topLevel,
+        isOpened
+    }) => {
     const [open, setOpen] = useState(isOpened);
 
     useEffect(() => setOpen(isOpened), [isOpened])
@@ -22,14 +37,14 @@ const SideBarItem = (props) => {
         }
     };
 
-    const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+    const StyledListItemButton = styled(ListItemButton)(({theme}) => ({
         '&': {
             backgroundColor: '#fafafa',
         }
     }));
 
 
-    const getCollapse = (item) => {
+    const getCollapse = (item: any) => {
         return (
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <SideBarItem {...{...item, topLevel: false, pl: item.pl + 2, addItem}}/>
