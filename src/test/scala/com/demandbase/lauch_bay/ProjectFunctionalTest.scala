@@ -1,5 +1,6 @@
 package com.demandbase.lauch_bay
 
+import cats.implicits.catsSyntaxOptionId
 import com.demandbase.lauch_bay.MainApp.appLayer
 import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
@@ -100,38 +101,64 @@ object ProjectFunctionalTest extends BaseFunTest {
   val baseUri = uri"http://localhost:8193/api/v1.0/project"
 
   private val project1 = ApiProject(
-    id   = ProjectId("project-1"),
-    name = ProjectName("project-name-1"),
+    id   = ProjectId("anticor-liveramp"),
+    name = ProjectName("Anticor Liveramp"),
     envConf = List(
       ApiEnvVarConf(
-        envKey  = EnvVarKey("ENV_KEY_1"),
-        default = Some(ApiStringEnvVar("default-string")),
+        envKey  = EnvVarKey("LIVERAMP_DB_HOST"),
+        default = None,
         envOverride = ApiEnvOverride(
-          dev   = Some(ApiStringEnvVar("dev-override")),
-          stage = Some(ApiStringEnvVar("stage-override")),
-          prod  = Some(ApiStringEnvVar("prod-override"))
+          dev   = ApiStringEnvVar("pg-liveramp.dev").some,
+          stage = ApiStringEnvVar("pg-liveramp.stage").some,
+          prod  = ApiStringEnvVar("pg-liveramp.prod").some
         )
+      ),
+      ApiEnvVarConf(
+        envKey      = EnvVarKey("LIVERAMP_DB_PORT"),
+        default     = ApiIntEnvVar(5432).some,
+        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
+      ),
+      ApiEnvVarConf(
+        envKey      = EnvVarKey("LIVERAMP_DB_SCHEMA"),
+        default     = ApiStringEnvVar("liveramp").some,
+        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
+      ),
+      ApiEnvVarConf(
+        envKey      = EnvVarKey("LIVERAMP_DB_USER"),
+        default     = ApiStringEnvVar("liveramp").some,
+        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
       )
     ),
-    deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None)),
-    version    = IntVersion(0)
+    deployConf = List(
+      ApiReplicaCountConf(default = 1, envOverride   = None),
+      ApiCpuRequestConf(default   = 100, envOverride = Some(ApiIntEnvOverride(dev = 50.some, stage = None, prod = 200.some)))
+    ),
+    version = IntVersion(0)
   )
   private val project2 = ApiProject(
-    id   = ProjectId("project-2"),
-    name = ProjectName("project-name-2"),
+    id   = ProjectId("tenant-configuration"),
+    name = ProjectName("Tenant Configuration"),
     envConf = List(
       ApiEnvVarConf(
-        envKey  = EnvVarKey("ENV_KEY_BOOLEAN_VALUE"),
-        default = Some(ApiBooleanEnvVar(true)),
+        envKey  = EnvVarKey("TENANT_DB_HOST_PATTERN"),
+        default = None,
         envOverride = ApiEnvOverride(
-          dev   = Some(ApiBooleanEnvVar(false)),
-          stage = Some(ApiBooleanEnvVar(false)),
-          prod  = Some(ApiBooleanEnvVar(true))
+          dev   = ApiStringEnvVar("pg-{idx}-tenant.dev").some,
+          stage = ApiStringEnvVar("pg-{idx}-tenant.stage").some,
+          prod  = ApiStringEnvVar("pg-{idx}-tenant.prod").some
         )
+      ),
+      ApiEnvVarConf(
+        envKey      = EnvVarKey("TENANT_DB_PORT"),
+        default     = ApiIntEnvVar(5432).some,
+        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
       )
     ),
-    deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None)),
-    version    = IntVersion(0)
+    deployConf = List(
+      ApiReplicaCountConf(default = 1, envOverride   = Some(ApiIntEnvOverride(dev = 2.some, stage = 3.some, prod = 5.some))),
+      ApiCpuRequestConf(default   = 200, envOverride = Some(ApiIntEnvOverride(dev = 100.some, stage = 100.some, prod = 500.some)))
+    ),
+    version = IntVersion(0)
   )
   def toApiModel(resp: Response[String]): Task[ApiProject] =
     Task

@@ -1,0 +1,81 @@
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev",
+          "type": "string"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage",
+          "type": "string"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp",
+        "type": "string"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp",
+        "type": "string"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
