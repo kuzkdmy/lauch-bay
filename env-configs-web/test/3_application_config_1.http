@@ -1,0 +1,89 @@
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "default": {
+        "value": true,
+        "type": "boolean"
+      },
+      "envOverride": {
+        "dev": {
+          "value": false,
+          "type": "boolean"
+        },
+        "stage": {
+          "value": false,
+          "type": "boolean"
+        },
+        "prod": {
+          "value": true,
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "default": {
+        "value": 2,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1,
+          "type": "integer"
+        },
+        "stage": null,
+        "prod": {
+          "value": 5,
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "default": {
+        "value": 1440,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15,
+          "type": "integer"
+        },
+        "stage": {
+          "value": 180,
+          "type": "integer"
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}

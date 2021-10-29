@@ -1,5 +1,6 @@
 package com.demandbase.lauch_bay
 
+import cats.implicits.catsSyntaxOptionId
 import com.demandbase.lauch_bay.MainApp.appLayer
 import com.demandbase.lauch_bay.domain.types._
 import com.demandbase.lauch_bay.dto._
@@ -100,27 +101,9 @@ object ApplicationFunctionalTest extends BaseFunTest {
   val baseUri = uri"http://localhost:8193/api/v1.0/application"
 
   private val application1 = ApiApplication(
-    id        = AppId("app-1"),
-    projectId = ProjectId("project-1"),
-    name      = AppName("app-name-1"),
-    envConf = List(
-      ApiEnvVarConf(
-        envKey  = EnvVarKey("ENV_KEY_1"),
-        default = Some(ApiStringEnvVar("default-string")),
-        envOverride = ApiEnvOverride(
-          dev   = Some(ApiStringEnvVar("dev-override")),
-          stage = Some(ApiStringEnvVar("stage-override")),
-          prod  = Some(ApiStringEnvVar("prod-override"))
-        )
-      )
-    ),
-    deployConf = List(ApiReplicaCountConf(default = 1, envOverride = None)),
-    version    = IntVersion(0)
-  )
-  private val application2 = ApiApplication(
-    id        = AppId("app-2"),
-    projectId = ProjectId("project-1"),
-    name      = AppName("app-name-2"),
+    id        = AppId("anticor-liveramp-audience-file-upload"),
+    projectId = ProjectId("anticor-liveramp"),
+    name      = AppName("Anticor LiveRamp Audience File Upload"),
     envConf = List(
       ApiEnvVarConf(
         envKey  = EnvVarKey("ENV_KEY_BOOLEAN_VALUE"),
@@ -130,10 +113,54 @@ object ApplicationFunctionalTest extends BaseFunTest {
           stage = Some(ApiBooleanEnvVar(false)),
           prod  = Some(ApiBooleanEnvVar(true))
         )
+      ),
+      ApiEnvVarConf(
+        envKey      = EnvVarKey("ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM"),
+        default     = ApiIntEnvVar(2).some,
+        envOverride = ApiEnvOverride(dev = ApiIntEnvVar(1).some, stage = None, prod = ApiIntEnvVar(5).some)
+      ),
+      ApiEnvVarConf(
+        envKey      = EnvVarKey("ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES"),
+        default     = ApiIntEnvVar(24 * 60).some,
+        envOverride = ApiEnvOverride(dev = ApiIntEnvVar(15).some, stage = ApiIntEnvVar(3 * 60).some, prod = None)
       )
     ),
-    deployConf = List(ApiCpuRequestConf(default = 100, envOverride = None)),
-    version    = IntVersion(0)
+    deployConf = List(
+      ApiCpuRequestConf(default   = 200, envOverride  = ApiIntEnvOverride(dev = None, stage = None, prod = 500.some).some),
+      ApiRamMegabytesConf(default = 1024, envOverride = ApiIntEnvOverride(dev = None, stage = 2048.some, prod = 8096.some).some)
+    ),
+    version = IntVersion(0)
+  )
+  private val application2 = ApiApplication(
+    id        = AppId("tenant-configuration-streaming"),
+    projectId = ProjectId("tenant-configuration"),
+    name      = AppName("Tenant Configuration Streaming"),
+    envConf = List(
+      ApiEnvVarConf(
+        envKey  = EnvVarKey("TENANT_CONFIGURATION_STREAMING_PARALLELISM"),
+        default = ApiIntEnvVar(10).some,
+        envOverride = ApiEnvOverride(
+          dev   = ApiIntEnvVar(2).some,
+          stage = None,
+          prod  = ApiIntEnvVar(20).some
+        )
+      ),
+      ApiEnvVarConf(
+        envKey  = EnvVarKey("TENANT_CONFIGURATION_STREAMING_BLACKLIST_TTL_SECONDS"),
+        default = None,
+        envOverride = ApiEnvOverride(
+          dev   = ApiIntEnvVar(10).some,
+          stage = ApiIntEnvVar(60).some,
+          prod  = ApiIntEnvVar(360).some
+        )
+      )
+    ),
+    deployConf = List(
+      ApiReplicaCountConf(default = 1, envOverride   = ApiIntEnvOverride(dev = None, stage = 2.some, prod = 3.some).some),
+      ApiRamMegabytesConf(default = 512, envOverride = ApiIntEnvOverride(dev = None, stage = None, prod = 1024.some).some),
+      ApiCpuRequestConf(default   = 200, envOverride = ApiIntEnvOverride(dev = 100.some, stage = None, prod = 500.some).some)
+    ),
+    version = IntVersion(0)
   )
   def toApiModel(resp: Response[String]): Task[ApiApplication] =
     Task
