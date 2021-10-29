@@ -29,6 +29,7 @@ lazy val root = (project in file("."))
       "dev.zio"                       %% "zio-metrics-prometheus"        % "1.0.12",
       "dev.zio"                       %% "zio-test"                      % "1.0.12" % "test",
       "dev.zio"                       %% "zio-test-sbt"                  % "1.0.12" % "test",
+      "io.circe"                      %% "circe-generic-extras"          % "0.14.1",
       "io.d11"                        %% "zhttp"                         % "1.0.0.0-RC17",
       "net.logstash.logback"           % "logstash-logback-encoder"      % "6.6",
       "tf.tofu"                       %% "derevo-cats"                   % "0.12.6",

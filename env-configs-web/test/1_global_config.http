@@ -1,0 +1,73 @@
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "default": {
+        "value": 5432,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432,
+          "type": "integer"
+        },
+        "stage": {
+          "value": 15432,
+          "type": "integer"
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev",
+          "type": "string"
+        },
+        "stage": {
+          "value": "pulsar.stage",
+          "type": "string"
+        },
+        "prod": {
+          "value": "pulsar.prod",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "default": {
+        "value": true,
+        "type": "boolean"
+      },
+      "envOverride": {
+        "dev": {
+          "value": false,
+          "type": "boolean"
+        },
+        "stage": {
+          "value": false,
+          "type": "boolean"
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+###
+

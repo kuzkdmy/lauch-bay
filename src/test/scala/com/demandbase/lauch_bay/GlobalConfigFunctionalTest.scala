@@ -47,12 +47,30 @@ object GlobalConfigFunctionalTest extends BaseFunTest {
   private val globalConf = ApiGlobalConfig(
     envConf = List(
       ApiEnvVarConf(
-        envKey  = EnvVarKey("ENV_KEY_1"),
-        default = Some(ApiStringEnvVar("default-string")),
+        envKey  = EnvVarKey("POSTGRES_PORT"),
+        default = Some(ApiIntEnvVar(5432)),
         envOverride = ApiEnvOverride(
-          dev   = Some(ApiStringEnvVar("dev-override")),
-          stage = Some(ApiStringEnvVar("stage-override")),
-          prod  = Some(ApiStringEnvVar("prod-override"))
+          dev   = Some(ApiIntEnvVar(25432)),
+          stage = Some(ApiIntEnvVar(15432)),
+          prod  = None
+        )
+      ),
+      ApiEnvVarConf(
+        envKey  = EnvVarKey("PULSAR_HOST"),
+        default = None,
+        envOverride = ApiEnvOverride(
+          dev   = Some(ApiStringEnvVar("pulsar.dev")),
+          stage = Some(ApiStringEnvVar("pulsar.stage")),
+          prod  = Some(ApiStringEnvVar("pulsar.prod"))
+        )
+      ),
+      ApiEnvVarConf(
+        envKey  = EnvVarKey("ZIPKIN_TRACE_LOGS"),
+        default = Some(ApiBooleanEnvVar(true)),
+        envOverride = ApiEnvOverride(
+          dev   = Some(ApiBooleanEnvVar(false)),
+          stage = Some(ApiBooleanEnvVar(false)),
+          prod  = None
         )
       )
     ),
