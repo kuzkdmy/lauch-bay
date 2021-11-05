@@ -105,24 +105,24 @@ object ApplicationFunctionalTest extends BaseFunTest {
     projectId = ProjectId("anticor-liveramp"),
     name      = AppName("Anticor LiveRamp Audience File Upload"),
     envConf = List(
-      ApiEnvVarConf(
+      ApiEnvBooleanVarConf(
         envKey  = EnvVarKey("ENV_KEY_BOOLEAN_VALUE"),
         default = Some(ApiBooleanEnvVar(true)),
-        envOverride = ApiEnvOverride(
+        envOverride = ApiBooleanEnvVarOverride(
           dev   = Some(ApiBooleanEnvVar(false)),
           stage = Some(ApiBooleanEnvVar(false)),
           prod  = Some(ApiBooleanEnvVar(true))
         )
       ),
-      ApiEnvVarConf(
+      ApiEnvIntVarConf(
         envKey      = EnvVarKey("ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM"),
         default     = ApiIntEnvVar(2).some,
-        envOverride = ApiEnvOverride(dev = ApiIntEnvVar(1).some, stage = None, prod = ApiIntEnvVar(5).some)
+        envOverride = ApiIntEnvVarOverride(dev = ApiIntEnvVar(1).some, stage = None, prod = ApiIntEnvVar(5).some)
       ),
-      ApiEnvVarConf(
+      ApiEnvIntVarConf(
         envKey      = EnvVarKey("ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES"),
         default     = ApiIntEnvVar(24 * 60).some,
-        envOverride = ApiEnvOverride(dev = ApiIntEnvVar(15).some, stage = ApiIntEnvVar(3 * 60).some, prod = None)
+        envOverride = ApiIntEnvVarOverride(dev = ApiIntEnvVar(15).some, stage = ApiIntEnvVar(3 * 60).some, prod = None)
       )
     ),
     deployConf = List(
@@ -136,19 +136,19 @@ object ApplicationFunctionalTest extends BaseFunTest {
     projectId = ProjectId("tenant-configuration"),
     name      = AppName("Tenant Configuration Streaming"),
     envConf = List(
-      ApiEnvVarConf(
+      ApiEnvIntVarConf(
         envKey  = EnvVarKey("TENANT_CONFIGURATION_STREAMING_PARALLELISM"),
         default = ApiIntEnvVar(10).some,
-        envOverride = ApiEnvOverride(
+        envOverride = ApiIntEnvVarOverride(
           dev   = ApiIntEnvVar(2).some,
           stage = None,
           prod  = ApiIntEnvVar(20).some
         )
       ),
-      ApiEnvVarConf(
+      ApiEnvIntVarConf(
         envKey  = EnvVarKey("TENANT_CONFIGURATION_STREAMING_BLACKLIST_TTL_SECONDS"),
         default = None,
-        envOverride = ApiEnvOverride(
+        envOverride = ApiIntEnvVarOverride(
           dev   = ApiIntEnvVar(10).some,
           stage = ApiIntEnvVar(60).some,
           prod  = ApiIntEnvVar(360).some

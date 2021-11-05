@@ -13,7 +13,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "ch.qos.logback"                 % "logback-classic"               % "1.2.6",
       "com.github.pureconfig"         %% "pureconfig"                    % "0.17.0",
-      "com.softwaremill.sttp.client3" %% "async-http-client-backend-zio" % "3.3.15",
+      "com.softwaremill.sttp.client3" %% "async-http-client-backend-zio" % "3.3.16",
       "com.softwaremill.sttp.tapir"   %% "tapir-core"                    % "0.19.0-M9",
       "com.softwaremill.sttp.tapir"   %% "tapir-derevo"                  % "0.19.0-M9",
       "com.softwaremill.sttp.tapir"   %% "tapir-enumeratum"              % "0.19.0-M9",

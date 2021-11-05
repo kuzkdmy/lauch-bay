@@ -104,29 +104,29 @@ object ProjectFunctionalTest extends BaseFunTest {
     id   = ProjectId("anticor-liveramp"),
     name = ProjectName("Anticor Liveramp"),
     envConf = List(
-      ApiEnvVarConf(
+      ApiEnvStringVarConf(
         envKey  = EnvVarKey("LIVERAMP_DB_HOST"),
         default = None,
-        envOverride = ApiEnvOverride(
+        envOverride = ApiStringEnvVarOverride(
           dev   = ApiStringEnvVar("pg-liveramp.dev").some,
           stage = ApiStringEnvVar("pg-liveramp.stage").some,
           prod  = ApiStringEnvVar("pg-liveramp.prod").some
         )
       ),
-      ApiEnvVarConf(
+      ApiEnvIntVarConf(
         envKey      = EnvVarKey("LIVERAMP_DB_PORT"),
         default     = ApiIntEnvVar(5432).some,
-        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
+        envOverride = ApiIntEnvVarOverride(dev = None, stage = None, prod = None)
       ),
-      ApiEnvVarConf(
+      ApiEnvStringVarConf(
         envKey      = EnvVarKey("LIVERAMP_DB_SCHEMA"),
         default     = ApiStringEnvVar("liveramp").some,
-        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
+        envOverride = ApiStringEnvVarOverride(dev = None, stage = None, prod = None)
       ),
-      ApiEnvVarConf(
+      ApiEnvStringVarConf(
         envKey      = EnvVarKey("LIVERAMP_DB_USER"),
         default     = ApiStringEnvVar("liveramp").some,
-        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
+        envOverride = ApiStringEnvVarOverride(dev = None, stage = None, prod = None)
       )
     ),
     deployConf = List(
@@ -139,19 +139,19 @@ object ProjectFunctionalTest extends BaseFunTest {
     id   = ProjectId("tenant-configuration"),
     name = ProjectName("Tenant Configuration"),
     envConf = List(
-      ApiEnvVarConf(
+      ApiEnvStringVarConf(
         envKey  = EnvVarKey("TENANT_DB_HOST_PATTERN"),
         default = None,
-        envOverride = ApiEnvOverride(
+        envOverride = ApiStringEnvVarOverride(
           dev   = ApiStringEnvVar("pg-{idx}-tenant.dev").some,
           stage = ApiStringEnvVar("pg-{idx}-tenant.stage").some,
           prod  = ApiStringEnvVar("pg-{idx}-tenant.prod").some
         )
       ),
-      ApiEnvVarConf(
+      ApiEnvIntVarConf(
         envKey      = EnvVarKey("TENANT_DB_PORT"),
         default     = ApiIntEnvVar(5432).some,
-        envOverride = ApiEnvOverride(dev = None, stage = None, prod = None)
+        envOverride = ApiIntEnvVarOverride(dev = None, stage = None, prod = None)
       )
     ),
     deployConf = List(
