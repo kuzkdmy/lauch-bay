@@ -6,18 +6,16 @@ Content-Type: application/json
   "envConf": [
     {
       "envKey": "POSTGRES_PORT",
+      "type": "integer",
       "default": {
-        "value": 5432,
-        "type": "integer"
+        "value": 5432
       },
       "envOverride": {
         "dev": {
-          "value": 25432,
-          "type": "integer"
+          "value": 25432
         },
         "stage": {
-          "value": 15432,
-          "type": "integer"
+          "value": 15432
         },
         "prod": null
       }
@@ -25,35 +23,31 @@ Content-Type: application/json
     {
       "envKey": "PULSAR_HOST",
       "default": null,
+      "type": "string",
       "envOverride": {
         "dev": {
-          "value": "pulsar.dev",
-          "type": "string"
+          "value": "pulsar.dev"
         },
         "stage": {
-          "value": "pulsar.stage",
-          "type": "string"
+          "value": "pulsar.stage"
         },
         "prod": {
-          "value": "pulsar.prod",
-          "type": "string"
+          "value": "pulsar.prod"
         }
       }
     },
     {
       "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
       "default": {
-        "value": true,
-        "type": "boolean"
+        "value": true
       },
       "envOverride": {
         "dev": {
-          "value": false,
-          "type": "boolean"
+          "value": false
         },
         "stage": {
-          "value": false,
-          "type": "boolean"
+          "value": false
         },
         "prod": null
       }
