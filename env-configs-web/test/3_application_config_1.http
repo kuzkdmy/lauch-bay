@@ -9,57 +9,50 @@ Content-Type: application/json
   "envConf": [
     {
       "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
       "default": {
-        "value": true,
-        "type": "boolean"
+        "value": true
       },
       "envOverride": {
         "dev": {
-          "value": false,
-          "type": "boolean"
+          "value": false
         },
         "stage": {
-          "value": false,
-          "type": "boolean"
+          "value": false
         },
         "prod": {
-          "value": true,
-          "type": "boolean"
+          "value": true
         }
       }
     },
     {
       "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
       "default": {
-        "value": 2,
-        "type": "integer"
+        "value": 2
       },
       "envOverride": {
         "dev": {
-          "value": 1,
-          "type": "integer"
+          "value": 1
         },
         "stage": null,
         "prod": {
-          "value": 5,
-          "type": "integer"
+          "value": 5
         }
       }
     },
     {
       "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
       "default": {
-        "value": 1440,
-        "type": "integer"
+        "value": 1440
       },
       "envOverride": {
         "dev": {
-          "value": 15,
-          "type": "integer"
+          "value": 15
         },
         "stage": {
-          "value": 180,
-          "type": "integer"
+          "value": 180
         },
         "prod": null
       }

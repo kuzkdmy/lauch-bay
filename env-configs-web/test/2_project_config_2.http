@@ -9,26 +9,24 @@ Content-Type: application/json
     {
       "envKey": "TENANT_DB_HOST_PATTERN",
       "default": null,
+      "type": "string",
       "envOverride": {
         "dev": {
-          "value": "pg-{idx}-tenant.dev",
-          "type": "string"
+          "value": "pg-{idx}-tenant.dev"
         },
         "stage": {
-          "value": "pg-{idx}-tenant.stage",
-          "type": "string"
+          "value": "pg-{idx}-tenant.stage"
         },
         "prod": {
-          "value": "pg-{idx}-tenant.prod",
-          "type": "string"
+          "value": "pg-{idx}-tenant.prod"
         }
       }
     },
     {
       "envKey": "TENANT_DB_PORT",
+      "type": "integer",
       "default": {
-        "value": 5432,
-        "type": "integer"
+        "value": 5432
       },
       "envOverride": {
         "dev": null,

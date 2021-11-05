@@ -18,6 +18,30 @@ object EnvVarConverter {
       case IntEnvVar(value)     => ApiIntEnvVar(value)
     }
   }
+  def toApiStringEnvVarValue(r: EnvVarValue): ApiStringEnvVar = {
+    r match {
+      case StringEnvVar(value) => ApiStringEnvVar(value)
+      case _: EnvVarValue      =>
+        println(s"Incompatible type conversion $r => is not StringEnvVar")
+        throw new RuntimeException(s"Incompatible type conversion $r => is not StringEnvVar")
+    }
+  }
+  def toApiBooleanEnvVarValue(r: EnvVarValue): ApiBooleanEnvVar = {
+    r match {
+      case BooleanEnvVar(value) => ApiBooleanEnvVar(value)
+      case _: EnvVarValue       =>
+        println(s"Incompatible type conversion $r => is not BooleanEnvVar")
+        throw new RuntimeException(s"Incompatible type conversion $r => is not BooleanEnvVar")
+    }
+  }
+  def toApiIntEnvVarValue(r: EnvVarValue): ApiIntEnvVar = {
+    r match {
+      case IntEnvVar(value) => ApiIntEnvVar(value)
+      case _: EnvVarValue   =>
+        println(s"Incompatible type conversion $r => is not IntEnvVar")
+        throw new RuntimeException(s"Incompatible type conversion $r => is not IntEnvVar")
+    }
+  }
   def toEnvVarValue(api: ApiEnvVarValue): EnvVarValue = {
     api match {
       case ApiStringEnvVar(value)  => StringEnvVar(value)
@@ -25,11 +49,25 @@ object EnvVarConverter {
       case ApiIntEnvVar(value)     => IntEnvVar(value)
     }
   }
-  def toApiEnvOverride(r: EnvOverride[EnvVarValue]): ApiEnvOverride = {
-    ApiEnvOverride(
-      dev   = r.dev.map(toApiEnvVarValue),
-      stage = r.stage.map(toApiEnvVarValue),
-      prod  = r.prod.map(toApiEnvVarValue)
+  def toApiStringEnvOverride(r: EnvOverride[EnvVarValue]): ApiStringEnvVarOverride = {
+    ApiStringEnvVarOverride(
+      dev   = r.dev.map(toApiStringEnvVarValue),
+      stage = r.stage.map(toApiStringEnvVarValue),
+      prod  = r.prod.map(toApiStringEnvVarValue)
+    )
+  }
+  def toApiBooleanEnvOverride(r: EnvOverride[EnvVarValue]): ApiBooleanEnvVarOverride = {
+    ApiBooleanEnvVarOverride(
+      dev   = r.dev.map(toApiBooleanEnvVarValue),
+      stage = r.stage.map(toApiBooleanEnvVarValue),
+      prod  = r.prod.map(toApiBooleanEnvVarValue)
+    )
+  }
+  def toApiInt2EnvOverride(r: EnvOverride[EnvVarValue]): ApiIntEnvVarOverride = {
+    ApiIntEnvVarOverride(
+      dev   = r.dev.map(toApiIntEnvVarValue),
+      stage = r.stage.map(toApiIntEnvVarValue),
+      prod  = r.prod.map(toApiIntEnvVarValue)
     )
   }
   def toApiIntEnvOverride(r: EnvOverride[Int]): ApiIntEnvOverride = {
@@ -46,7 +84,7 @@ object EnvVarConverter {
       prod  = r.prod
     )
   }
-  def toEnvOverride(r: ApiEnvOverride): EnvOverride[EnvVarValue] = {
+  def toEnvOverride(r: ApiEnvVarOverride): EnvOverride[EnvVarValue] = {
     EnvOverride[EnvVarValue](
       dev   = r.dev.map(toEnvVarValue),
       stage = r.stage.map(toEnvVarValue),
@@ -54,10 +92,16 @@ object EnvVarConverter {
     )
   }
   def toApiEnvVarConf(r: EnvVarConf): ApiEnvVarConf = {
-    ApiEnvVarConf(
-      envKey      = r.envKey,
-      default     = r.default.map(toApiEnvVarValue),
-      envOverride = toApiEnvOverride(r.envOverride)
-    )
+    Seq(r.default, r.envOverride.dev, r.envOverride.stage, r.envOverride.prod).flatten.headOption
+      .fold("string")(_.getClass.getSimpleName match {
+        case "StringEnvVar"  => "string"
+        case "BooleanEnvVar" => "boolean"
+        case "IntEnvVar"     => "int"
+        case _               => "string"
+      }) match {
+      case "string"  => ApiEnvStringVarConf(r.envKey, r.default.map(toApiStringEnvVarValue), toApiStringEnvOverride(r.envOverride))
+      case "boolean" => ApiEnvBooleanVarConf(r.envKey, r.default.map(toApiBooleanEnvVarValue), toApiBooleanEnvOverride(r.envOverride))
+      case "int"     => ApiEnvIntVarConf(r.envKey, r.default.map(toApiIntEnvVarValue), toApiInt2EnvOverride(r.envOverride))
+    }
   }
 }

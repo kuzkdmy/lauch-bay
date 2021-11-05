@@ -9,26 +9,24 @@ Content-Type: application/json
     {
       "envKey": "LIVERAMP_DB_HOST",
       "default": null,
+      "type": "string",
       "envOverride": {
         "dev": {
-          "value": "pg-liveramp.dev",
-          "type": "string"
+          "value": "pg-liveramp.dev"
         },
         "stage": {
-          "value": "pg-liveramp.stage",
-          "type": "string"
+          "value": "pg-liveramp.stage"
         },
         "prod": {
-          "value": "pg-liveramp.prod",
-          "type": "string"
+          "value": "pg-liveramp.prod"
         }
       }
     },
     {
       "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
       "default": {
-        "value": 5432,
-        "type": "integer"
+        "value": 5432
       },
       "envOverride": {
         "dev": null,
@@ -38,9 +36,9 @@ Content-Type: application/json
     },
     {
       "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
       "default": {
-        "value": "liveramp",
-        "type": "string"
+        "value": "liveramp"
       },
       "envOverride": {
         "dev": null,
@@ -50,9 +48,9 @@ Content-Type: application/json
     },
     {
       "envKey": "LIVERAMP_DB_USER",
+      "type": "string",
       "default": {
-        "value": "liveramp",
-        "type": "string"
+        "value": "liveramp"
       },
       "envOverride": {
         "dev": null,
