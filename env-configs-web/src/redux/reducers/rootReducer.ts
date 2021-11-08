@@ -1,11 +1,10 @@
-import {combineReducers} from "redux";
-import configsReducer from "./configsReducer";
-import menuReducer from "./menuReducer";
+import { combineReducers } from 'redux';
+import configsReducer from './configsReducer';
+import menuReducer from './menuReducer';
 
-export const rootReducer =  combineReducers({
+export const rootReducer = combineReducers({
     menu: menuReducer,
-    configsState: configsReducer
-
+    configsState: configsReducer,
 });
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;

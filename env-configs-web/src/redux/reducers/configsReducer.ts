@@ -1,10 +1,15 @@
-import {Configs, ConfigsActions, ConfigsActionTypes, ConfigsState} from "../../types/types";
-import _ from "lodash";
+import {
+    Configs,
+    ConfigsActions,
+    ConfigsActionTypes,
+    ConfigsState,
+} from '../../types/types';
+import _ from 'lodash';
 
 const initialState = {
     isLoading: false,
-    configs: {}
-}
+    configs: {},
+};
 
 // const findMenuItem = (name, item, state) => {
 //     if (!name) {
@@ -26,48 +31,63 @@ const initialState = {
 //     };
 // }
 
-const configsReducer =
-    (state = initialState as ConfigsState, action: ConfigsActions): ConfigsState => {
-        switch (action.type) {
-            case ConfigsActionTypes.FETCH_CONFIGS:
-                return {...state, isLoading: true}
-            case ConfigsActionTypes.FETCH_CONFIGS_SUCCESS:
-                return {
-                    ...state,
-                    isLoading: false,
-                    configs: {...state.configs, [action.payload.confType]: action.payload.configs}
-                }
-            case ConfigsActionTypes.REFRESH_GLOBAL_CONFIGS_SUCCESS:
-                return {
-                    ...state,
-                    isLoading: false,
-                    configs: {...state.configs, [action.payload.confType]: action.payload.configs}
-                }
-            case ConfigsActionTypes.REFRESH_PROJECT_CONFIGS_SUCCESS:
-                const refreshedConfigs = [...state.configs[action.payload.confType] as Configs[]];
-                const idx = _.findIndex(refreshedConfigs, {id: action.payload.id});
-                refreshedConfigs.splice(idx, 1, action.payload.configs)
+const configsReducer = (
+    state = initialState as ConfigsState,
+    action: ConfigsActions
+): ConfigsState => {
+    switch (action.type) {
+        case ConfigsActionTypes.FETCH_CONFIGS:
+            return { ...state, isLoading: true };
+        case ConfigsActionTypes.FETCH_CONFIGS_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    [action.payload.confType]: action.payload.configs,
+                },
+            };
+        case ConfigsActionTypes.REFRESH_GLOBAL_CONFIGS_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    [action.payload.confType]: action.payload.configs,
+                },
+            };
+        case ConfigsActionTypes.REFRESH_PROJECT_CONFIGS_SUCCESS:
+            const refreshedConfigs = [
+                ...(state.configs[action.payload.confType] as Configs[]),
+            ];
+            const idx = _.findIndex(refreshedConfigs, {
+                id: action.payload.id,
+            });
+            refreshedConfigs.splice(idx, 1, action.payload.configs);
 
-                return {
-                    ...state,
-                    isLoading: false,
-                    configs: {
-                        ...state.configs,
-                        [action.payload.confType]: refreshedConfigs
-                    }
-                }
-            case ConfigsActionTypes.REFRESH_PROJECTS_CONFIGS_SUCCESS:
-                return {
-                    ...state,
-                    isLoading: false,
-                    configs: {...state.configs, [action.payload.confType]: action.payload.configs}
-                }
-            case ConfigsActionTypes.FETCH_CONFIGS_ERROR:
-                return {...state, isLoading: false}
-            default: {
-                return state;
-            }
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    [action.payload.confType]: refreshedConfigs,
+                },
+            };
+        case ConfigsActionTypes.REFRESH_PROJECTS_CONFIGS_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    [action.payload.confType]: action.payload.configs,
+                },
+            };
+        case ConfigsActionTypes.FETCH_CONFIGS_ERROR:
+            return { ...state, isLoading: false };
+        default: {
+            return state;
         }
-    };
+    }
+};
 
 export default configsReducer;

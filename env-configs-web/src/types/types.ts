@@ -8,11 +8,14 @@ export interface ConfigsState {
 }
 
 export interface MenuState {
-    openedItems: any[]
+    activeTabName: string;
+    openedItems: any[];
 }
 
 export enum ConfigType {
-    GLOBAL = 'GLOBAL', PROJECT = 'PROJECT', MICROSERVICE = 'MICROSERVICE'
+    GLOBAL = 'GLOBAL',
+    PROJECT = 'PROJECT',
+    MICROSERVICE = 'MICROSERVICE',
 }
 
 export interface ConfigItem {
@@ -28,7 +31,7 @@ export interface Config {
         dev: ConfigItem | null;
         stage: ConfigItem | null;
         prod: ConfigItem | null;
-    }
+    };
 }
 
 export interface Configs {
@@ -58,7 +61,7 @@ export enum ConfigsActionTypes {
     REFRESH_PROJECTS_CONFIGS_SUCCESS = 'REFRESH_PROJECTS_CONFIGS_SUCCESS',
     REFRESH_PROJECT_CONFIGS_SUCCESS = 'REFRESH_PROJECT_CONFIGS_SUCCESS',
     REFRESH_CONFIGS = 'REFRESH_CONFIGS',
-    FIND_ITEMS = 'FIND_ITEMS'
+    FIND_ITEMS = 'FIND_ITEMS',
 }
 
 interface FetchConfigsAction {
@@ -73,15 +76,15 @@ interface FetchConfigsErrorAction {
 interface FetchConfigsSuccessAction {
     type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS;
     payload: {
-        confType: ConfigType
-        configs: Configs
+        confType: ConfigType;
+        configs: Configs;
     };
 }
 
 interface RefreshProjectConfigsAction {
     type: ConfigsActionTypes.REFRESH_CONFIGS;
     payload: {
-        id: string
+        id: string;
     };
 }
 
@@ -117,10 +120,10 @@ interface FindMenuAction {
     payload: any;
 }
 
-
 export enum MenuActionTypes {
     OPEN_MENU_ITEM = 'OPEN_MENU_ITEM',
-    CLOSE_MENU_ITEM = 'CLOSE_MENU_ITEM'
+    SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
+    CLOSE_MENU_ITEM = 'CLOSE_MENU_ITEM',
 }
 
 export interface MenuItemType {
@@ -131,12 +134,23 @@ export interface MenuItemType {
     parentConfigType?: ConfigType;
 }
 
+export interface TabContent {
+    tabName: string;
+    content: any;
+}
+
 export interface MenuActions {
     type: MenuActionTypes;
-    payload?: MenuItemType
+    payload: any;
 }
 
 export type ConfigsActions =
-    FetchConfigsAction | FetchConfigsSuccessAction | FetchConfigsErrorAction | FindMenuAction | MenuActions |
-    RefreshProjectConfigsAction | RefreshProjectConfigsSuccessAction | RefreshProjectsConfigsSuccessAction |
-    RefreshGlobalConfigsSuccessAction
+    | FetchConfigsAction
+    | FetchConfigsSuccessAction
+    | FetchConfigsErrorAction
+    | FindMenuAction
+    | MenuActions
+    | RefreshProjectConfigsAction
+    | RefreshProjectConfigsSuccessAction
+    | RefreshProjectsConfigsSuccessAction
+    | RefreshGlobalConfigsSuccessAction;
