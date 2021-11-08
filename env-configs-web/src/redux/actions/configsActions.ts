@@ -1,46 +1,60 @@
-import {Dispatch} from "redux";
-import axios from "axios";
-import {Configs, ConfigsActions, ConfigsActionTypes, ConfigType, MenuActionTypes} from "../../types/types";
+import { Dispatch } from 'redux';
+import axios from 'axios';
+import {
+    Configs,
+    ConfigsActions,
+    ConfigsActionTypes,
+    ConfigType,
+    MenuActionTypes,
+} from '../../types/types';
 
 export const fetchGlobalConfigs = () => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            dispatch({type: ConfigsActionTypes.FETCH_CONFIGS});
-            const response = await axios.get<Configs>('/api/v1.0/global_config');
+            dispatch({ type: ConfigsActionTypes.FETCH_CONFIGS });
+            const response = await axios.get<Configs>(
+                '/api/v1.0/global_config'
+            );
 
             if (!response.data.envConf.length) {
                 dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR
+                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
                 });
             } else {
                 dispatch({
                     type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS,
-                    payload: {configs: response.data, confType: ConfigType.GLOBAL}
+                    payload: {
+                        configs: response.data,
+                        confType: ConfigType.GLOBAL,
+                    },
                 });
             }
         } catch (e) {
             dispatch({
                 type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: ''
+                payload: '',
             });
         }
-    }
-}
+    };
+};
 
 export const fetchProjectConfigs = () => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            dispatch({type: ConfigsActionTypes.FETCH_CONFIGS});
+            dispatch({ type: ConfigsActionTypes.FETCH_CONFIGS });
             const response = await axios.get<Configs>('/api/v1.0/project');
 
             if (!response.data) {
                 dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR
+                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
                 });
             } else {
                 dispatch({
                     type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS,
-                    payload: {configs: response.data, confType: ConfigType.PROJECT}
+                    payload: {
+                        configs: response.data,
+                        confType: ConfigType.PROJECT,
+                    },
                 });
             }
             dispatch({
@@ -49,18 +63,18 @@ export const fetchProjectConfigs = () => {
                     name: 'Projects',
                     isTableContent: false,
                     type: ConfigType.PROJECT,
-                    parentConfigType: ConfigType.GLOBAL
-                }
+                    parentConfigType: ConfigType.GLOBAL,
+                },
             });
         } catch (e) {
             console.log(e);
             dispatch({
                 type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: ''
+                payload: '',
             });
         }
-    }
-}
+    };
+};
 
 const getConfigsUrl = (type: ConfigType, id: string) => {
     switch (type) {
@@ -71,44 +85,50 @@ const getConfigsUrl = (type: ConfigType, id: string) => {
         case ConfigType.MICROSERVICE:
             return '';
     }
-}
+};
 
 const getRefreshConfigPayload = (type: ConfigType, data: any) => {
     switch (true) {
         case ConfigType.GLOBAL === type:
             return {
-                type: ConfigsActionTypes.REFRESH_GLOBAL_CONFIGS_SUCCESS
-            }
-        case (ConfigType.PROJECT && Array.isArray(data)):
+                type: ConfigsActionTypes.REFRESH_GLOBAL_CONFIGS_SUCCESS,
+            };
+        case ConfigType.PROJECT && Array.isArray(data):
             return {
-                type: ConfigsActionTypes.REFRESH_PROJECTS_CONFIGS_SUCCESS
-            }
+                type: ConfigsActionTypes.REFRESH_PROJECTS_CONFIGS_SUCCESS,
+            };
         case ConfigType.PROJECT === type:
             return {
-                type: ConfigsActionTypes.REFRESH_PROJECT_CONFIGS_SUCCESS
-            }
+                type: ConfigsActionTypes.REFRESH_PROJECT_CONFIGS_SUCCESS,
+            };
     }
-}
+};
 
 export const refreshConfigs = (type: ConfigType, id: string) => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            dispatch({type: ConfigsActionTypes.REFRESH_CONFIGS, payload: {id}});
+            dispatch({
+                type: ConfigsActionTypes.REFRESH_CONFIGS,
+                payload: { id },
+            });
             const response = await axios.get<Configs>(getConfigsUrl(type, id));
 
             if (!response.data) {
                 dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR
+                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
                 });
             } else {
-                dispatch({...getRefreshConfigPayload(type, response.data), payload: {configs: response.data, type, id}} as any);
+                dispatch({
+                    ...getRefreshConfigPayload(type, response.data),
+                    payload: { configs: response.data, confType: type, id },
+                } as any);
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
             dispatch({
                 type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: ''
+                payload: '',
             });
         }
-    }
-}
+    };
+};

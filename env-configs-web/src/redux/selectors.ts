@@ -1,5 +1,5 @@
-import {RootState} from "./reducers/rootReducer";
+import { RootState } from './reducers/rootReducer';
 
 export const hasConfigs = (root: RootState) => {
     return [];
-}
+};

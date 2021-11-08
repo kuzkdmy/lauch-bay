@@ -1,7 +1,7 @@
-import {styled} from "@mui/material/styles";
-import {ListItemButton} from "@mui/material";
-import ListItemText from "@mui/material/ListItemText";
-import React, {FC} from "react";
+import { styled } from '@mui/material/styles';
+import { ListItemButton } from '@mui/material';
+import ListItemText from '@mui/material/ListItemText';
+import React, { FC } from 'react';
 
 interface ListItemButtonProps {
     onClick: () => void;
@@ -9,22 +9,25 @@ interface ListItemButtonProps {
     disabled?: boolean;
 }
 
-const StyledListItemButton:FC<ListItemButtonProps> = ({onClick, name, disabled}) => {
-
-    const StyledListItemButton = styled(ListItemButton)(({theme}) => ({
+const StyledListItemButton: FC<ListItemButtonProps> = ({
+    onClick,
+    name,
+    disabled,
+}) => {
+    const StyledListItemButton = styled(ListItemButton)(() => ({
         '&:nth-of-type(odd)': {
-            backgroundColor: '#eef4fb'
+            backgroundColor: '#eef4fb',
         },
         '&:hover': {
-            backgroundColor: '#b5d2f3'
-        }
+            backgroundColor: '#b5d2f3',
+        },
     }));
 
     return (
         <StyledListItemButton onClick={onClick} disabled={disabled}>
-            <ListItemText primary={name}/>
+            <ListItemText primary={name} />
         </StyledListItemButton>
-    )
-}
+    );
+};
 
 export default StyledListItemButton;

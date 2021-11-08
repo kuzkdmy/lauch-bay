@@ -7,17 +7,15 @@ $selectedTabColor: #0e0e0e;
   justify-content: space-around;
 
   .main-content {
-    margin-top: 2em;
+    padding: 10px;
     display: flex;
-    width: 1400px;
+    width: 99%;
 
     .check-box span {
       font-size: 14px;
     }
 
     .side-bar {
-      width: 280px;
-
       .side-bar-menu {
         border: 1px solid $bdColor;
         background-color: $bgColor;
