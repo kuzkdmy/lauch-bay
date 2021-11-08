@@ -1,45 +1,26 @@
-import './App.scss';
-import {TextField} from "@mui/material";
-import TabsPanel from "./tabsPanel/TabsPanel";
-import SideBar from "./sideBar/SideBar";
+import React from 'react';
 import {connect} from "react-redux";
-import {findItem} from "../redux/actions";
-import {FC} from "react";
+import './App.scss';
+import {findItem} from "../redux/actions/menuActions";
+import MenuBar from "./menuBar/MenuBar";
+import ConfigTabs from "./configTabs/ConfigTabs";
 
-interface AppProps {
-    findItem: (name: string) => void;
-}
-
-const App: FC<AppProps> = ({findItem}) => {
-
-    const onSearch = (event: any) => {
-        if (event.key === 'Enter') {
-            findItem(event.target.value);
-        }
-    }
+const App = () => {
 
     return (
         <div className="App">
             <div className='main-content'>
                 <div className='side-bar'>
-                    <TextField
-                        sx={{width: 300}}
-                        size='small'
-                        id="outlined-basic"
-                        label="search by menu"
-                        variant="outlined"
-                        onKeyPress={(event) => onSearch(event)}
-                    />
                     <div className='side-bar-menu'>
-                        <SideBar/>
+                        <MenuBar />
                     </div>
                 </div>
                 <div className='content'>
-                    <TabsPanel/>
+                    <ConfigTabs />
                 </div>
             </div>
         </div>
     );
 }
 
-export default connect(null, {findItem})(App);
+export default App;

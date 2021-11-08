@@ -9,21 +9,32 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {Input} from "@mui/material";
 import {FC, useState} from "react";
+import {Config, Configs} from "../../types/types";
 
 interface EditableTableProps {
     isEdit: boolean;
-    rows: any[];
+    rows: Configs;
+    sx?: any;
 }
 
 const columns = [
-    {id: 'name', label: 'Name', minWidth: 120},
-    {id: 'type', label: 'Type', minWidth: 80},
+    {id: 'envKey', label: 'Name', minWidth: 120, getValue: (row: Config) => row.envKey},
+    {id: 'type', label: 'Type', minWidth: 80, getValue: (row: Config) => row.type},
+    {
+        id: 'default',
+        label: 'Default',
+        minWidth: 150,
+        align: 'right',
+        format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.default?.value
+    },
     {
         id: 'dev',
         label: 'Dev',
         minWidth: 150,
         align: 'right',
         format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.envOverride.dev?.value
     },
     {
         id: 'stage',
@@ -31,20 +42,22 @@ const columns = [
         minWidth: 150,
         align: 'right',
         format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.envOverride.stage?.value
     },
     {
         id: 'prod',
         label: 'Prod',
-        minWidth: 120,
+        minWidth: 150,
         align: 'right',
-        format: (value: any) => value.toFixed(2),
+        format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.envOverride.prod?.value
     },
 ];
 
-const EditableTable: FC<EditableTableProps> = ({isEdit, rows}) => {
+const EditableTable: FC<EditableTableProps> = ({isEdit, rows, sx}) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [tableRows, setTableRows] = useState(rows);
+    const [tableRows, setTableRows] = useState(rows.envConf);
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -58,32 +71,30 @@ const EditableTable: FC<EditableTableProps> = ({isEdit, rows}) => {
     const onRowsChange = (event: any, row: any, colId: number) => {
         setTableRows(
             tableRows.map(r => {
-                if (r.id === row.id) {
-                    return {...r, [colId]: event.target.value};
-                }
+                // if (r.id === row.id) {
+                //     return {...r, [colId]: event.target.value};
+                // }
                 return r;
             })
         );
     }
 
-    const getTableCell = (value: any, row: any, column: any) => {
+    const getTableCell = (col: any, row: any) => {
         return isEdit ?
             <Input
                 sx={{fontSize: 14}}
-                value={value}
-                name={row.name}
-                onChange={e => onRowsChange(e, row, column.id)}
+                value={col.getValue(row)}
+                name={col.name}
+                // onChange={e => onRowsChange(e, row, column.id)}
             /> :
             <>
-                {column.format && typeof value === 'number'
-                    ? column.format(value)
-                    : value}
+                {col.getValue(row)}
             </>;
     }
 
     return (
-        <Paper sx={{width: '100%', overflow: 'hidden'}}>
-            <TableContainer sx={{maxHeight: 240, maxWidth: 800}}>
+        <Paper sx={{...sx, width: '100%', overflow: 'hidden'}}>
+            <TableContainer sx={{maxHeight: 240, maxWidth: 1100}}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
@@ -91,6 +102,7 @@ const EditableTable: FC<EditableTableProps> = ({isEdit, rows}) => {
                                 <TableCell
                                     key={column.id}
                                     align='center'
+                                    size='small'
                                     style={
                                         {
                                             minWidth: column.minWidth,
@@ -110,16 +122,12 @@ const EditableTable: FC<EditableTableProps> = ({isEdit, rows}) => {
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, idx) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.envKey}
                                               sx={{backgroundColor: idx % 2 !== 0 ? '#f5f5f5' : ''}}>
-                                        {columns.map((column) => {
-                                            return (
-                                                <TableCell
-                                                    key={column.id}
-                                                    align='center'>
-                                                    {getTableCell(row[column.id], row, column)}
-                                                </TableCell>
-                                            );
+                                        {columns.map(col => {
+                                            return (<TableCell key={col.id}>
+                                                {getTableCell(col, row)}
+                                            </TableCell>)
                                         })}
                                     </TableRow>
                                 );
@@ -127,15 +135,15 @@ const EditableTable: FC<EditableTableProps> = ({isEdit, rows}) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            {/*<TablePagination*/}
+            {/*    rowsPerPageOptions={[10, 25, 100]}*/}
+            {/*    component="div"*/}
+            {/*    count={0}*/}
+            {/*    rowsPerPage={rowsPerPage}*/}
+            {/*    page={page}*/}
+            {/*    onPageChange={handleChangePage}*/}
+            {/*    onRowsPerPageChange={handleChangeRowsPerPage}*/}
+            {/*/>*/}
         </Paper>
     );
 }

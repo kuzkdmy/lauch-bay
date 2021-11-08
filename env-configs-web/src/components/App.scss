@@ -9,32 +9,64 @@ $selectedTabColor: #0e0e0e;
   .main-content {
     margin-top: 2em;
     display: flex;
-    width: 1160px;
-    height: 750px;
-    background-color: $bgColor;
+    width: 1400px;
 
     .check-box span {
       font-size: 14px;
     }
 
     .side-bar {
-      flex: 1;
+      width: 280px;
 
       .side-bar-menu {
-        margin-top: 15px;
         border: 1px solid $bdColor;
         background-color: $bgColor;
         border-radius: 5px;
-        height: 689px;
+        height: 785px;
         overflow-y: scroll;
+      }
+
+      .menu-sub-header {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        cursor: default;
       }
     }
 
     .content {
+      background-color: $bgColor;
+      height: 785px;
       margin-left: 10px;
       flex: 3;
       border: 1px solid $bdColor;
       border-radius: 5px;
+      overflow-y: scroll;
+
+      .parent-config {
+        margin: 0 0 10px 10px;
+      }
+
+      .empty-config-message {
+        text-align: center;
+      }
+
+      .create-new-config-block {
+        display: flex;
+        align-items: center;
+        margin-top: 50px;
+        justify-content: space-around;
+
+        .create-new-config {
+          display: flex;
+          width: 410px;
+          justify-content: space-between;
+
+          border: 1px solid #aae536;
+          padding: 50px;
+          border-radius: 8px;
+        }
+      }
     }
   }
 }

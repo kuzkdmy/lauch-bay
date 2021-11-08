@@ -1,0 +1,83 @@
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-anticor-liveramp-3",
+  "name": "Legacy Anticor Liveramp 3",
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "5435",
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.legacy.anticor.liveramp.dev",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp",
+        "type": "string"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp",
+        "type": "string"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
