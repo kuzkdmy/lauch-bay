@@ -1,0 +1,61 @@
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev",
+          "type": "string"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage",
+          "type": "string"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "default": {
+        "value": 5432,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}

@@ -1,21 +1,20 @@
-import * as React from 'react';
-import {FC, useState} from "react";
-import {connect} from "react-redux";
-import {Button, Checkbox, FormControlLabel, FormGroup, IconButton} from "@mui/material";
+import React, {FC, useEffect, useState} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import EditIcon from '@mui/icons-material/Edit';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditableTable from "../basicTable/EditableTable";
-import {RootState} from "../../types/Types";
+import CloseIcon from '@mui/icons-material/Close';
+import {useTypedSelector} from "../../redux/hooks/useTypedSelector";
+import {useActions} from "../../redux/hooks/useActions";
+import {Alert} from "@mui/material";
 
 interface TabsPanelProps {
-    items: any[];
+    tabsContent: any[];
+    onChange: () => void;
+    onTabClick: any;
 }
 
-function TabPanel(props: any) {
+const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
 
     return (
@@ -28,77 +27,60 @@ function TabPanel(props: any) {
         >
             {value === index && (
                 <Box sx={{p: 3}}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'span'}>{children}</Typography>
                 </Box>
             )}
         </div>
     );
 }
 
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
-const TabsPanel: FC<TabsPanelProps> = ({items}) => {
+const TabsPanel: FC<TabsPanelProps> = ({tabsContent, onChange, onTabClick}) => {
     const [value, setValue] = useState(0);
-    const [isEdit, setIsEdit] = useState(false);
+    const {closeMenu} = useActions();
+    const {openedItems} = useTypedSelector(state => state.menu);
+    const [refresh, setRefresh] = useState(false);
+
+    useEffect(() => setValue(Math.max(openedItems.length - 1, 0)), [openedItems]);
 
     const handleChange = (event: any, newValue: number) => {
-        setIsEdit(false);
         setValue(newValue);
+        onChange();
     };
 
-    return items.length ? (
-        <Box sx={{maxWidth: '600'}}>
-            <Box sx={{borderBottom: 1, borderColor: 'divider', backgroundColor: '#e3e3e3'}}>
-                <Tabs sx={{width: 845}}
-                      value={value}
-                      scrollButtons="auto"
-                      variant='scrollable'
-                      aria-label="scrollable auto tabs"
-                      onChange={handleChange}>
-                    {items?.map((i, index) =>
-                        <Tab sx={{'&.Mui-selected': {color: '#0e0e0e'}}} label={i.name} {...a11yProps(index)}/>
-                    )}
-                </Tabs>
+    return openedItems.length ? (
+            <Box sx={{maxWidth: '600'}}>
+                <Box sx={{borderColor: 'divider', backgroundColor: '#d8e6f5'}}>
+                    <Tabs value={value}
+                          sx={{height: 3, '.MuiTabs-scroller': {marginTop: '-10px'}}}
+                          scrollButtons="auto"
+                          variant='scrollable'
+                          aria-label="scrollable auto tabs"
+                          onChange={handleChange}>
+                        {openedItems.map((i, index) =>
+                            <Tab sx={{'&.Mui-selected': {color: '#0e0e0e'}}}
+                                 label={i.name}
+                                 onClick={() => onTabClick(i.type, i.id)}
+                                 icon={
+                                     <CloseIcon
+                                         onClick={(e) => {
+                                             e.stopPropagation();
+                                             closeMenu({name: i.name, type: i.type})
+                                         }}
+                                         sx={{fontSize: 14, marginLeft: 0, marginBottom: 2}}/>
+                                 }
+                                 iconPosition='end'
+                                 key={i.name}/>
+                        )}
+                    </Tabs>
+                </Box>
+                {tabsContent?.map((item, index) =>
+                    <TabPanel value={value} index={index} key={index}>
+                        {item}
+                    </TabPanel>)
+                }
             </Box>
-            {items?.map((item, index) =>
-                <TabPanel value={value} index={index}>
-                    <FormGroup sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        margin: '5px 25px 20px'
-                    }}>
-                        <Button
-                            variant="outlined"
-                            disabled={!isEdit}
-                            sx={{marginRight: 10, height: 30, width: 120}}>
-                            Save
-                        </Button>
-                        <FormControlLabel className='check-box' control={<Checkbox />} label="Show global" />
-                        <FormControlLabel className='check-box' control={<Checkbox />} label="Show project" />
-                        <IconButton
-                            onClick={() => {setIsEdit(!isEdit)}}
-                        >
-                            {!isEdit ? <EditIcon/> : <CancelIcon/>}
-                        </IconButton>
-                    </FormGroup>
-                    <EditableTable isEdit={isEdit} rows={item.rows}/>
-                </TabPanel>)
-            }
-        </Box>
-    ) : null;
+        ) :
+        <Alert severity="info">There are no selected configs, choose one or create new</Alert>
 }
 
-const mapPropertyState = (state: RootState) => {
-    return {
-        items: state.menuItems.openedItems
-    }
-}
-
-export default connect(mapPropertyState)(TabsPanel);
+export default TabsPanel;
