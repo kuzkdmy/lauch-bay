@@ -3,6 +3,7 @@ import { MenuActions, MenuActionTypes, MenuState } from '../../types/types';
 const initialState = {
     activeTabName: '',
     openedItems: [] as any[],
+    collapsedItems: {},
 };
 
 const menuReducer = (state = initialState, action: MenuActions): MenuState => {
@@ -14,11 +15,20 @@ const menuReducer = (state = initialState, action: MenuActions): MenuState => {
                     .includes(action.payload?.name)
             ) {
                 return {
+                    ...state,
                     activeTabName: action.payload.name,
                     openedItems: [...state.openedItems, action.payload],
                 };
             }
             return { ...state, activeTabName: action.payload.name };
+        case MenuActionTypes.OPEN_COLLAPSIBLE_ITEM:
+            return {
+                ...state,
+                collapsedItems: {
+                    ...state.collapsedItems,
+                    [action.payload.item.name]: action.payload.isOpened,
+                },
+            };
         case MenuActionTypes.CLOSE_MENU_ITEM:
             return {
                 ...state,

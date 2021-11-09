@@ -10,6 +10,7 @@ export interface ConfigsState {
 export interface MenuState {
     activeTabName: string;
     openedItems: any[];
+    collapsedItems: any;
 }
 
 export enum ConfigType {
@@ -36,6 +37,7 @@ export interface Config {
 
 export interface Configs {
     id?: string;
+    projectId?: string;
     name: string;
     envConf: Config[];
     deployConf: Config[];
@@ -56,6 +58,7 @@ export interface MenuItem {
 export enum ConfigsActionTypes {
     FETCH_CONFIGS = 'FETCH_CONFIGS',
     FETCH_CONFIGS_SUCCESS = 'FETCH_CONFIGS_SUCCESS',
+    FETCH_APPLICATION_CONFIGS_SUCCESS = 'FETCH_APPLICATION_CONFIGS_SUCCESS',
     FETCH_CONFIGS_ERROR = 'FETCH_CONFIGS_ERROR',
     REFRESH_GLOBAL_CONFIGS_SUCCESS = 'REFRESH_GLOBAL_CONFIGS_SUCCESS',
     REFRESH_PROJECTS_CONFIGS_SUCCESS = 'REFRESH_PROJECTS_CONFIGS_SUCCESS',
@@ -78,6 +81,15 @@ interface FetchConfigsSuccessAction {
     payload: {
         confType: ConfigType;
         configs: Configs;
+    };
+}
+
+interface FetchApplicationConfigsSuccessAction {
+    type: ConfigsActionTypes.FETCH_APPLICATION_CONFIGS_SUCCESS;
+    payload: {
+        projectId: string;
+        confType: ConfigType;
+        configs: Configs[];
     };
 }
 
@@ -122,6 +134,7 @@ interface FindMenuAction {
 
 export enum MenuActionTypes {
     OPEN_MENU_ITEM = 'OPEN_MENU_ITEM',
+    OPEN_COLLAPSIBLE_ITEM = 'OPEN_COLLAPSIBLE_ITEM',
     SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
     CLOSE_MENU_ITEM = 'CLOSE_MENU_ITEM',
 }
@@ -131,7 +144,8 @@ export interface MenuItemType {
     name: string;
     type: ConfigType;
     isTableContent?: boolean;
-    parentConfigType?: ConfigType;
+    hasGlobalConfigType?: boolean;
+    hasProjectConfigType?: boolean;
 }
 
 export interface TabContent {
@@ -153,4 +167,5 @@ export type ConfigsActions =
     | RefreshProjectConfigsAction
     | RefreshProjectConfigsSuccessAction
     | RefreshProjectsConfigsSuccessAction
-    | RefreshGlobalConfigsSuccessAction;
+    | RefreshGlobalConfigsSuccessAction
+    | FetchApplicationConfigsSuccessAction;

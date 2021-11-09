@@ -3,9 +3,9 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "id": "anticor-liveramp-audience-file-upload",
-  "projectId": "anticor-liveramp-3",
-  "name": "Anticor LiveRamp Audience File Upload",
+  "id": "anticor-liveramp-audience-file-upload-3",
+  "projectId": "legacy-anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload 3",
   "envConf": [
     {
       "envKey": "ENV_KEY_BOOLEAN_VALUE",

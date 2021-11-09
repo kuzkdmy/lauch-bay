@@ -6,6 +6,14 @@ export const openMenu = (content: MenuItemType): MenuActions => ({
     payload: { ...content },
 });
 
+export const collapsiblePanelClick = (content: {
+    item: MenuItemType;
+    isOpened: boolean;
+}): MenuActions => ({
+    type: MenuActionTypes.OPEN_COLLAPSIBLE_ITEM,
+    payload: { ...content },
+});
+
 export const setActiveTabName = (tabName: string): MenuActions => ({
     type: MenuActionTypes.SET_ACTIVE_TAB,
     payload: tabName,

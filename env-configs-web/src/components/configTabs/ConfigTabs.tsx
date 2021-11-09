@@ -22,11 +22,13 @@ import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditableTable from '../basicTable/EditableTable';
-import StyledListItemButton from '../listItem/listItem';
+import ProjectItems from './ProjectItems';
 
 const ConfigTabs = () => {
     const { openMenu, refreshConfigs } = useActions();
-    const { openedItems } = useTypedSelector((state) => state.menu);
+    const { openedItems, collapsedItems } = useTypedSelector(
+        (state) => state.menu
+    );
     const { configs } = useTypedSelector((state) => state.configsState);
 
     const [isEdit, setIsEdit] = useState(false);
@@ -67,7 +69,7 @@ const ConfigTabs = () => {
 
     const mergeConfigs = (
         config: Configs,
-        parentConfigs: any = []
+        parentConfigs: any = {}
     ): Configs => {
         const overriddenEnvConf = parentConfigs?.envConf.map((p: Config) => {
             const confOverride = _.find(
@@ -108,8 +110,25 @@ const ConfigTabs = () => {
         return { ...parentConfigs, envConf: overriddenEnvConf };
     };
 
+    const getParentConfigs = (
+        config: Configs,
+        parentConfigs: any,
+        type: ConfigType
+    ) => {
+        return (
+            <>
+                <div className="parent-config">{type} config</div>
+                <EditableTable
+                    sx={{ marginBottom: '25px' }}
+                    isEdit={false}
+                    rows={mergeConfigs(config as Configs, parentConfigs)}
+                />
+            </>
+        );
+    };
+
     const renderTableTabsContent = (item: MenuItemType) => {
-        let config;
+        let config: any;
         if (Array.isArray(configs[item.type])) {
             config = _.find(
                 configs[item.type],
@@ -186,49 +205,43 @@ const ConfigTabs = () => {
                         ) : null}
                     </FormGroup>
                     <EditableTable
-                        sx={{ marginBottom: 5 }}
+                        sx={{ marginBottom: '25px' }}
                         isEdit={isEdit}
                         rows={config as Configs}
                     />
-                    {item.parentConfigType &&
-                        configs[item.parentConfigType] &&
-                        (showGlobal || showProject) && (
-                            <>
-                                <div className="parent-config">
-                                    {item.parentConfigType} config
-                                </div>
-                                <EditableTable
-                                    isEdit={false}
-                                    rows={mergeConfigs(
-                                        config as Configs,
-                                        configs[item.parentConfigType]
-                                    )}
-                                />
-                            </>
+                    {item.hasGlobalConfigType &&
+                        showGlobal &&
+                        getParentConfigs(
+                            config as Configs,
+                            configs.GLOBAL ? configs.GLOBAL : null,
+                            ConfigType.GLOBAL
+                        )}
+                    {item.hasProjectConfigType &&
+                        showProject &&
+                        getParentConfigs(
+                            config as Configs,
+                            _.find(configs.PROJECT, (el) => {
+                                return el.id === config.projectId;
+                            }) as Configs,
+                            ConfigType.PROJECT
                         )}
                 </div>
             )
         );
     };
 
-    const renderListTabsContent = (
-        items: Configs[] | undefined,
-        type: ConfigType,
-        parentConfigType: ConfigType
-    ) => {
-        return items?.map((item) => (
-            <StyledListItemButton
-                onClick={() =>
-                    openMenu({
-                        name: item.name,
-                        isTableContent: true,
-                        type,
-                        parentConfigType,
-                        id: item.id,
-                    })
-                }
-                name={item.name}
-                key={item.id}
+    const renderListTabsContent = (items: Configs[]) => {
+        return items?.map((item, index) => (
+            <ProjectItems
+                item={item}
+                key={item.name}
+                projectId={item.id!}
+                pl={2}
+                isTopLevel
+                index={index}
+                nestedItems={configs.MICROSERVICE?.filter(
+                    (el) => el.projectId === item.id
+                )}
             />
         ));
     };
@@ -240,11 +253,7 @@ const ConfigTabs = () => {
                 content: renderTableTabsContent(item),
             };
         }
-        const listTabsContent = renderListTabsContent(
-            configs[item.type],
-            item.type,
-            item.parentConfigType!
-        );
+        const listTabsContent = renderListTabsContent(configs[item.type]!);
         return { tabName: item.name, content: listTabsContent };
     });
 
