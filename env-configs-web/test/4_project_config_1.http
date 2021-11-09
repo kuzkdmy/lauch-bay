@@ -9,28 +9,31 @@ Content-Type: application/json
     {
       "envKey": "POSTGRES_PORT",
       "default": null,
+      "type": "string",
       "envOverride": {
         "dev": {
-          "value": "5435",
-          "type": "integer"
+          "value": "5435"
         }
       }
     },
     {
       "envKey": "PULSAR_HOST",
       "default": null,
+      "type": "string",
       "envOverride": {
         "dev": {
-          "value": "pulsar.legacy.anticor.liveramp.dev",
-          "type": "string"
+          "value": "pulsar.legacy.anticor.liveramp.dev"
+        },
+        "stage": {
+          "value": "pulsar.legacy.anticor.liveramp.stage"
         }
       }
     },
     {
       "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
       "default": {
-        "value": 5432,
-        "type": "integer"
+        "value": 5432
       },
       "envOverride": {
         "dev": null,
@@ -40,21 +43,9 @@ Content-Type: application/json
     },
     {
       "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
       "default": {
-        "value": "liveramp",
-        "type": "string"
-      },
-      "envOverride": {
-        "dev": null,
-        "stage": null,
-        "prod": null
-      }
-    },
-    {
-      "envKey": "LIVERAMP_DB_USER",
-      "default": {
-        "value": "liveramp",
-        "type": "string"
+        "value": "liveramp"
       },
       "envOverride": {
         "dev": null,
@@ -79,5 +70,5 @@ Content-Type: application/json
       "type": "cpu"
     }
   ],
-  "version": 0
+  "version": 1
 }

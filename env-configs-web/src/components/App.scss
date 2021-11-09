@@ -15,12 +15,16 @@ $selectedTabColor: #0e0e0e;
       font-size: 14px;
     }
 
+    .list-item-icon {
+      margin-right: 10px;
+    }
+
     .side-bar {
       .side-bar-menu {
         border: 1px solid $bdColor;
         background-color: $bgColor;
         border-radius: 5px;
-        height: 785px;
+        height: 97vh;
         overflow-y: scroll;
       }
 
@@ -34,7 +38,7 @@ $selectedTabColor: #0e0e0e;
 
     .content {
       background-color: $bgColor;
-      height: 785px;
+      height: 97vh;
       margin-left: 10px;
       flex: 3;
       border: 1px solid $bdColor;
@@ -65,6 +69,12 @@ $selectedTabColor: #0e0e0e;
           border-radius: 8px;
         }
       }
+
+      //.application-level-item {
+      //  &:nth-of-type(1) {
+      //    background-color: white;
+      //  }
+      //}
     }
   }
 }

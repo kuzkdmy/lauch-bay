@@ -132,3 +132,38 @@ export const refreshConfigs = (type: ConfigType, id: string) => {
         }
     };
 };
+
+export const fetchApplicationConfigs = (projectId: string) => {
+    return async (dispatch: Dispatch<ConfigsActions>) => {
+        try {
+            dispatch({
+                type: ConfigsActionTypes.FETCH_CONFIGS,
+                payload: { id: projectId },
+            });
+            const response = await axios.get<Configs>(
+                `/api/v1.0/application/?project_id=${projectId}`
+            );
+
+            if (!response.data) {
+                dispatch({
+                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
+                });
+            } else {
+                dispatch({
+                    type: ConfigsActionTypes.FETCH_APPLICATION_CONFIGS_SUCCESS,
+                    payload: {
+                        configs: response.data,
+                        confType: ConfigType.MICROSERVICE,
+                        projectId,
+                    },
+                } as any);
+            }
+        } catch (e) {
+            console.log(e);
+            dispatch({
+                type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
+                payload: '',
+            });
+        }
+    };
+};

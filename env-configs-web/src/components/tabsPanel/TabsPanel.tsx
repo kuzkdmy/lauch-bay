@@ -91,6 +91,7 @@ const TabsPanel: FC<TabsPanelProps> = ({
                                                 openedItems[index - 1]?.name
                                             );
                                         }
+                                        onChange();
                                         closeMenu({
                                             name: i.name,
                                             type: i.type,

@@ -47,6 +47,23 @@ const configsReducer = (
                     [action.payload.confType]: action.payload.configs,
                 },
             };
+        case ConfigsActionTypes.FETCH_APPLICATION_CONFIGS_SUCCESS:
+            const filteredConfigs = _.filter(
+                state.configs.MICROSERVICE,
+                (el) => el.projectId !== action.payload.projectId
+            );
+
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    MICROSERVICE: [
+                        ...filteredConfigs,
+                        ...action.payload.configs,
+                    ],
+                },
+            };
         case ConfigsActionTypes.REFRESH_GLOBAL_CONFIGS_SUCCESS:
             return {
                 ...state,
