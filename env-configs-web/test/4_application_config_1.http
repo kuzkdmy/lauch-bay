@@ -66,7 +66,7 @@ Content-Type: application/json
         "stage": null,
         "prod": 500
       },
-      "type": "cpu"
+      "type": "request_cpu"
     },
     {
       "default": 1024,

@@ -126,8 +126,13 @@ object ApplicationFunctionalTest extends BaseFunTest {
       )
     ),
     deployConf = List(
-      ApiCpuRequestConf(default   = 200, envOverride  = ApiIntEnvOverride(dev = None, stage = None, prod = 500.some).some),
-      ApiRamMegabytesConf(default = 1024, envOverride = ApiIntEnvOverride(dev = None, stage = 2048.some, prod = 8096.some).some)
+      ApiReplicaCountConf(default        = 1, envOverride                 = None),
+      ApiCpuRequestConf(default          = 100, envOverride               = Some(ApiIntEnvOverride(dev = 50.some, stage = None, prod = 200.some))),
+      ApiCpuLimitConf(default            = 1000, envOverride              = Some(ApiIntEnvOverride(dev = 100.some, stage = None, prod = 2000.some))),
+      ApiRamMegabytesRequestConf(default = 512, envOverride               = Some(ApiIntEnvOverride(dev = 256.some, stage = None, prod = 1024.some))),
+      ApiRamMegabytesLimitConf(default   = 1024, envOverride              = Some(ApiIntEnvOverride(dev = 512.some, stage = None, prod = 2048.some))),
+      ApiJavaOptsConf(default            = "-Xms512M -Xmx1G", envOverride = Some(ApiStringEnvOverride(dev = "-Xms256M -Xmx512M".some, stage = None, prod = "-Xms1G -Xmx2G".some))),
+      ApiEmptyDirMemoryConf(default      = false, envOverride             = Some(ApiBooleanEnvOverride(dev = None, stage = true.some, prod = true.some)))
     ),
     version = IntVersion(0)
   )
@@ -156,9 +161,9 @@ object ApplicationFunctionalTest extends BaseFunTest {
       )
     ),
     deployConf = List(
-      ApiReplicaCountConf(default = 1, envOverride   = ApiIntEnvOverride(dev = None, stage = 2.some, prod = 3.some).some),
-      ApiRamMegabytesConf(default = 512, envOverride = ApiIntEnvOverride(dev = None, stage = None, prod = 1024.some).some),
-      ApiCpuRequestConf(default   = 200, envOverride = ApiIntEnvOverride(dev = 100.some, stage = None, prod = 500.some).some)
+      ApiReplicaCountConf(default        = 1, envOverride   = ApiIntEnvOverride(dev = None, stage = 2.some, prod = 3.some).some),
+      ApiRamMegabytesRequestConf(default = 512, envOverride = ApiIntEnvOverride(dev = None, stage = None, prod = 1024.some).some),
+      ApiCpuRequestConf(default          = 200, envOverride = ApiIntEnvOverride(dev = 100.some, stage = None, prod = 500.some).some)
     ),
     version = IntVersion(0)
   )

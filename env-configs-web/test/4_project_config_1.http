@@ -67,7 +67,7 @@ Content-Type: application/json
         "stage": null,
         "prod": 200
       },
-      "type": "cpu"
+      "type": "request_cpu"
     }
   ],
   "version": 1

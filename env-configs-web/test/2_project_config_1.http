@@ -9,7 +9,6 @@ Content-Type: application/json
     {
       "envKey": "LIVERAMP_DB_HOST",
       "default": null,
-      "type": "string",
       "envOverride": {
         "dev": {
           "value": "pg-liveramp.dev"
@@ -20,11 +19,11 @@ Content-Type: application/json
         "prod": {
           "value": "pg-liveramp.prod"
         }
-      }
+      },
+      "type": "string"
     },
     {
       "envKey": "LIVERAMP_DB_PORT",
-      "type": "integer",
       "default": {
         "value": 5432
       },
@@ -32,11 +31,11 @@ Content-Type: application/json
         "dev": null,
         "stage": null,
         "prod": null
-      }
+      },
+      "type": "integer"
     },
     {
       "envKey": "LIVERAMP_DB_SCHEMA",
-      "type": "string",
       "default": {
         "value": "liveramp"
       },
@@ -44,11 +43,11 @@ Content-Type: application/json
         "dev": null,
         "stage": null,
         "prod": null
-      }
+      },
+      "type": "string"
     },
     {
       "envKey": "LIVERAMP_DB_USER",
-      "type": "string",
       "default": {
         "value": "liveramp"
       },
@@ -56,7 +55,8 @@ Content-Type: application/json
         "dev": null,
         "stage": null,
         "prod": null
-      }
+      },
+      "type": "string"
     }
   ],
   "deployConf": [
@@ -72,7 +72,52 @@ Content-Type: application/json
         "stage": null,
         "prod": 200
       },
-      "type": "cpu"
+      "type": "request_cpu"
+    },
+    {
+      "default": 1000,
+      "envOverride": {
+        "dev": 100,
+        "stage": null,
+        "prod": 2000
+      },
+      "type": "limit_cpu"
+    },
+    {
+      "default": 512,
+      "envOverride": {
+        "dev": 256,
+        "stage": null,
+        "prod": 1024
+      },
+      "type": "request_ram"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": 512,
+        "stage": null,
+        "prod": 2048
+      },
+      "type": "request_lim"
+    },
+    {
+      "default": "-Xms512M -Xmx1G",
+      "envOverride": {
+        "dev": "-Xms256M -Xmx512M",
+        "stage": null,
+        "prod": "-Xms1G -Xmx2G"
+      },
+      "type": "java_opts"
+    },
+    {
+      "default": false,
+      "envOverride": {
+        "dev": null,
+        "stage": true,
+        "prod": true
+      },
+      "type": "empty_dir_memory"
     }
   ],
   "version": 0

@@ -18,4 +18,8 @@ import derevo.derive
 @derive(show) sealed trait DeploymentConf
 @derive(show) case class ReplicaCountConf(default: Int, envOverride: Option[EnvOverride[Int]]) extends DeploymentConf
 @derive(show) case class CpuRequestConf(default: Int, envOverride: Option[EnvOverride[Int]]) extends DeploymentConf
-@derive(show) case class RamMegabytesConf(default: Int, envOverride: Option[EnvOverride[Int]]) extends DeploymentConf
+@derive(show) case class CpuLimitConf(default: Int, envOverride: Option[EnvOverride[Int]]) extends DeploymentConf
+@derive(show) case class RamMegabytesRequestConf(default: Int, envOverride: Option[EnvOverride[Int]]) extends DeploymentConf
+@derive(show) case class RamMegabytesLimitConf(default: Int, envOverride: Option[EnvOverride[Int]]) extends DeploymentConf
+@derive(show) case class JavaOptsConf(default: String, envOverride: Option[EnvOverride[String]]) extends DeploymentConf
+@derive(show) case class EmptyDirMemoryConf(default: Boolean, envOverride: Option[EnvOverride[Boolean]]) extends DeploymentConf
