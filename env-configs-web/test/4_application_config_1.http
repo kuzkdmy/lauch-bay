@@ -75,7 +75,7 @@ Content-Type: application/json
         "stage": 2048,
         "prod": 8096
       },
-      "type": "ram"
+      "type": "request_ram"
     }
   ],
   "version": 0
