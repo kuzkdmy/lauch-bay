@@ -89,7 +89,7 @@ object ApiDeploymentConf {
   val RequestCpu     = "request_cpu"
   val LimitCpu       = "limit_cpu"
   val RequestRam     = "request_ram"
-  val LimitRam       = "request_lim"
+  val LimitRam       = "limit_ram"
   val JavaOpts       = "java_opts"
   val EmptyDirMemory = "empty_dir_memory"
 
