@@ -8,88 +8,106 @@ import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
 import { Configs, ConfigType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
-import { fetchApplicationConfigs } from '../../redux/actions/configsActions';
 import { Alert, ListItem, Tooltip } from '@mui/material';
 import { collapsiblePanelClick } from '../../redux/actions/menuActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import _ from 'lodash';
 
 interface MenuItemsProps {
-    item: Configs;
-    projectId: string;
+    project: Configs;
     pl: number;
     isTopLevel?: boolean;
     additionalClass?: string;
-    nestedItems?: any[];
     index: number;
+    showCreateNewDialog: () => void;
 }
 
 const ProjectItems: FC<MenuItemsProps> = ({
-    item,
+    project,
     pl,
     additionalClass,
-    nestedItems = [],
     index,
+    showCreateNewDialog,
 }) => {
-    const { fetchApplicationConfigs, collapsiblePanelClick, openMenu } =
-        useActions();
+    const { collapsiblePanelClick, fetchConfigs, openMenu } = useActions();
 
-    const { collapsedItems } = useTypedSelector((state) => state.menu);
-
+    const { configs } = useTypedSelector((state) => state.configsState);
     const [isOpened, setIsOpened] = useState(false);
-
-    useEffect(
-        () => setIsOpened(collapsedItems[item.name]),
-        [collapsedItems, item]
-    );
+    const [applications, setApplications] = useState();
 
     const handleClick = () => {
+        setIsOpened(!isOpened);
         collapsiblePanelClick({
             item: {
-                name: item.name,
-                type: ConfigType.MICROSERVICE,
+                name: project.name,
+                id: project.id,
+                type: ConfigType.PROJECT,
             },
-            isOpened: !isOpened,
+            isOpened: isOpened,
         });
-        setIsOpened(!isOpened);
-        fetchApplicationConfigs(item.id!);
+        !isOpened &&
+            fetchConfigs({
+                type: ConfigType.APPLICATION,
+                id: project.id,
+                projectId: project.id,
+                name: project.name,
+            });
     };
 
     const StyledListItemButton = styled(ListItemButton)(() => ({
         backgroundColor: index % 2 ? '#f5f8ff' : '#e5edf8',
+        '&:onclick': { backgroundColor: 'red' },
     }));
 
-    const getCollapsedItems = (index: number, nested: any) => {
-        return (
-            <Collapse in={isOpened} timeout="auto" unmountOnExit key={index}>
-                <ListItem
-                    key={index}
-                    onClick={() => {
-                        if (nested) {
-                            openMenu({
-                                id: nested.id,
-                                name: nested.name,
-                                type: ConfigType.MICROSERVICE,
-                                hasGlobalConfigType: true,
-                                hasProjectConfigType: true,
-                                isTableContent: true,
-                            });
-                        }
-                    }}
-                    sx={{
-                        pl: 6,
-                        cursor: 'pointer',
-                        '&:hover': { backgroundColor: nested ? '#f1f1f1' : '' },
-                    }}
-                >
-                    {nested ? (
-                        <ListItemText primary={nested.name} />
-                    ) : (
-                        <Alert severity="warning" sx={{ width: '90%' }}>
-                            There are no applications
-                        </Alert>
-                    )}
-                </ListItem>
+    const getCollapsedItems = (app: any[]) => {
+        return app.length > 0 ? (
+            app.map((app, index) => {
+                return (
+                    <Collapse
+                        in={isOpened}
+                        timeout="auto"
+                        unmountOnExit
+                        key={index}
+                    >
+                        <ListItem
+                            key={index}
+                            onClick={() => {
+                                if (app) {
+                                    fetchConfigs({
+                                        type: ConfigType.APPLICATION,
+                                        id: app.id,
+                                        name: app.name,
+                                        isTableContent: true,
+                                        openAfterFetching: true,
+                                    });
+                                }
+                            }}
+                            sx={{
+                                pl: 6,
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    backgroundColor: app ? '#f1f1f1' : '',
+                                },
+                            }}
+                        >
+                            {app ? (
+                                <ListItemText primary={app.name} />
+                            ) : (
+                                <Alert severity="warning" sx={{ width: '90%' }}>
+                                    There are no applications
+                                </Alert>
+                            )}
+                        </ListItem>
+                    </Collapse>
+                );
+            })
+        ) : (
+            <Collapse in={isOpened} timeout="auto" unmountOnExit>
+                <Alert severity="warning" sx={{ width: '90%' }}>
+                    There are no applications
+                </Alert>
             </Collapse>
         );
     };
@@ -101,30 +119,46 @@ const ProjectItems: FC<MenuItemsProps> = ({
                 sx={{ pl: pl }}
                 className={additionalClass}
             >
-                {isOpened ? <ExpandLess /> : <ExpandMore />}
-                <ListItemText primary={item.name} />
-                <Tooltip
-                    placement={'top-start'}
-                    title="Edit"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        openMenu({
-                            id: item.id,
-                            name: item.name,
-                            isTableContent: true,
-                            hasGlobalConfigType: true,
-                            type: ConfigType.PROJECT,
-                        });
-                    }}
-                >
-                    <EditIcon color="primary" />
-                </Tooltip>
+                <div className="expand-icon">
+                    {isOpened ? <ExpandLess /> : <ExpandMore />}
+                </div>
+                <ListItemText primary={project.name} sx={{ width: '100px' }} />
+                <div>
+                    <Tooltip
+                        placement={'top-start'}
+                        title="Add New Application"
+                        sx={{ marginRight: '25px' }}
+                    >
+                        <AddIcon
+                            color="primary"
+                            sx={{ marginRight: '10px' }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                showCreateNewDialog();
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip
+                        placement={'top-start'}
+                        title="Edit"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            fetchConfigs({
+                                type: ConfigType.PROJECT,
+                                id: project.id,
+                                name: project.name,
+                                isTableContent: true,
+                                openAfterFetching: true,
+                            });
+                        }}
+                    >
+                        <EditIcon color="primary" />
+                    </Tooltip>
+                </div>
             </StyledListItemButton>
-            {nestedItems?.length > 0
-                ? nestedItems.map((nested: any, index: number) =>
-                      getCollapsedItems(index, nested)
-                  )
-                : getCollapsedItems(0, null)}
+            {Array.isArray(configs[project.id])
+                ? getCollapsedItems(configs[project.id])
+                : null}
         </>
     );
 };

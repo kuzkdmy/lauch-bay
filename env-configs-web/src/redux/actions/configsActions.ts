@@ -8,162 +8,139 @@ import {
     MenuActionTypes,
 } from '../../types/types';
 
-export const fetchGlobalConfigs = () => {
+interface FetchConfigProps {
+    type: ConfigType;
+    id: string;
+    name: string;
+    projectId?: string;
+    isTableContent?: boolean;
+    openAfterFetching?: boolean;
+}
+
+export const fetchConfigs = ({
+    type,
+    id,
+    name,
+    projectId,
+    isTableContent,
+    openAfterFetching,
+}: FetchConfigProps) => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            dispatch({ type: ConfigsActionTypes.FETCH_CONFIGS });
             const response = await axios.get<Configs>(
-                '/api/v1.0/global_config'
+                getConfigsUrl()[type](id, projectId)
             );
-
-            if (!response.data.envConf.length) {
-                dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                });
-            } else {
-                dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS,
-                    payload: {
-                        configs: response.data,
-                        confType: ConfigType.GLOBAL,
-                    },
-                });
-            }
-        } catch (e) {
             dispatch({
-                type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: '',
-            });
-        }
-    };
-};
-
-export const fetchProjectConfigs = () => {
-    return async (dispatch: Dispatch<ConfigsActions>) => {
-        try {
-            dispatch({ type: ConfigsActionTypes.FETCH_CONFIGS });
-            const response = await axios.get<Configs>('/api/v1.0/project');
-
-            if (!response.data) {
-                dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                });
-            } else {
-                dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS,
-                    payload: {
-                        configs: response.data,
-                        confType: ConfigType.PROJECT,
-                    },
-                });
-            }
-            dispatch({
-                type: MenuActionTypes.OPEN_MENU_ITEM,
+                type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS,
                 payload: {
-                    name: 'Projects',
-                    isTableContent: false,
-                    type: ConfigType.PROJECT,
-                    parentConfigType: ConfigType.GLOBAL,
+                    id,
+                    configs: response.data,
+                    confType: type,
                 },
             });
-        } catch (e) {
-            console.log(e);
-            dispatch({
-                type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: '',
-            });
-        }
-    };
-};
-
-const getConfigsUrl = (type: ConfigType, id: string) => {
-    switch (type) {
-        case ConfigType.GLOBAL:
-            return `/api/v1.0/global_config`;
-        case ConfigType.PROJECT:
-            return `/api/v1.0/project${id ? `/${id}` : ''}`;
-        case ConfigType.MICROSERVICE:
-            return '';
-    }
-};
-
-const getRefreshConfigPayload = (type: ConfigType, data: any) => {
-    switch (true) {
-        case ConfigType.GLOBAL === type:
-            return {
-                type: ConfigsActionTypes.REFRESH_GLOBAL_CONFIGS_SUCCESS,
-            };
-        case ConfigType.PROJECT && Array.isArray(data):
-            return {
-                type: ConfigsActionTypes.REFRESH_PROJECTS_CONFIGS_SUCCESS,
-            };
-        case ConfigType.PROJECT === type:
-            return {
-                type: ConfigsActionTypes.REFRESH_PROJECT_CONFIGS_SUCCESS,
-            };
-    }
-};
-
-export const refreshConfigs = (type: ConfigType, id: string) => {
-    return async (dispatch: Dispatch<ConfigsActions>) => {
-        try {
-            dispatch({
-                type: ConfigsActionTypes.REFRESH_CONFIGS,
-                payload: { id },
-            });
-            const response = await axios.get<Configs>(getConfigsUrl(type, id));
-
-            if (!response.data) {
+            openAfterFetching &&
                 dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                });
-            } else {
-                dispatch({
-                    ...getRefreshConfigPayload(type, response.data),
-                    payload: { configs: response.data, confType: type, id },
-                } as any);
-            }
-        } catch (e) {
-            console.log(e);
-            dispatch({
-                type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: '',
-            });
-        }
-    };
-};
-
-export const fetchApplicationConfigs = (projectId: string) => {
-    return async (dispatch: Dispatch<ConfigsActions>) => {
-        try {
-            dispatch({
-                type: ConfigsActionTypes.FETCH_CONFIGS,
-                payload: { id: projectId },
-            });
-            const response = await axios.get<Configs>(
-                `/api/v1.0/application/?project_id=${projectId}`
-            );
-
-            if (!response.data) {
-                dispatch({
-                    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                });
-            } else {
-                dispatch({
-                    type: ConfigsActionTypes.FETCH_APPLICATION_CONFIGS_SUCCESS,
+                    type: MenuActionTypes.OPEN_TAB,
                     payload: {
-                        configs: response.data,
-                        confType: ConfigType.MICROSERVICE,
-                        projectId,
+                        id,
+                        name: name,
+                        isTableContent,
+                        type: type,
                     },
-                } as any);
-            }
+                });
         } catch (e) {
             console.log(e);
             dispatch({
                 type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
-                payload: '',
             });
         }
     };
 };
+
+export const removeConfigFromState = (id: string): ConfigsActions => ({
+    type: ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE,
+    payload: { id },
+});
+
+export const createConfigs = (config: Configs) => {
+    return async (dispatch: Dispatch<ConfigsActions>) => {
+        try {
+            const post = await axios.post(
+                getConfigsUrl()[config.confType](),
+                config
+            );
+            if (post.status === 200) {
+                dispatch({
+                    type: ConfigsActionTypes.CREATE_NEW_SUCCESS,
+                    payload: { name: config.name, type: config.confType },
+                });
+                dispatch({
+                    type: ConfigsActionTypes.FETCH_CONFIGS_SUCCESS,
+                    payload: {
+                        id: config.id,
+                        configs: post.data,
+                        confType: config.confType,
+                    },
+                });
+                dispatch({
+                    type: MenuActionTypes.OPEN_TAB,
+                    payload: {
+                        id: config.id,
+                        name: config.name,
+                        isTableContent: true,
+                        type: config.confType,
+                    },
+                });
+            }
+        } catch (e) {
+            dispatch({
+                type: ConfigsActionTypes.CREATE_NEW_CONFIG_ERROR,
+            });
+        }
+    };
+};
+
+export const updateConfig = (config: Configs) => {
+    return async (dispatch: Dispatch<ConfigsActions>) => {
+        try {
+            await updateConfigRequest(config)[config.confType]();
+            dispatch({
+                type: MenuActionTypes.EDIT_CONFIG_ROW,
+                payload: { config },
+            });
+            dispatch({
+                type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
+                payload: { id: config.id, config },
+            });
+        } catch (e) {
+            dispatch({
+                type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
+                payload: config.id,
+            });
+        }
+    };
+};
+
+const updateConfigRequest = (body: any) => ({
+    [ConfigType.GLOBAL]: () => {
+        return axios.put('/api/v1.0/global_config', body);
+    },
+    [ConfigType.PROJECT]: () => {
+        return axios.post('/api/v1.0/project', body);
+    },
+    [ConfigType.APPLICATION]: () => {
+        return axios.put('/api/v1.0/application', body);
+    },
+});
+
+const getConfigsUrl = () => ({
+    [ConfigType.GLOBAL]: () => `/api/v1.0/global_config`,
+    [ConfigType.PROJECT]: (id?: string) => {
+        if (id === 'projects-id') return '/api/v1.0/project';
+        return `/api/v1.0/project${id ? `/${id}` : ''}`;
+    },
+    [ConfigType.APPLICATION]: (id?: string, projectId?: string) => {
+        if (projectId) return `/api/v1.0/application?project_id=${projectId}`;
+        return `/api/v1.0/application${id ? `/${id}` : ''}`;
+    },
+});

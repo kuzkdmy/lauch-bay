@@ -1,33 +1,58 @@
-import { FIND_ITEM } from '../actionTypes';
-import { MenuActions, MenuActionTypes, MenuItemType } from '../../types/types';
+import {
+    Configs,
+    ConfigType,
+    MenuActions,
+    MenuActionTypes,
+    MenuItemType,
+} from '../../types/types';
 
 export const openMenu = (content: MenuItemType): MenuActions => ({
-    type: MenuActionTypes.OPEN_MENU_ITEM,
+    type: MenuActionTypes.OPEN_TAB,
     payload: { ...content },
+});
+
+export const openCreateNewItemTab = (
+    name: string,
+    id: string,
+    confType: ConfigType,
+    projectId?: string
+): MenuActions => ({
+    type: MenuActionTypes.OPEN_CREATE_NEW_CONFIG,
+    payload: { name, id, confType, projectId },
+});
+
+export const addNewRowToConfig = (id: string): MenuActions => ({
+    type: MenuActionTypes.ADD_NEW_ROW_TO_CONFIG,
+    payload: { id },
+});
+
+export const editConfigItem = (
+    config: Configs,
+    isEdit: boolean
+): MenuActions => ({
+    type: MenuActionTypes.EDIT_CONFIG_ROW,
+    payload: { config: config, isEdit },
+});
+
+export const removeTabFromEditState = (id: string): MenuActions => ({
+    type: MenuActionTypes.EDIT_CONFIG_ROW,
+    payload: { config: { id } },
 });
 
 export const collapsiblePanelClick = (content: {
     item: MenuItemType;
     isOpened: boolean;
 }): MenuActions => ({
-    type: MenuActionTypes.OPEN_COLLAPSIBLE_ITEM,
+    type: MenuActionTypes.OPEN_COLLAPSIBLE_CONFIG,
     payload: { ...content },
 });
 
-export const setActiveTabName = (tabName: string): MenuActions => ({
+export const setActiveTabId = (tabId: string): MenuActions => ({
     type: MenuActionTypes.SET_ACTIVE_TAB,
-    payload: tabName,
+    payload: tabId,
 });
 
-export const closeMenu = (content: MenuItemType): MenuActions => ({
-    type: MenuActionTypes.CLOSE_MENU_ITEM,
+export const closeTab = (content: MenuItemType): MenuActions => ({
+    type: MenuActionTypes.CLOSE_TAB,
     payload: { ...content },
-});
-
-export const findItem = (content: any) => ({
-    type: FIND_ITEM,
-    payload: {
-        id: 1,
-        name: content,
-    },
 });

@@ -8,10 +8,12 @@ import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import { useActions } from '../../redux/hooks/useActions';
 import { Alert } from '@mui/material';
 import { TabContent } from '../../types/types';
+import { removeTabFromEditState } from '../../redux/actions/menuActions';
 
 interface TabsPanelProps {
-    tabsContent: TabContent[];
+    tabsContent: () => any[];
     onChange: () => void;
+    activeTabId: string;
     onTabClick: any;
 }
 
@@ -37,30 +39,30 @@ const TabPanel = (props: any) => {
 
 const TabsPanel: FC<TabsPanelProps> = ({
     tabsContent,
+    activeTabId,
     onChange,
     onTabClick,
 }) => {
-    const { closeMenu } = useActions();
-    const { openedItems, activeTabName } = useTypedSelector(
-        (state) => state.menu
-    );
-    const { setActiveTabName } = useActions();
+    const { closeTab } = useActions();
+    const { openedTabs } = useTypedSelector((state) => state.menu);
+    const { setActiveTabId, removeConfigFromState, removeTabFromEditState } =
+        useActions();
     const [value, setValue] = useState(0);
 
     useEffect(() => {
-        const activeTabIndex = openedItems.findIndex(
-            (el) => el.name === activeTabName
+        const activeTabIndex = openedTabs.findIndex(
+            (el) => el.id === activeTabId
         );
         setValue(activeTabIndex === -1 ? 0 : activeTabIndex);
-    }, [activeTabName, openedItems]);
+    }, [openedTabs, activeTabId]);
 
     const handleChange = (event: any, index: number) => {
+        setActiveTabId(openedTabs[index].id);
         setValue(index);
-        setActiveTabName(openedItems[index].name);
         onChange();
     };
 
-    return openedItems.length ? (
+    return openedTabs?.length ? (
         <Box sx={{ maxWidth: '600' }}>
             <Box sx={{ borderColor: 'divider', backgroundColor: '#d8e6f5' }}>
                 <Tabs
@@ -74,28 +76,33 @@ const TabsPanel: FC<TabsPanelProps> = ({
                     aria-label="scrollable auto tabs"
                     onChange={handleChange}
                 >
-                    {openedItems.map((i, index) => (
+                    {openedTabs.map((tab: any, index: number) => (
                         <Tab
                             sx={{ '&.Mui-selected': { color: '#0e0e0e' } }}
-                            label={i.name}
-                            onClick={() => onTabClick(i.type, i.id)}
+                            label={tab.name}
+                            onClick={() => {
+                                onTabClick(tab.type, tab.name, tab.id);
+                            }}
                             icon={
                                 <CloseIcon
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         if (
-                                            activeTabName ===
-                                            openedItems[index]?.name
+                                            activeTabId ===
+                                            openedTabs[index]?.id
                                         ) {
-                                            setActiveTabName(
-                                                openedItems[index - 1]?.name
+                                            setActiveTabId(
+                                                openedTabs[index - 1]?.id
                                             );
                                         }
-                                        onChange();
-                                        closeMenu({
-                                            name: i.name,
-                                            type: i.type,
+                                        closeTab({
+                                            name: tab.name,
+                                            id: tab.id,
+                                            type: tab.type,
                                         });
+                                        removeTabFromEditState(tab.id);
+                                        removeConfigFromState(tab.id);
+                                        onChange();
                                     }}
                                     sx={{
                                         fontSize: 14,
@@ -105,12 +112,12 @@ const TabsPanel: FC<TabsPanelProps> = ({
                                 />
                             }
                             iconPosition="end"
-                            key={i.name}
+                            key={tab.name}
                         />
                     ))}
                 </Tabs>
             </Box>
-            {tabsContent?.map((item: TabContent, index: number) => (
+            {tabsContent()?.map((item: TabContent, index: number) => (
                 <TabPanel value={value} index={index} key={index}>
                     {item.content}
                 </TabPanel>
