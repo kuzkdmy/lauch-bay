@@ -28,6 +28,19 @@ object ApplicationFunctionalTest extends BaseFunTest {
         }
       }).use(identity).provideLayer(appLayer)
     },
+    testM("check create conflict") {
+      (for {
+        _ <- MainApp.appProgramResource
+        b <- AsyncHttpClientZioBackend().toManaged_
+      } yield {
+        for {
+          _        <- c.post(baseUri).body(application1.asJson.noSpaces).send(b).flatMap(toApiModel)
+          conflict <- c.post(baseUri).body(application1.asJson.noSpaces).send(b).map(_.code.code)
+        } yield {
+          assert(conflict)(equalTo(409))
+        }
+      }).use(identity).provideLayer(appLayer)
+    },
     testM("check update") {
       (for {
         _ <- MainApp.appProgramResource
@@ -35,12 +48,24 @@ object ApplicationFunctionalTest extends BaseFunTest {
       } yield {
         for {
           created  <- c.post(baseUri).body(application1.asJson.noSpaces).send(b).flatMap(toApiModel)
-          conflict <- c.post(baseUri).body(application1.asJson.noSpaces).send(b).map(_.code.code)
+          conflict <- c.put(baseUri.addPath(application1.id.value)).body(application1.asJson.noSpaces).send(b).map(_.code.code)
           updateValidReqBody = application2.copy(id = application1.id, version = created.version)
-          updated <- c.post(baseUri).body(updateValidReqBody.asJson.noSpaces).send(b).flatMap(toApiModel)
+          updated <- c.put(baseUri.addPath(updateValidReqBody.id.value)).body(updateValidReqBody.asJson.noSpaces).send(b).flatMap(toApiModel)
         } yield {
           assert(conflict)(equalTo(409)) &&
           assert(updated)(equalTo(updateValidReqBody.copy(version = updated.version)))
+        }
+      }).use(identity).provideLayer(appLayer)
+    },
+    testM("check update not found") {
+      (for {
+        _ <- MainApp.appProgramResource
+        b <- AsyncHttpClientZioBackend().toManaged_
+      } yield {
+        for {
+          notFound <- c.put(baseUri.addPath(application1.id.value)).body(application1.asJson.noSpaces).send(b).map(_.code.code)
+        } yield {
+          assert(notFound)(equalTo(404))
         }
       }).use(identity).provideLayer(appLayer)
     },
