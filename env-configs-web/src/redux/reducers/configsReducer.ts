@@ -1,6 +1,7 @@
 import { AnyAction } from 'redux';
 import createReducer from '../hooks/createReducer';
 import { ConfigsActionTypes, ConfigType } from '../../types/types';
+import _ from 'lodash';
 
 const initialState = {
     isLoading: false,
@@ -29,6 +30,37 @@ const configsReducer = {
                 },
             };
         }
+        if (
+            action.payload.confType === ConfigType.PROJECT &&
+            Array.isArray(action.payload.configs)
+        ) {
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    'projects-id': action.payload.configs,
+                },
+            };
+        } else if (action.payload.confType === ConfigType.PROJECT) {
+            const projectConfigs = [...state.configs['projects-id']];
+            const projectConfigIndex = _.findIndex(projectConfigs, {
+                id: action.payload.id,
+            });
+            projectConfigs.splice(projectConfigIndex, 1, action.payload);
+
+            console.log(action.payload, '0');
+
+            return {
+                ...state,
+                isLoading: false,
+                configs: {
+                    ...state.configs,
+                    'projects-id': projectConfigs,
+                },
+            };
+        }
+        console.log(action.payload, '1');
         return {
             ...state,
             isLoading: false,
@@ -56,6 +88,7 @@ const configsReducer = {
     ) => {
         const stateConfigs = { ...state };
         delete stateConfigs.configs[action.payload.id];
+
         return { ...stateConfigs };
     },
     [ConfigsActionTypes.CONFIG_REQUESTS_ERROR]: (state: any) => {

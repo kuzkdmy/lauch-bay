@@ -39,12 +39,12 @@ export const removeTabFromEditState = (id: string): MenuActions => ({
     payload: { config: { id } },
 });
 
-export const collapsiblePanelClick = (content: {
-    item: MenuItemType;
-    isOpened: boolean;
-}): MenuActions => ({
-    type: MenuActionTypes.OPEN_COLLAPSIBLE_CONFIG,
-    payload: { ...content },
+export const collapsiblePanelClick = (
+    item: MenuItemType,
+    isOpen: boolean
+): MenuActions => ({
+    type: MenuActionTypes.COLLAPSIBLE_ITEM_CLICK,
+    payload: { item, isOpen },
 });
 
 export const setActiveTabId = (tabId: string): MenuActions => ({

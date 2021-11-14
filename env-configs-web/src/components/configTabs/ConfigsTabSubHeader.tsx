@@ -8,13 +8,14 @@ import {
     Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import CancelIcon from '@mui/icons-material/Cancel';
+import CancelIcon from '@mui/icons-material/HighlightOff';
 import AddIcon from '@mui/icons-material/Add';
 import { Configs, ConfigType, MenuItemType } from '../../types/types';
 import { getEmptyConfigRow } from './utils/configTabsUtils';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import _ from 'lodash';
+import DeleteIcon from '@mui/icons-material/DeleteForever';
 
 interface ConfigsSubHeaderProps {
     isEdit: boolean;
@@ -62,53 +63,82 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
                     Save
                 </Button>
                 <>
-                    {isEdit && (
-                        <IconButton
-                            sx={{ marginRight: '10px' }}
-                            onClick={onAddNewRow}
-                        >
-                            <Tooltip
-                                placement={'top-start'}
-                                title="Add New Row"
+                    {isEdit ? (
+                        <>
+                            <IconButton
+                                sx={{ marginRight: '10px' }}
+                                onClick={onAddNewRow}
                             >
-                                <AddIcon />
+                                <Tooltip
+                                    disableFocusListener={true}
+                                    placement={'top-start'}
+                                    title="Add New Row"
+                                >
+                                    <AddIcon />
+                                </Tooltip>
+                            </IconButton>
+                            <Tooltip
+                                disableFocusListener={true}
+                                placement={'top-start'}
+                                title="Delete Config"
+                            >
+                                <IconButton>
+                                    <DeleteIcon
+                                        color="warning"
+                                        sx={{ fontSize: 31 }}
+                                    />
+                                </IconButton>
                             </Tooltip>
-                        </IconButton>
+                            <Tooltip
+                                disableFocusListener={true}
+                                placement={'top-start'}
+                                title="Cancel"
+                            >
+                                <IconButton
+                                    sx={{ marginRight: 5 }}
+                                    onClick={() => {
+                                        editConfigItem(
+                                            {
+                                                ...getEmptyConfigRow(),
+                                                id: menuItem.id,
+                                                confType: menuItem.type,
+                                            },
+                                            !isEdit
+                                        );
+                                        setIsEdit(false);
+                                    }}
+                                >
+                                    <CancelIcon color="info" />
+                                </IconButton>
+                            </Tooltip>
+                        </>
+                    ) : (
+                        <Tooltip
+                            disableFocusListener={true}
+                            placement={'top-start'}
+                            title="Edit"
+                        >
+                            <IconButton
+                                sx={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    console.log(configs[menuItem.id]);
+                                    if (!_.isEmpty(configs[menuItem.id])) {
+                                        console.log(menuItem.id);
+                                        editConfigItem(
+                                            {
+                                                ...configs[menuItem.id],
+                                                confType: menuItem.type,
+                                            },
+                                            true
+                                        );
+                                    }
+                                    setIsEdit(true);
+                                }}
+                            >
+                                {!isEdit && <EditIcon color="primary" />}
+                            </IconButton>
+                        </Tooltip>
                     )}
-                    <IconButton
-                        sx={{ marginRight: '10px' }}
-                        onClick={() => {
-                            if (_.isEmpty(configs[menuItem.id])) {
-                                editConfigItem(
-                                    {
-                                        ...getEmptyConfigRow(),
-                                        id: menuItem.id,
-                                        confType: menuItem.type,
-                                    },
-                                    !isEdit
-                                );
-                            } else {
-                                editConfigItem(
-                                    {
-                                        ...configs[menuItem.id],
-                                        confType: menuItem.type,
-                                    },
-                                    !isEdit
-                                );
-                            }
-                            setIsEdit(!isEdit);
-                        }}
-                    >
-                        {!isEdit ? (
-                            <Tooltip placement={'top-start'} title="Edit">
-                                <EditIcon color="primary" />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip placement={'top-start'} title="Cancel">
-                                <CancelIcon color="secondary" />
-                            </Tooltip>
-                        )}
-                    </IconButton>
                     {menuItem?.type === ConfigType.PROJECT ? (
                         <FormControlLabel
                             className="check-box"

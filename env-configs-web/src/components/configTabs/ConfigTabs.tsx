@@ -72,8 +72,6 @@ const ConfigTabs = () => {
                 />
                 <EditableTable
                     sx={{ marginBottom: '25px', maxHeight: '60vh' }}
-                    // isEdit={isEdit}
-                    // item={config}
                 />
                 {/* {item.hasGlobalConfigType && */}
                 {/*    showGlobal && */}
@@ -91,7 +89,7 @@ const ConfigTabs = () => {
         );
     };
 
-    const renderListTabsContent = (items?: Configs[]) => {
+    const renderListTabsContent = () => {
         return (
             <>
                 <CreateNewDialog
@@ -111,24 +109,22 @@ const ConfigTabs = () => {
                 >
                     Add New Project
                 </Button>
-                {Array.isArray(items)
-                    ? items?.map((item, index) => (
-                          <ProjectItems
-                              project={item}
-                              key={index}
-                              pl={2}
-                              isTopLevel
-                              index={index}
-                              showCreateNewDialog={() => {
-                                  setConfToCreate({
-                                      type: ConfigType.APPLICATION,
-                                      projectId: item.id,
-                                  });
-                                  setIsDialogOpened(true);
-                              }}
-                          />
-                      ))
-                    : null}
+                {configs['projects-id']?.map((item, index) => (
+                    <ProjectItems
+                        project={item}
+                        key={index}
+                        pl={2}
+                        isTopLevel
+                        index={index}
+                        showCreateNewDialog={() => {
+                            setConfToCreate({
+                                type: ConfigType.APPLICATION,
+                                projectId: item.id,
+                            });
+                            setIsDialogOpened(true);
+                        }}
+                    />
+                ))}
             </>
         );
     };
@@ -146,7 +142,7 @@ const ConfigTabs = () => {
             }
             return {
                 tabName: item.name,
-                content: renderListTabsContent(configs[item.id]),
+                content: renderListTabsContent(),
             };
         });
     };

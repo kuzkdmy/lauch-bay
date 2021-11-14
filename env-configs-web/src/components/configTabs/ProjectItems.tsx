@@ -34,20 +34,26 @@ const ProjectItems: FC<MenuItemsProps> = ({
     const { collapsiblePanelClick, fetchConfigs, openMenu } = useActions();
 
     const { configs } = useTypedSelector((state) => state.configsState);
-    const [isOpened, setIsOpened] = useState(false);
-    const [applications, setApplications] = useState();
+    const { collapsiblePanelState } = useTypedSelector((state) => state.menu);
+    const [isOpen, setIsOpen] = useState(false);
+    // const [applications, setApplications] = useMemo(() => {}, [project]);
+
+    useEffect(() => {
+        console.log(collapsiblePanelState[project.id]);
+        setIsOpen(collapsiblePanelState[project.id]);
+    }, [collapsiblePanelState, project]);
 
     const handleClick = () => {
-        setIsOpened(!isOpened);
-        collapsiblePanelClick({
-            item: {
+        setIsOpen(!isOpen);
+        collapsiblePanelClick(
+            {
                 name: project.name,
                 id: project.id,
                 type: ConfigType.PROJECT,
             },
-            isOpened: isOpened,
-        });
-        !isOpened &&
+            !isOpen
+        );
+        !isOpen &&
             fetchConfigs({
                 type: ConfigType.APPLICATION,
                 id: project.id,
@@ -66,7 +72,7 @@ const ProjectItems: FC<MenuItemsProps> = ({
             app.map((app, index) => {
                 return (
                     <Collapse
-                        in={isOpened}
+                        in={isOpen}
                         timeout="auto"
                         unmountOnExit
                         key={index}
@@ -98,7 +104,7 @@ const ProjectItems: FC<MenuItemsProps> = ({
                 );
             })
         ) : (
-            <Collapse in={isOpened} timeout="auto" unmountOnExit>
+            <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <Alert severity="warning">There are no applications</Alert>
             </Collapse>
         );
@@ -112,7 +118,7 @@ const ProjectItems: FC<MenuItemsProps> = ({
                 className={additionalClass}
             >
                 <div className="expand-icon">
-                    {isOpened ? <ExpandLess /> : <ExpandMore />}
+                    {isOpen ? <ExpandLess /> : <ExpandMore />}
                 </div>
                 <ListItemText primary={project.name} sx={{ width: '100px' }} />
                 <div>

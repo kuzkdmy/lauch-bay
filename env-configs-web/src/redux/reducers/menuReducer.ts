@@ -60,7 +60,7 @@ const menuReducer = {
         }
         return { ...state, activeTabId: action.payload.id };
     },
-    [MenuActionTypes.OPEN_COLLAPSIBLE_CONFIG]: (
+    [MenuActionTypes.COLLAPSIBLE_ITEM_CLICK]: (
         state: any,
         action: AnyAction
     ) => {
@@ -68,13 +68,17 @@ const menuReducer = {
             ...state,
             collapsiblePanelState: {
                 ...state.collapsiblePanelState,
-                [action.payload.item.name]: action.payload.isOpened,
+                [action.payload.item.id]: action.payload.isOpen,
             },
         };
     },
     [MenuActionTypes.CLOSE_TAB]: (state: any, action: AnyAction) => {
         return {
             ...state,
+            collapsiblePanelState:
+                action.payload.id === 'projects-id'
+                    ? []
+                    : state.collapsiblePanelState,
             openedTabs: state.openedTabs.filter((i: any) => {
                 return i.id !== action.payload.id;
             }),

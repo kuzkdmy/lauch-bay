@@ -9,12 +9,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Checkbox, Input, Switch, Tooltip } from '@mui/material';
 import { columnsConfig } from './tableConfig';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CloseIcon from '@mui/icons-material/Close';
 import SelectItem from '../listItem/SelectItem';
 import { useActions } from '../../redux/hooks/useActions';
 import { getColUpdateValue } from './utils/tableUtils';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { Config } from '../../types/types';
+import { Config, ConfigType } from '../../types/types';
 
 interface EditableTableProps {
     onRowsRemove?: any;
@@ -25,7 +25,9 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
     const [rowType, setRowType] = useState('text');
     const [isEdit, setIsEdit] = useState(false);
 
-    const { editTabs, activeTabId } = useTypedSelector((state) => state.menu);
+    const { editTabs, activeTabId, openedTabs } = useTypedSelector(
+        (state) => state.menu
+    );
     const { configs } = useTypedSelector((state) => state.configsState);
 
     const [tableRows, setTableRows] = useState(configs[activeTabId]?.envConf);
@@ -53,6 +55,13 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
         if (editTabs[activeTabId]) {
             setTableRows(editTabs[activeTabId]?.envConf);
         } else {
+            if (openedTabs[activeTabId]?.type === ConfigType.PROJECT) {
+                setTableRows(
+                    configs['projects-id']?.filter(
+                        (conf) => conf.id === activeTabId
+                    )?.envConf
+                );
+            }
             setTableRows(configs[activeTabId]?.envConf);
         }
     }, [activeTabId, configs, editTabs]);
@@ -75,7 +84,7 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
         onEditingRowChange(updatedTableRows);
     };
 
-    const getSimpleInput = (col: any, idx: number) => {
+    const getSimpleInput = (col: any, idx: number, autoFocus?: boolean) => {
         return (
             <Input
                 sx={{
@@ -83,6 +92,7 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
                     width: '95%',
                     paddingLeft: col.paddingLeft,
                 }}
+                autoFocus={autoFocus}
                 value={col.getValue(tableRows[idx])}
                 type={col.id === 'envKey' ? 'text' : rowType}
                 name={col.id}
@@ -103,7 +113,7 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
         switch (true) {
             case col.id === 'envKey':
                 return isRowInEditState(idx)
-                    ? getSimpleInput(col, idx)
+                    ? getSimpleInput(col, idx, true)
                     : renderValue(col, idx);
             case col.id === 'type':
                 return isRowInEditState(idx) ? (
@@ -166,7 +176,7 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
                             title="Delete Row"
                             sx={{ '& .MuiSvgIcon-root': { marginTop: '5px' } }}
                         >
-                            <DeleteForeverIcon
+                            <CloseIcon
                                 color={'warning'}
                                 onClick={() => {
                                     onRowDelete();

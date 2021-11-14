@@ -111,7 +111,6 @@ export const updateConfig = (config: Configs) => {
             const resp = await updateConfigRequest(config)[config.confType](
                 config.id
             );
-            console.log(resp);
             if (resp.status === 200) {
                 dispatch({
                     type: MenuActionTypes.EDIT_CONFIG_ROW,
@@ -136,7 +135,7 @@ const updateConfigRequest = (body: any) => ({
         return axios.put('/api/v1.0/global_config', body);
     },
     [ConfigType.PROJECT]: (id: string) => {
-        return axios.post(`/api/v1.0/project/${id}`, body);
+        return axios.put(`/api/v1.0/project/${id}`, body);
     },
     [ConfigType.APPLICATION]: (id: string) => {
         return axios.put(`/api/v1.0/application/${id}`, body);
