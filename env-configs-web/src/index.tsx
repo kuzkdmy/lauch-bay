@@ -7,16 +7,29 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './components/App';
 import { rootReducer } from './redux/reducers/rootReducer';
 import thunk from 'redux-thunk';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 const store = createStore(
     rootReducer,
     composeWithDevTools(applyMiddleware(thunk))
 );
 
+const theme = createTheme({
+    components: {
+        MuiButtonBase: {
+            defaultProps: {
+                disableRipple: true,
+            },
+        },
+    },
+});
+
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <App />
+            <ThemeProvider theme={theme}>
+                <App />
+            </ThemeProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')

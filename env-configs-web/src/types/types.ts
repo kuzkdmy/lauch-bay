@@ -33,17 +33,15 @@ export interface Configs {
 export enum ConfigsActionTypes {
     FETCH_CONFIGS = 'FETCH_CONFIGS',
     FETCH_CONFIGS_SUCCESS = 'FETCH_CONFIGS_SUCCESS',
-    FETCH_CONFIGS_ERROR = 'FETCH_CONFIGS_ERROR',
+    SET_HAS_ERRORS = 'SET_HAS_ERRORS',
 
+    CONFIG_REQUESTS_ERROR = 'CONFIG_REQUESTS_ERROR',
     REMOVE_CONFIG_FROM_STATE = 'REMOVE_CONFIG_FROM_STATE',
     REFRESH_CONFIGS = 'REFRESH_CONFIGS',
 
     CONFIG_UPDATE_SUCCESS = 'CONFIG_UPDATE_SUCCESS',
-    CONFIG_UPDATE_ERROR = 'CONFIG_UPDATE_ERROR',
-
     CREATE_NEW_CONFIG = 'CREATE_NEW_CONFIG',
     CREATE_NEW_SUCCESS = 'CREATE_NEW_SUCCESS',
-    CREATE_NEW_CONFIG_ERROR = 'CREATE_NEW_CONFIG_ERROR',
 }
 
 export enum MenuActionTypes {
@@ -93,15 +91,8 @@ interface ConfigUpdateSuccess {
     type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS;
     payload: any;
 }
-interface ConfigUpdateError {
-    type: ConfigsActionTypes.CONFIG_UPDATE_ERROR;
-    payload: any;
-}
-interface CreateConfigError {
-    type: ConfigsActionTypes.CREATE_NEW_CONFIG_ERROR;
-}
-interface FetchConfigsErrorAction {
-    type: ConfigsActionTypes.FETCH_CONFIGS_ERROR;
+interface ConfigRequestsErrorAction {
+    type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR;
     payload?: any;
 }
 interface FetchConfigsSuccessAction {
@@ -121,16 +112,20 @@ interface RefreshProjectConfigsAction {
         config: Configs;
     };
 }
+interface SetIsErrorAction {
+    type: ConfigsActionTypes.SET_HAS_ERRORS;
+    payload: {
+        isError: boolean;
+    };
+}
 
 export type ConfigsActions =
     | CreateNewConfig
     | RemoveConfigFromState
     | CreatedNewConfig
     | ConfigUpdateSuccess
-    | ConfigUpdateError
-    | CreateConfigError
     | FetchConfigsAction
     | FetchConfigsSuccessAction
-    | FetchConfigsErrorAction
+    | ConfigRequestsErrorAction
     | MenuActions
     | RefreshProjectConfigsAction;

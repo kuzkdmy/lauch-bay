@@ -1,24 +1,17 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import ListSubheader from '@mui/material/ListSubheader';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import { ListItemButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ListIcon from '@mui/icons-material/List';
 import { useActions } from '../../redux/hooks/useActions';
-import { fetchProjectConfigs } from '../../redux/actions/configsActions';
 import { ConfigType } from '../../types/types';
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
 
 const MenuBar = () => {
-    const { fetchGlobalConfigs, fetchProjectConfigs, openMenu } = useActions();
-
-    useEffect(() => {
-        fetchGlobalConfigs();
-    }, [fetchGlobalConfigs]);
-
+    const { fetchConfigs, openMenu } = useActions();
     const [isHidden, setIsHidden] = useState(false);
     const [menuWidth, setMenuWidth] = useState(360);
 
@@ -63,10 +56,12 @@ const MenuBar = () => {
         >
             <ListItemButton
                 onClick={() => {
-                    openMenu({
-                        name: 'Global',
+                    fetchConfigs({
                         type: ConfigType.GLOBAL,
+                        id: 'global-id',
+                        name: 'Global',
                         isTableContent: true,
+                        openAfterFetching: true,
                     });
                 }}
             >
@@ -75,7 +70,12 @@ const MenuBar = () => {
             </ListItemButton>
             <ListItemButton
                 onClick={() => {
-                    fetchProjectConfigs();
+                    fetchConfigs({
+                        type: ConfigType.PROJECT,
+                        id: 'projects-id',
+                        name: 'Projects',
+                        openAfterFetching: true,
+                    });
                 }}
             >
                 <ListItemText primary="Projects" hidden={isHidden} />

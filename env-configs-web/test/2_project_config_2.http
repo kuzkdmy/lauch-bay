@@ -3,8 +3,8 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "id": "tenant-configuration",
-  "name": "Tenant Configuration",
+  "id": "tenant-configuration-3",
+  "name": "Tenant Configuration 3" ,
   "envConf": [
     {
       "envKey": "TENANT_DB_HOST_PATTERN",

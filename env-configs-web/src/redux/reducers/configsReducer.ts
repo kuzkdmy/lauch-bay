@@ -4,6 +4,7 @@ import { ConfigsActionTypes, ConfigType } from '../../types/types';
 
 const initialState = {
     isLoading: false,
+    hasErrors: false,
     configs: {},
 };
 
@@ -57,8 +58,11 @@ const configsReducer = {
         delete stateConfigs.configs[action.payload.id];
         return { ...stateConfigs };
     },
-    [ConfigsActionTypes.FETCH_CONFIGS_ERROR]: (state: any) => {
-        return { ...state, isLoading: false };
+    [ConfigsActionTypes.CONFIG_REQUESTS_ERROR]: (state: any) => {
+        return { ...state, isLoading: false, hasErrors: true };
+    },
+    [ConfigsActionTypes.SET_HAS_ERRORS]: (state: any, action: AnyAction) => {
+        return { ...state, hasErrors: action.payload.isError };
     },
 };
 

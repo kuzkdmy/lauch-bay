@@ -51,7 +51,7 @@ export const fetchConfigs = ({
         } catch (e) {
             console.log(e);
             dispatch({
-                type: ConfigsActionTypes.FETCH_CONFIGS_ERROR,
+                type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR,
             });
         }
     };
@@ -94,27 +94,37 @@ export const createConfigs = (config: Configs) => {
             }
         } catch (e) {
             dispatch({
-                type: ConfigsActionTypes.CREATE_NEW_CONFIG_ERROR,
+                type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR,
             });
         }
     };
 };
 
+export const setHasErrors = (isError: boolean) => ({
+    type: ConfigsActionTypes.SET_HAS_ERRORS,
+    payload: isError,
+});
+
 export const updateConfig = (config: Configs) => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            await updateConfigRequest(config)[config.confType]();
-            dispatch({
-                type: MenuActionTypes.EDIT_CONFIG_ROW,
-                payload: { config },
-            });
-            dispatch({
-                type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
-                payload: { id: config.id, config },
-            });
+            const resp = await updateConfigRequest(config)[config.confType](
+                config.id
+            );
+            console.log(resp);
+            if (resp.status === 200) {
+                dispatch({
+                    type: MenuActionTypes.EDIT_CONFIG_ROW,
+                    payload: { config },
+                });
+                dispatch({
+                    type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
+                    payload: { id: config.id, config },
+                });
+            }
         } catch (e) {
             dispatch({
-                type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
+                type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR,
                 payload: config.id,
             });
         }
@@ -125,11 +135,11 @@ const updateConfigRequest = (body: any) => ({
     [ConfigType.GLOBAL]: () => {
         return axios.put('/api/v1.0/global_config', body);
     },
-    [ConfigType.PROJECT]: () => {
-        return axios.post('/api/v1.0/project', body);
+    [ConfigType.PROJECT]: (id: string) => {
+        return axios.post(`/api/v1.0/project/${id}`, body);
     },
-    [ConfigType.APPLICATION]: () => {
-        return axios.put('/api/v1.0/application', body);
+    [ConfigType.APPLICATION]: (id: string) => {
+        return axios.put(`/api/v1.0/application/${id}`, body);
     },
 });
 

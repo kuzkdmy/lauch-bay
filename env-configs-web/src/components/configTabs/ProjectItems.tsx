@@ -92,22 +92,14 @@ const ProjectItems: FC<MenuItemsProps> = ({
                                 },
                             }}
                         >
-                            {app ? (
-                                <ListItemText primary={app.name} />
-                            ) : (
-                                <Alert severity="warning" sx={{ width: '90%' }}>
-                                    There are no applications
-                                </Alert>
-                            )}
+                            <ListItemText primary={app.name} />
                         </ListItem>
                     </Collapse>
                 );
             })
         ) : (
             <Collapse in={isOpened} timeout="auto" unmountOnExit>
-                <Alert severity="warning" sx={{ width: '90%' }}>
-                    There are no applications
-                </Alert>
+                <Alert severity="warning">There are no applications</Alert>
             </Collapse>
         );
     };

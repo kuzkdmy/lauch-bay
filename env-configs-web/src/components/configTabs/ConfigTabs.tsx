@@ -24,10 +24,11 @@ const ConfigTabs = () => {
     const [confToCreate, setConfToCreate] = useState<any>();
     const [showGlobal, setShowGlobal] = useState(false);
     const [showProject, setShowProject] = useState(false);
+    const { addNewRowToConfig, fetchConfigs, updateConfig } = useActions();
 
     const { editTabs } = useTypedSelector((state) => state.menu);
     const { configs } = useTypedSelector((state) => state.configsState);
-    const { addNewRowToConfig, fetchConfigs, updateConfig } = useActions();
+
     const tabsContent = useMemo(() => openedTabs, [openedTabs]);
 
     const resetState = () => {
@@ -48,19 +49,12 @@ const ConfigTabs = () => {
         return (
             <>
                 <div className="parent-config">{type} config</div>
-                <EditableTable
-                    sx={{ marginBottom: '25px' }}
-                    // isEdit={false}
-                    // item={config[]}
-                />
+                <EditableTable sx={{ marginBottom: '25px' }} />
             </>
         );
     };
 
-    const renderTableTabsContent = (
-        menuItem: MenuItemType,
-        config: Configs
-    ) => {
+    const renderTableTabsContent = (menuItem: MenuItemType) => {
         return (
             <div className="tabs-content-container">
                 <ConfigsTabSubHeader
@@ -147,7 +141,7 @@ const ConfigTabs = () => {
             if (item.isTableContent) {
                 return {
                     tabName: item.name,
-                    content: renderTableTabsContent(item, configs[item.id]!),
+                    content: renderTableTabsContent(item),
                 };
             }
             return {
@@ -167,11 +161,13 @@ const ConfigTabs = () => {
                 name: string,
                 id: string
             ) => {
-                fetchConfigs({
-                    type,
-                    id,
-                    name,
-                });
+                if (!editTabs[id]) {
+                    fetchConfigs({
+                        type,
+                        id,
+                        name,
+                    });
+                }
             }}
         />
     );

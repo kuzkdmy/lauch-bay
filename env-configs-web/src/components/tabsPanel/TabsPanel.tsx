@@ -8,7 +8,7 @@ import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import { useActions } from '../../redux/hooks/useActions';
 import { Alert } from '@mui/material';
 import { TabContent } from '../../types/types';
-import { removeTabFromEditState } from '../../redux/actions/menuActions';
+import _ from 'lodash';
 
 interface TabsPanelProps {
     tabsContent: () => any[];
