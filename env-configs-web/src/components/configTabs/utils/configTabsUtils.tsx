@@ -19,7 +19,7 @@ export const getEmptyConfigRow = (): Configs => ({
 export const getEmptyEnvConf = () => ({
     envKey: '',
     type: 'string',
-    default: { value: '' },
+    default: null,
     envOverride: {
         dev: null,
         stage: null,

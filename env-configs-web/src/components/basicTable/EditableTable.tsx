@@ -14,14 +14,19 @@ import SelectItem from '../listItem/SelectItem';
 import { useActions } from '../../redux/hooks/useActions';
 import { getColUpdateValue } from './utils/tableUtils';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { Config, ConfigType } from '../../types/types';
+import { Config, ConfigType, MenuItemType } from '../../types/types';
 
 interface EditableTableProps {
     onRowsRemove?: any;
+    menuItem: MenuItemType;
     sx?: any;
 }
 
-const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
+const EditableTable: FC<EditableTableProps> = ({
+    sx,
+    onRowsRemove,
+    menuItem,
+}) => {
     const [rowType, setRowType] = useState('text');
     const [isEdit, setIsEdit] = useState(false);
 
@@ -30,7 +35,9 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
     );
     const { configs } = useTypedSelector((state) => state.configsState);
 
-    const [tableRows, setTableRows] = useState(configs[activeTabId]?.envConf);
+    const [tableRows, setTableRows] = useState(
+        configs[menuItem.type][activeTabId]?.envConf
+    );
     const [editingRow, setEditingRow] = useState({ idx: 0, isEdit: false });
 
     const { editConfigItem } = useActions();
@@ -42,7 +49,8 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
     const onEditingRowChange = (updatedRows?: Config[]) => {
         editConfigItem(
             {
-                ...configs[activeTabId],
+                ...configs[menuItem.type][activeTabId],
+                id: activeTabId,
                 envConf: updatedRows || tableRows,
                 confType: editTabs[activeTabId].confType,
             },
@@ -51,20 +59,13 @@ const EditableTable: FC<EditableTableProps> = ({ sx, onRowsRemove }) => {
     };
 
     useEffect(() => {
-        setIsEdit(editTabs[activeTabId]);
+        setIsEdit(!!editTabs[activeTabId]);
         if (editTabs[activeTabId]) {
             setTableRows(editTabs[activeTabId]?.envConf);
         } else {
-            if (openedTabs[activeTabId]?.type === ConfigType.PROJECT) {
-                setTableRows(
-                    configs['projects-id']?.filter(
-                        (conf) => conf.id === activeTabId
-                    )?.envConf
-                );
-            }
-            setTableRows(configs[activeTabId]?.envConf);
+            setTableRows(configs[menuItem.type][activeTabId]?.envConf);
         }
-    }, [activeTabId, configs, editTabs]);
+    }, [activeTabId, configs, editTabs, menuItem.type]);
 
     const onRowsChange = (value: any, colId: string) => {
         const updatedRows = [...tableRows];

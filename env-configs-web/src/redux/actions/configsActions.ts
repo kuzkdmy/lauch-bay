@@ -51,7 +51,7 @@ export const fetchConfigs = ({
         } catch (e) {
             console.log(e);
             dispatch({
-                type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR,
+                type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
             });
         }
     };
@@ -94,7 +94,7 @@ export const createConfigs = (config: Configs) => {
             }
         } catch (e) {
             dispatch({
-                type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR,
+                type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
             });
         }
     };
@@ -118,12 +118,15 @@ export const updateConfig = (config: Configs) => {
                 });
                 dispatch({
                     type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
-                    payload: { id: config.id, config },
+                    payload: {
+                        id: config.id,
+                        config: { ...config, ...resp.data },
+                    },
                 });
             }
         } catch (e) {
             dispatch({
-                type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR,
+                type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
                 payload: config.id,
             });
         }

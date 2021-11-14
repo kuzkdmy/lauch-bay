@@ -1,17 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import TabsPanel from '../tabsPanel/TabsPanel';
-import {
-    Configs,
-    ConfigType,
-    MenuItemType,
-    TabContent,
-} from '../../types/types';
+import { ConfigType, MenuItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import EditableTable from '../basicTable/EditableTable';
 import ProjectItems from './ProjectItems';
-import { mergeConfigs } from './utils/configTabsUtils';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
 import ConfigsTabSubHeader from './ConfigsTabSubHeader';
 import { addNewRowToConfig } from '../../redux/actions/menuActions';
@@ -41,18 +35,18 @@ const ConfigTabs = () => {
         setIsEdit(!!editTabs[activeTabId]);
     }, [editTabs, activeTabId]);
 
-    const getParentConfigs = (
-        config: Configs,
-        parentConfigs: any,
-        type: ConfigType
-    ) => {
-        return (
-            <>
-                <div className="parent-config">{type} config</div>
-                <EditableTable sx={{ marginBottom: '25px' }} />
-            </>
-        );
-    };
+    // const getParentConfigs = (
+    //     config: Configs,
+    //     parentConfigs: any,
+    //     type: ConfigType
+    // ) => {
+    //     return (
+    //         <>
+    //             <div className="parent-config">{type} config</div>
+    //             <EditableTable sx={{ marginBottom: '25px' }} menuItem={menu} />
+    //         </>
+    //     );
+    // };
 
     const renderTableTabsContent = (menuItem: MenuItemType) => {
         return (
@@ -72,6 +66,7 @@ const ConfigTabs = () => {
                 />
                 <EditableTable
                     sx={{ marginBottom: '25px', maxHeight: '60vh' }}
+                    menuItem={menuItem}
                 />
                 {/* {item.hasGlobalConfigType && */}
                 {/*    showGlobal && */}
@@ -89,7 +84,7 @@ const ConfigTabs = () => {
         );
     };
 
-    const renderListTabsContent = () => {
+    const renderListTabsContent = (menuItem: MenuItemType) => {
         return (
             <>
                 <CreateNewDialog
@@ -109,29 +104,32 @@ const ConfigTabs = () => {
                 >
                     Add New Project
                 </Button>
-                {configs['projects-id']?.map((item, index) => (
-                    <ProjectItems
-                        project={item}
-                        key={index}
-                        pl={2}
-                        isTopLevel
-                        index={index}
-                        showCreateNewDialog={() => {
-                            setConfToCreate({
-                                type: ConfigType.APPLICATION,
-                                projectId: item.id,
-                            });
-                            setIsDialogOpened(true);
-                        }}
-                    />
-                ))}
+                {configs[ConfigType.PROJECT]['projects-id']?.map(
+                    (item, index) => (
+                        <ProjectItems
+                            project={item}
+                            key={index}
+                            pl={2}
+                            isTopLevel
+                            index={index}
+                            menuItem={menuItem}
+                            showCreateNewDialog={() => {
+                                setConfToCreate({
+                                    type: ConfigType.APPLICATION,
+                                    projectId: item.id,
+                                });
+                                setIsDialogOpened(true);
+                            }}
+                        />
+                    )
+                )}
             </>
         );
     };
 
     const getTabItems = () => {
         return tabsContent.map((item: MenuItemType): any => {
-            if (!configs[item.id]) {
+            if (!configs[item.type][activeTabId]) {
                 return {};
             }
             if (item.isTableContent) {
@@ -142,7 +140,7 @@ const ConfigTabs = () => {
             }
             return {
                 tabName: item.name,
-                content: renderListTabsContent(),
+                content: renderListTabsContent(item),
             };
         });
     };

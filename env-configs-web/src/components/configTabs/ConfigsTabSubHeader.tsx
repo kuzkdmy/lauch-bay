@@ -121,12 +121,13 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
                             <IconButton
                                 sx={{ marginRight: '10px' }}
                                 onClick={() => {
-                                    console.log(configs[menuItem.id]);
-                                    if (!_.isEmpty(configs[menuItem.id])) {
-                                        console.log(menuItem.id);
+                                    const configToEdit =
+                                        configs[menuItem.type][menuItem.id];
+                                    if (!_.isEmpty(configToEdit)) {
                                         editConfigItem(
                                             {
-                                                ...configs[menuItem.id],
+                                                ...configToEdit,
+                                                id: menuItem.id,
                                                 confType: menuItem.type,
                                             },
                                             true
@@ -135,7 +136,7 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
                                     setIsEdit(true);
                                 }}
                             >
-                                {!isEdit && <EditIcon color="primary" />}
+                                <EditIcon color="primary" />
                             </IconButton>
                         </Tooltip>
                     )}

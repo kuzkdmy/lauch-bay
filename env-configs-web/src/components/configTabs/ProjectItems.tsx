@@ -6,7 +6,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
-import { Configs, ConfigType } from '../../types/types';
+import { Configs, ConfigType, MenuItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { Alert, ListItem, Tooltip } from '@mui/material';
 import { collapsiblePanelClick } from '../../redux/actions/menuActions';
@@ -20,6 +20,7 @@ interface MenuItemsProps {
     pl: number;
     isTopLevel?: boolean;
     additionalClass?: string;
+    menuItem: MenuItemType;
     index: number;
     showCreateNewDialog: () => void;
 }
@@ -29,6 +30,7 @@ const ProjectItems: FC<MenuItemsProps> = ({
     pl,
     additionalClass,
     index,
+    menuItem,
     showCreateNewDialog,
 }) => {
     const { collapsiblePanelClick, fetchConfigs, openMenu } = useActions();
@@ -39,7 +41,6 @@ const ProjectItems: FC<MenuItemsProps> = ({
     // const [applications, setApplications] = useMemo(() => {}, [project]);
 
     useEffect(() => {
-        console.log(collapsiblePanelState[project.id]);
         setIsOpen(collapsiblePanelState[project.id]);
     }, [collapsiblePanelState, project]);
 
@@ -154,8 +155,8 @@ const ProjectItems: FC<MenuItemsProps> = ({
                     </Tooltip>
                 </div>
             </StyledListItemButton>
-            {Array.isArray(configs[project.id])
-                ? getCollapsedItems(configs[project.id])
+            {Array.isArray(configs[ConfigType.APPLICATION][project.id])
+                ? getCollapsedItems(configs[ConfigType.APPLICATION][project.id])
                 : null}
         </>
     );

@@ -6,7 +6,11 @@ import _ from 'lodash';
 const initialState = {
     isLoading: false,
     hasErrors: false,
-    configs: {},
+    configs: {
+        [ConfigType.GLOBAL]: {},
+        [ConfigType.PROJECT]: {},
+        [ConfigType.APPLICATION]: {},
+    },
 };
 
 const configsReducer = {
@@ -17,56 +21,14 @@ const configsReducer = {
         state: any,
         action: AnyAction
     ) => {
-        if (action.payload.confType === ConfigType.GLOBAL) {
-            return {
-                ...state,
-                isLoading: false,
-                configs: {
-                    ...state.configs,
-                    'global-id': {
-                        ...action.payload.configs,
-                        id: 'global-id',
-                    },
-                },
-            };
-        }
-        if (
-            action.payload.confType === ConfigType.PROJECT &&
-            Array.isArray(action.payload.configs)
-        ) {
-            return {
-                ...state,
-                isLoading: false,
-                configs: {
-                    ...state.configs,
-                    'projects-id': action.payload.configs,
-                },
-            };
-        } else if (action.payload.confType === ConfigType.PROJECT) {
-            const projectConfigs = [...state.configs['projects-id']];
-            const projectConfigIndex = _.findIndex(projectConfigs, {
-                id: action.payload.id,
-            });
-            projectConfigs.splice(projectConfigIndex, 1, action.payload);
-
-            console.log(action.payload, '0');
-
-            return {
-                ...state,
-                isLoading: false,
-                configs: {
-                    ...state.configs,
-                    'projects-id': projectConfigs,
-                },
-            };
-        }
-        console.log(action.payload, '1');
         return {
             ...state,
-            isLoading: false,
             configs: {
                 ...state.configs,
-                [action.payload.id]: action.payload.configs,
+                [action.payload.confType]: {
+                    ...state.configs[action.payload.confType],
+                    [action.payload.id]: action.payload.configs,
+                },
             },
         };
     },
@@ -78,7 +40,9 @@ const configsReducer = {
             ...state,
             configs: {
                 ...state.configs,
-                [action.payload.id]: action.payload.config,
+                [action.payload.config.confType]: {
+                    [action.payload.config.id]: action.payload.config,
+                },
             },
         };
     },
@@ -91,7 +55,7 @@ const configsReducer = {
 
         return { ...stateConfigs };
     },
-    [ConfigsActionTypes.CONFIG_REQUESTS_ERROR]: (state: any) => {
+    [ConfigsActionTypes.CONFIG_REQUEST_ERROR]: (state: any) => {
         return { ...state, isLoading: false, hasErrors: true };
     },
     [ConfigsActionTypes.SET_HAS_ERRORS]: (state: any, action: AnyAction) => {

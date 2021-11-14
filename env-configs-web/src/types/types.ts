@@ -35,7 +35,7 @@ export enum ConfigsActionTypes {
     FETCH_CONFIGS_SUCCESS = 'FETCH_CONFIGS_SUCCESS',
     SET_HAS_ERRORS = 'SET_HAS_ERRORS',
 
-    CONFIG_REQUESTS_ERROR = 'CONFIG_REQUESTS_ERROR',
+    CONFIG_REQUEST_ERROR = 'CONFIG_REQUEST_ERROR',
     REMOVE_CONFIG_FROM_STATE = 'REMOVE_CONFIG_FROM_STATE',
     REFRESH_CONFIGS = 'REFRESH_CONFIGS',
 
@@ -92,7 +92,7 @@ interface ConfigUpdateSuccess {
     payload: any;
 }
 interface ConfigRequestsErrorAction {
-    type: ConfigsActionTypes.CONFIG_REQUESTS_ERROR;
+    type: ConfigsActionTypes.CONFIG_REQUEST_ERROR;
     payload?: any;
 }
 interface FetchConfigsSuccessAction {
