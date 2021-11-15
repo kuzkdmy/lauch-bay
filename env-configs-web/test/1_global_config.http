@@ -60,7 +60,7 @@ Content-Type: application/json
       "type": "replica"
     }
   ],
-  "version": 1
+  "version": 0
 }
 
 ###
