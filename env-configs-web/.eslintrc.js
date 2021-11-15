@@ -25,7 +25,7 @@ module.exports = {
         'no-useless-constructor': 'off',
         'max-lines': [
             'error',
-            { max: 300, skipBlankLines: true, skipComments: true },
+            { max: 400, skipBlankLines: true, skipComments: true },
         ],
         'react/display-name': 'off',
         'no-return-assign': 'off',

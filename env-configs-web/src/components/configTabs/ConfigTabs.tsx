@@ -1,39 +1,29 @@
-import React, { useState } from 'react';
-import Typography from '@mui/material/Typography';
-import {
-    Button,
-    Checkbox,
-    FormControlLabel,
-    FormGroup,
-    IconButton,
-    Tooltip,
-} from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button } from '@mui/material';
 import TabsPanel from '../tabsPanel/TabsPanel';
-import {
-    Config,
-    Configs,
-    ConfigType,
-    MenuItemType,
-    TabContent,
-} from '../../types/types';
-import _ from 'lodash';
+import { ConfigType, MenuItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import EditIcon from '@mui/icons-material/Edit';
-import CancelIcon from '@mui/icons-material/Cancel';
 import EditableTable from '../basicTable/EditableTable';
 import ProjectItems from './ProjectItems';
+import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
+import ConfigsTabSubHeader from './ConfigsTabSubHeader';
+import { addNewRowToConfig } from '../../redux/actions/menuActions';
 
 const ConfigTabs = () => {
-    const { openMenu, refreshConfigs } = useActions();
-    const { openedItems, collapsedItems } = useTypedSelector(
-        (state) => state.menu
-    );
-    const { configs } = useTypedSelector((state) => state.configsState);
+    const { openedTabs, activeTabId } = useTypedSelector((state) => state.menu);
 
     const [isEdit, setIsEdit] = useState(false);
+    const [isDialogOpened, setIsDialogOpened] = useState(false);
+    const [confToCreate, setConfToCreate] = useState<any>();
     const [showGlobal, setShowGlobal] = useState(false);
     const [showProject, setShowProject] = useState(false);
+    const { addNewRowToConfig, fetchConfigs, updateConfig } = useActions();
+
+    const { editTabs } = useTypedSelector((state) => state.menu);
+    const { configs } = useTypedSelector((state) => state.configsState);
+
+    const tabsContent = useMemo(() => openedTabs, [openedTabs]);
 
     const resetState = () => {
         setIsEdit(false);
@@ -41,228 +31,137 @@ const ConfigTabs = () => {
         setShowGlobal(false);
     };
 
-    const renderCreateNewConfig = () => {
+    useEffect(() => {
+        setIsEdit(!!editTabs[activeTabId]);
+    }, [editTabs, activeTabId]);
+
+    // const getParentConfigs = (
+    //     config: Configs,
+    //     parentConfigs: any,
+    //     type: ConfigType
+    // ) => {
+    //     return (
+    //         <>
+    //             <div className="parent-config">{type} config</div>
+    //             <EditableTable sx={{ marginBottom: '25px' }} menuItem={menu} />
+    //         </>
+    //     );
+    // };
+
+    const renderTableTabsContent = (menuItem: MenuItemType) => {
         return (
-            <div className="create-new-config-block">
-                <div className="create-new-config">
-                    <Typography
-                        variant="subtitle1"
-                        component="div"
-                        gutterBottom
-                    >
-                        There are no any configs ...
-                    </Typography>
-                    <Button variant="contained" onClick={() => {}}>
-                        Create New Config
-                    </Button>
-                </div>
+            <div className="tabs-content-container">
+                <ConfigsTabSubHeader
+                    isEdit={isEdit}
+                    setIsEdit={setIsEdit}
+                    showGlobal={showGlobal}
+                    onAddNewRow={() => {
+                        addNewRowToConfig(menuItem.id);
+                    }}
+                    onSave={() => updateConfig(editTabs[menuItem.id])}
+                    setShowGlobal={setShowGlobal}
+                    showProject={showProject}
+                    setShowProject={setShowProject}
+                    menuItem={menuItem}
+                />
+                <EditableTable
+                    sx={{ marginBottom: '25px', maxHeight: '60vh' }}
+                    menuItem={menuItem}
+                />
+                {/* {item.hasGlobalConfigType && */}
+                {/*    showGlobal && */}
+                {/*    getParentConfigs(config, configs.GLOBAL, ConfigType.GLOBAL)} */}
+                {/* {item.hasProjectConfigType && */}
+                {/*    showProject && */}
+                {/*    getParentConfigs( */}
+                {/*        config as Configs, */}
+                {/*        _.find(configs.PROJECT, (el) => { */}
+                {/*            return el.id === config.projectId; */}
+                {/*        }) as Configs, */}
+                {/*        ConfigType.PROJECT */}
+                {/*    )} */}
             </div>
         );
     };
 
-    const getConfigValue = (val1: any, val2: any) => {
-        if (!val2) {
-            return val1;
-        }
-        return `${val1} -> ${val2}`;
-    };
-
-    const mergeConfigs = (
-        config: Configs,
-        parentConfigs: any = {}
-    ): Configs => {
-        const overriddenEnvConf = parentConfigs?.envConf.map((p: Config) => {
-            const confOverride = _.find(
-                config.envConf,
-                (conf: Config) => conf.envKey === p.envKey
-            );
-            if (!confOverride) {
-                return p;
-            }
-            return {
-                ...p,
-                envOverride: {
-                    dev: {
-                        ...p.envOverride.dev,
-                        value: getConfigValue(
-                            p.envOverride.dev?.value,
-                            confOverride.envOverride.dev?.value
-                        ),
-                    },
-                    prod: {
-                        ...p.envOverride.dev,
-                        value: getConfigValue(
-                            p.envOverride.prod?.value,
-                            confOverride.envOverride.prod?.value
-                        ),
-                    },
-                    stage: {
-                        ...p.envOverride.dev,
-                        value: getConfigValue(
-                            p.envOverride.stage?.value,
-                            confOverride.envOverride.stage?.value
-                        ),
-                    },
-                },
-            };
-        }) as Config[];
-
-        return { ...parentConfigs, envConf: overriddenEnvConf };
-    };
-
-    const getParentConfigs = (
-        config: Configs,
-        parentConfigs: any,
-        type: ConfigType
-    ) => {
+    const renderListTabsContent = (menuItem: MenuItemType) => {
         return (
             <>
-                <div className="parent-config">{type} config</div>
-                <EditableTable
-                    sx={{ marginBottom: '25px' }}
-                    isEdit={false}
-                    rows={mergeConfigs(config as Configs, parentConfigs)}
+                <CreateNewDialog
+                    isOpened={isDialogOpened}
+                    configType={confToCreate}
+                    onClose={() => setIsDialogOpened(false)}
                 />
+                <Button
+                    sx={{ marginBottom: '20px' }}
+                    variant="outlined"
+                    onClick={() => {
+                        setConfToCreate({
+                            type: ConfigType.PROJECT,
+                        });
+                        setIsDialogOpened(true);
+                    }}
+                >
+                    Add New Project
+                </Button>
+                {configs[ConfigType.PROJECT]['projects-id']?.map(
+                    (item, index) => (
+                        <ProjectItems
+                            project={item}
+                            key={index}
+                            pl={2}
+                            isTopLevel
+                            index={index}
+                            menuItem={menuItem}
+                            showCreateNewDialog={() => {
+                                setConfToCreate({
+                                    type: ConfigType.APPLICATION,
+                                    projectId: item.id,
+                                });
+                                setIsDialogOpened(true);
+                            }}
+                        />
+                    )
+                )}
             </>
         );
     };
 
-    const renderTableTabsContent = (item: MenuItemType) => {
-        let config: any;
-        if (Array.isArray(configs[item.type])) {
-            config = _.find(
-                configs[item.type],
-                (val: any) => val.name === item.name
-            );
-        } else {
-            config = configs[item.type];
-        }
-
-        return (
-            config && (
-                <div className="tabs-content-container">
-                    <FormGroup
-                        sx={{
-                            display: 'flex',
-                            width: '500px',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            margin: '5px 25px 20px',
-                        }}
-                    >
-                        <Button
-                            variant="outlined"
-                            disabled={!isEdit}
-                            sx={{ marginRight: 1, height: 30, width: 120 }}
-                        >
-                            Save
-                        </Button>
-                        <IconButton
-                            sx={{ marginRight: '10px' }}
-                            onClick={() => {
-                                setIsEdit(!isEdit);
-                            }}
-                        >
-                            {!isEdit ? (
-                                <Tooltip placement={'top-start'} title="Edit">
-                                    <EditIcon color="primary" />
-                                </Tooltip>
-                            ) : (
-                                <Tooltip placement={'top-start'} title="Cancel">
-                                    <CancelIcon color="secondary" />
-                                </Tooltip>
-                            )}
-                        </IconButton>
-                        {item.type === ConfigType.PROJECT ? (
-                            <FormControlLabel
-                                className="check-box"
-                                onChange={() => {
-                                    setShowGlobal(!showGlobal);
-                                }}
-                                control={<Checkbox />}
-                                label="Show global"
-                            />
-                        ) : null}
-                        {item.type === ConfigType.MICROSERVICE ? (
-                            <>
-                                <FormControlLabel
-                                    className="check-box"
-                                    control={<Checkbox />}
-                                    onChange={() => {
-                                        setShowGlobal(!showGlobal);
-                                    }}
-                                    label="Show global"
-                                />
-                                <FormControlLabel
-                                    className="check-box"
-                                    control={<Checkbox />}
-                                    onChange={() => {
-                                        setShowProject(!showProject);
-                                    }}
-                                    label="Show project"
-                                />
-                            </>
-                        ) : null}
-                    </FormGroup>
-                    <EditableTable
-                        sx={{ marginBottom: '25px' }}
-                        isEdit={isEdit}
-                        rows={config as Configs}
-                    />
-                    {item.hasGlobalConfigType &&
-                        showGlobal &&
-                        getParentConfigs(
-                            config as Configs,
-                            configs.GLOBAL ? configs.GLOBAL : null,
-                            ConfigType.GLOBAL
-                        )}
-                    {item.hasProjectConfigType &&
-                        showProject &&
-                        getParentConfigs(
-                            config as Configs,
-                            _.find(configs.PROJECT, (el) => {
-                                return el.id === config.projectId;
-                            }) as Configs,
-                            ConfigType.PROJECT
-                        )}
-                </div>
-            )
-        );
-    };
-
-    const renderListTabsContent = (items: Configs[]) => {
-        return items?.map((item, index) => (
-            <ProjectItems
-                item={item}
-                key={item.name}
-                projectId={item.id!}
-                pl={2}
-                isTopLevel
-                index={index}
-                nestedItems={configs.MICROSERVICE?.filter(
-                    (el) => el.projectId === item.id
-                )}
-            />
-        ));
-    };
-
-    const tabItems = openedItems?.map((item: MenuItemType): TabContent => {
-        if (item.isTableContent) {
+    const getTabItems = () => {
+        return tabsContent.map((item: MenuItemType): any => {
+            if (!configs[item.type][activeTabId]) {
+                return {};
+            }
+            if (item.isTableContent) {
+                return {
+                    tabName: item.name,
+                    content: renderTableTabsContent(item),
+                };
+            }
             return {
                 tabName: item.name,
-                content: renderTableTabsContent(item),
+                content: renderListTabsContent(item),
             };
-        }
-        const listTabsContent = renderListTabsContent(configs[item.type]!);
-        return { tabName: item.name, content: listTabsContent };
-    });
+        });
+    };
 
     return (
         <TabsPanel
-            tabsContent={tabItems}
+            tabsContent={getTabItems}
+            activeTabId={activeTabId}
             onChange={resetState}
-            onTabClick={(type = ConfigType.GLOBAL, id: string) => {
-                refreshConfigs(type, id);
+            onTabClick={(
+                type = ConfigType.GLOBAL,
+                name: string,
+                id: string
+            ) => {
+                if (!editTabs[id]) {
+                    fetchConfigs({
+                        type,
+                        id,
+                        name,
+                    });
+                }
             }}
         />
     );

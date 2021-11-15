@@ -70,11 +70,18 @@ $selectedTabColor: #0e0e0e;
         }
       }
 
-      //.application-level-item {
-      //  &:nth-of-type(1) {
-      //    background-color: white;
-      //  }
-      //}
+      .expand-icon {
+        margin-right: 10px;
+        padding-top: 7px
+      }
+
+      .table-edit-icons {
+        display: flex;
+
+        .table-delete-row-icon {
+
+        }
+      }
     }
   }
 }
