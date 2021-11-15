@@ -57,9 +57,9 @@ export const fetchConfigs = ({
     };
 };
 
-export const removeConfigFromState = (id: string): ConfigsActions => ({
+export const removeConfigFromState = (configTab: any): ConfigsActions => ({
     type: ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE,
-    payload: { id },
+    payload: configTab,
 });
 
 export const createConfigs = (config: Configs) => {

@@ -101,7 +101,7 @@ const TabsPanel: FC<TabsPanelProps> = ({
                                             type: tab.type,
                                         });
                                         removeTabFromEditState(tab.id);
-                                        removeConfigFromState(tab.id);
+                                        removeConfigFromState(tab);
                                         onChange();
                                     }}
                                     sx={{

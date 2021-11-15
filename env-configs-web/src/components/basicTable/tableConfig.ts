@@ -22,7 +22,7 @@ export const columnsConfig = (): any[] => [
         minWidth: 150,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
-        getValue: (row: Config) => row.default?.value || '',
+        getValue: (row: Config) => row.default?.value,
     },
     {
         id: 'dev',

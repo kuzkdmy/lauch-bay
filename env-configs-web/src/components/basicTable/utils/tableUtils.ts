@@ -1,11 +1,16 @@
 import { Config } from '../../../types/types';
 
+const getDefaultValue = () => ({
+    integer: () => 0,
+    string: () => '',
+    boolean: () => false,
+});
+
 export const getColUpdateValue = (
     value: any,
     configRow: Config,
     colId: string
 ): Config => {
-    // todo refactor
     switch (colId) {
         case 'dev':
             return {
@@ -35,6 +40,13 @@ export const getColUpdateValue = (
             return {
                 ...configRow,
                 [colId]: { value },
+            };
+        case 'type':
+            return {
+                ...configRow,
+                default: { value: getDefaultValue()[value]() },
+                envOverride: { dev: null, prod: null, stage: null },
+                [colId]: value,
             };
         default:
             return { ...configRow, [colId]: value };

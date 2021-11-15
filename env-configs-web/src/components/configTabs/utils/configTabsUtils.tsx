@@ -10,7 +10,7 @@ export const getEmptyConfigRow = (): Configs => ({
     id: '',
     projectId: '',
     name: '',
-    envConf: [getEmptyEnvConf()],
+    envConf: [],
     deployConf: [],
     confType: ConfigType.PROJECT,
     version: 0,

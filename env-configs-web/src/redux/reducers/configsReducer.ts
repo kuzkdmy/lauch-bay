@@ -51,7 +51,7 @@ const configsReducer = {
         action: AnyAction
     ) => {
         const stateConfigs = { ...state };
-        delete stateConfigs.configs[action.payload.id];
+        delete stateConfigs.configs[action.payload.type][action.payload.id];
 
         return { ...stateConfigs };
     },
