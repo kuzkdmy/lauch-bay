@@ -1,0 +1,4045 @@
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-anticor-liveramp-3",
+  "name": "Legacy Anticor Liveramp 3",
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "5435"
+        }
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.legacy.anticor.liveramp.dev"
+        },
+        "stage": {
+          "value": "pulsar.legacy.anticor.liveramp.stage"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-15T160745.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload-3",
+  "projectId": "legacy-anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload 3",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160740.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": {
+        "value": ""
+      },
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160728.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-fbr-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp File Based Recognition upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_FBR_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_FBR_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-15T160722.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-15T160635.409.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160629.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "tenant-configuration-3",
+  "name": "Tenant Configuration 3" ,
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160613.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1000,
+      "envOverride": {
+        "dev": 100,
+        "stage": null,
+        "prod": 2000
+      },
+      "type": "limit_cpu"
+    },
+    {
+      "default": 512,
+      "envOverride": {
+        "dev": 256,
+        "stage": null,
+        "prod": 1024
+      },
+      "type": "request_ram"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": 512,
+        "stage": null,
+        "prod": 2048
+      },
+      "type": "limit_ram"
+    },
+    {
+      "default": "-Xms512M -Xmx1G",
+      "envOverride": {
+        "dev": "-Xms256M -Xmx512M",
+        "stage": null,
+        "prod": "-Xms1G -Xmx2G"
+      },
+      "type": "java_opts"
+    },
+    {
+      "default": false,
+      "envOverride": {
+        "dev": null,
+        "stage": true,
+        "prod": true
+      },
+      "type": "empty_dir_memory"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160607.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1000,
+      "envOverride": {
+        "dev": 100,
+        "stage": null,
+        "prod": 2000
+      },
+      "type": "limit_cpu"
+    },
+    {
+      "default": 512,
+      "envOverride": {
+        "dev": 256,
+        "stage": null,
+        "prod": 1024
+      },
+      "type": "request_ram"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": 512,
+        "stage": null,
+        "prod": 2048
+      },
+      "type": "memory_lim"
+    },
+    {
+      "default": "-Xms512M -Xmx1G",
+      "envOverride": {
+        "dev": "-Xms256M -Xmx512M",
+        "stage": null,
+        "prod": "-Xms1G -Xmx2G"
+      },
+      "type": "java_opts"
+    },
+    {
+      "default": false,
+      "envOverride": {
+        "dev": null,
+        "stage": true,
+        "prod": true
+      },
+      "type": "empty_dir_memory"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160541.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1000,
+      "envOverride": {
+        "dev": 100,
+        "stage": null,
+        "prod": 2000
+      },
+      "type": "limit_cpu"
+    },
+    {
+      "default": 512,
+      "envOverride": {
+        "dev": 256,
+        "stage": null,
+        "prod": 1024
+      },
+      "type": "request_ram"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": 512,
+        "stage": null,
+        "prod": 2048
+      },
+      "type": "request_lim"
+    },
+    {
+      "default": "-Xms512M -Xmx1G",
+      "envOverride": {
+        "dev": "-Xms256M -Xmx512M",
+        "stage": null,
+        "prod": "-Xms1G -Xmx2G"
+      },
+      "type": "java_opts"
+    },
+    {
+      "default": false,
+      "envOverride": {
+        "dev": null,
+        "stage": true,
+        "prod": true
+      },
+      "type": "empty_dir_memory"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160426.400.txt
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432
+        },
+        "stage": {
+          "value": 15432
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-15T160357.200.json
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432
+        },
+        "stage": {
+          "value": 15432
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-15T160347.409.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "blank_project",
+  "name": "BLANK PROJECT",
+  "envConf": [],
+  "deployConf": [],
+  "version": 0
+}
+
+<> 2021-11-12T131727.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-12T131221.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T131213.409.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload-3",
+  "projectId": "legacy-anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload 3",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T131133.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload-3",
+  "projectId": "legacy-anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload 3",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T131120.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": {
+        "value": ""
+      },
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T131044.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": {
+        "value": ""
+      },
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": {
+        "value": 1
+      },
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": {
+        "value": 200
+      },
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T131007.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": "",
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": 5432,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130851.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": "",
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "default": {
+        "value": 5432,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130818.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-tenant-configuration",
+  "name": "Legacy Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev",
+          "type": "string"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage",
+          "type": "string"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "default": {
+        "value": 5432,
+        "type": "integer"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130736.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130717.409.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "request_ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130706.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130640.400.txt
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "tenant-configuration",
+  "name": "Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130636.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1000,
+      "envOverride": {
+        "dev": 100,
+        "stage": null,
+        "prod": 2000
+      },
+      "type": "limit_cpu"
+    },
+    {
+      "default": 512,
+      "envOverride": {
+        "dev": 256,
+        "stage": null,
+        "prod": 1024
+      },
+      "type": "request_ram"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": 512,
+        "stage": null,
+        "prod": 2048
+      },
+      "type": "request_lim"
+    },
+    {
+      "default": "-Xms512M -Xmx1G",
+      "envOverride": {
+        "dev": "-Xms256M -Xmx512M",
+        "stage": null,
+        "prod": "-Xms1G -Xmx2G"
+      },
+      "type": "java_opts"
+    },
+    {
+      "default": false,
+      "envOverride": {
+        "dev": null,
+        "stage": true,
+        "prod": true
+      },
+      "type": "empty_dir_memory"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130632.200.json
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432
+        },
+        "stage": {
+          "value": 15432
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-12T130611.200.json
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": "sfsdasd"
+      },
+      "envOverride": {
+        "dev": {
+          "value": "asdf"
+        },
+        "stage": {
+          "value": "asdfasdf"
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-11T112135.400.txt
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": "5432"
+      },
+      "envOverride": {
+        "dev": {
+          "value": "25432"
+        },
+        "stage": {
+          "value": "15432"
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": "0"
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-11T111920.400.txt
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": "5432"
+      },
+      "envOverride": {
+        "dev": {
+          "value": "25432"
+        },
+        "stage": {
+          "value": "15432"
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": "true"
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-11T111813.400.txt
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": "5432"
+      },
+      "envOverride": {
+        "dev": {
+          "value": "25432"
+        },
+        "stage": {
+          "value": "15432"
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-11T111755.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "tenant-configuration",
+  "name": "Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "request_cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-10T201043.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "request_cpu"
+    },
+    {
+      "default": 1000,
+      "envOverride": {
+        "dev": 100,
+        "stage": null,
+        "prod": 2000
+      },
+      "type": "limit_cpu"
+    },
+    {
+      "default": 512,
+      "envOverride": {
+        "dev": 256,
+        "stage": null,
+        "prod": 1024
+      },
+      "type": "request_ram"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": 512,
+        "stage": null,
+        "prod": 2048
+      },
+      "type": "request_lim"
+    },
+    {
+      "default": "-Xms512M -Xmx1G",
+      "envOverride": {
+        "dev": "-Xms256M -Xmx512M",
+        "stage": null,
+        "prod": "-Xms1G -Xmx2G"
+      },
+      "type": "java_opts"
+    },
+    {
+      "default": false,
+      "envOverride": {
+        "dev": null,
+        "stage": true,
+        "prod": true
+      },
+      "type": "empty_dir_memory"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-10T201037.200.json
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432
+        },
+        "stage": {
+          "value": 15432
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-10T201033.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "legacy-anticor-liveramp-3",
+  "name": "Legacy Anticor Liveramp 3",
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "5435"
+        }
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.legacy.anticor.liveramp.dev"
+        },
+        "stage": {
+          "value": "pulsar.legacy.anticor.liveramp.stage"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-09T183332.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload-3",
+  "projectId": "legacy-anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload 3",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-09T183327.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-09T183133.409.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp-3",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-09T183128.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "tenant-configuration",
+  "name": "Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-09T183123.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-09T183117.200.json
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432
+        },
+        "stage": {
+          "value": 15432
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-09T183108.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-08T193438.409.json
+
+###
+
+POST http://localhost:8193/api/v1.0/application
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp-audience-file-upload",
+  "projectId": "anticor-liveramp",
+  "name": "Anticor LiveRamp Audience File Upload",
+  "envConf": [
+    {
+      "envKey": "ENV_KEY_BOOLEAN_VALUE",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": {
+          "value": true
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "type": "integer",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": {
+          "value": 1
+        },
+        "stage": null,
+        "prod": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "type": "integer",
+      "default": {
+        "value": 1440
+      },
+      "envOverride": {
+        "dev": {
+          "value": 15
+        },
+        "stage": {
+          "value": 180
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": 500
+      },
+      "type": "cpu"
+    },
+    {
+      "default": 1024,
+      "envOverride": {
+        "dev": null,
+        "stage": 2048,
+        "prod": 8096
+      },
+      "type": "ram"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-08T193433.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "tenant-configuration",
+  "name": "Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-08T193427.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-08T193422.200.json
+
+###
+
+PUT http://localhost:8193/api/v1.0/global_config
+accept: application/json
+Content-Type: application/json
+
+{
+  "envConf": [
+    {
+      "envKey": "POSTGRES_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": {
+          "value": 25432
+        },
+        "stage": {
+          "value": 15432
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pulsar.dev"
+        },
+        "stage": {
+          "value": "pulsar.stage"
+        },
+        "prod": {
+          "value": "pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "ZIPKIN_TRACE_LOGS",
+      "type": "boolean",
+      "default": {
+        "value": true
+      },
+      "envOverride": {
+        "dev": {
+          "value": false
+        },
+        "stage": {
+          "value": false
+        },
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-08T193418.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "project-pulsar.dev"
+        },
+        "stage": {
+          "value": "project-pulsar.stage"
+        },
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 2
+}
+
+<> 2021-11-08T132137.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "anticor-liveramp",
+  "name": "Anticor Liveramp",
+  "envConf": [
+    {
+      "envKey": "LIVERAMP_DB_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-liveramp.dev"
+        },
+        "stage": {
+          "value": "pg-liveramp.stage"
+        },
+        "prod": {
+          "value": "pg-liveramp.prod"
+        }
+      }
+    },
+    {
+      "envKey": "PULSAR_HOST",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "project-pulsar.dev"
+        },
+        "stage": {
+          "value": "project-pulsar.stage"
+        },
+        "prod": {
+          "value": "project-pulsar.prod"
+        }
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_SCHEMA",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    },
+    {
+      "envKey": "LIVERAMP_DB_USER",
+      "type": "string",
+      "default": {
+        "value": "liveramp"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": null,
+      "type": "replica"
+    },
+    {
+      "default": 100,
+      "envOverride": {
+        "dev": 50,
+        "stage": null,
+        "prod": 200
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 1
+}
+
+<> 2021-11-08T125738.200.json
+
+###
+
+POST http://localhost:8193/api/v1.0/project
+accept: application/json
+Content-Type: application/json
+
+{
+  "id": "tenant-configuration",
+  "name": "Tenant Configuration",
+  "envConf": [
+    {
+      "envKey": "TENANT_DB_HOST_PATTERN",
+      "default": null,
+      "type": "string",
+      "envOverride": {
+        "dev": {
+          "value": "pg-{idx}-tenant.dev"
+        },
+        "stage": {
+          "value": "pg-{idx}-tenant.stage"
+        },
+        "prod": {
+          "value": "pg-{idx}-tenant.prod"
+        }
+      }
+    },
+    {
+      "envKey": "TENANT_DB_PORT",
+      "type": "integer",
+      "default": {
+        "value": 5432
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      }
+    }
+  ],
+  "deployConf": [
+    {
+      "default": 1,
+      "envOverride": {
+        "dev": 2,
+        "stage": 3,
+        "prod": 5
+      },
+      "type": "replica"
+    },
+    {
+      "default": 200,
+      "envOverride": {
+        "dev": 100,
+        "stage": 100,
+        "prod": 500
+      },
+      "type": "cpu"
+    }
+  ],
+  "version": 0
+}
+
+<> 2021-11-08T123237.409.json
+
+###
+

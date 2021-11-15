@@ -3,9 +3,9 @@ accept: application/json
 Content-Type: application/json
 
 {
-  "id": "anticor-liveramp-audience-file-upload",
+  "id": "anticor-liveramp-fbr-upload",
   "projectId": "anticor-liveramp",
-  "name": "Anticor LiveRamp Audience File Upload",
+  "name": "Anticor LiveRamp File Based Recognition upload",
   "envConf": [
     {
       "envKey": "ENV_KEY_BOOLEAN_VALUE",
@@ -26,7 +26,7 @@ Content-Type: application/json
       }
     },
     {
-      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_TENANT_PARALLELISM",
+      "envKey": "ANTICOR_LIVERAMP_FBR_UPLOAD_TENANT_PARALLELISM",
       "type": "integer",
       "default": {
         "value": 2
@@ -42,7 +42,7 @@ Content-Type: application/json
       }
     },
     {
-      "envKey": "ANTICOR_LIVERAMP_AUDIENCE_FILE_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
+      "envKey": "ANTICOR_LIVERAMP_FBR_UPLOAD_INTERVAL_NOT_OFTEN_THAN_MINUTES",
       "type": "integer",
       "default": {
         "value": 1440

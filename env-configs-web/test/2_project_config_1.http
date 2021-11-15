@@ -99,7 +99,7 @@ Content-Type: application/json
         "stage": null,
         "prod": 2048
       },
-      "type": "request_lim"
+      "type": "limit_ram"
     },
     {
       "default": "-Xms512M -Xmx1G",
