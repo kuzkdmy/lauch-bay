@@ -3,7 +3,7 @@ import './App.scss';
 import MenuBar from './menuBar/MenuBar';
 import ConfigTabs from './configTabs/ConfigTabs';
 import { Alert } from '@mui/material';
-import Notification from './alert/Notification';
+import NotificationComponent from './alert/NotificationComponent';
 import { useActions } from '../redux/hooks/useActions';
 import { useTypedSelector } from '../redux/hooks/useTypedSelector';
 
@@ -20,7 +20,7 @@ const App = () => {
                     </div>
                 </div>
                 <div className="content">
-                    <Notification
+                    <NotificationComponent
                         alertSeverity={'error'}
                         visibilityState={{
                             setVisible: setHasErrors,

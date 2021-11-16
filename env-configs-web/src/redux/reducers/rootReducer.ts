@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import configsReducer from './configsReducer';
-import menuReducer from './menuReducer';
+import tabsReducer from './tabsReducer';
 
 export const rootReducer = combineReducers({
-    menu: menuReducer,
+    tabState: tabsReducer,
     configsState: configsReducer,
 });
 

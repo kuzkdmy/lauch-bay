@@ -1,9 +1,4 @@
-import {
-    Config,
-    Configs,
-    ConfigType,
-    MenuItemType,
-} from '../../../types/types';
+import { Config, Configs, ConfigType, TabItemType } from '../../../types/types';
 import _ from 'lodash';
 
 export const getEmptyConfigRow = (): Configs => ({

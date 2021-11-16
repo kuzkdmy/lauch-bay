@@ -12,7 +12,7 @@ export interface NotificationProps {
     visibilityState: { setVisible: any; isVisible: any };
 }
 
-const Notification: FC<NotificationProps> = ({
+const NotificationComponent: FC<NotificationProps> = ({
     message,
     alertSeverity,
     visibilityState,
@@ -44,4 +44,4 @@ const Notification: FC<NotificationProps> = ({
     );
 };
 
-export default Notification;
+export default NotificationComponent;

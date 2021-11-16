@@ -5,7 +5,7 @@ import {
     ConfigsActions,
     ConfigsActionTypes,
     ConfigType,
-    MenuActionTypes,
+    TabsActionTypes,
 } from '../../types/types';
 
 interface FetchConfigProps {
@@ -40,7 +40,7 @@ export const fetchConfigs = ({
             });
             openAfterFetching &&
                 dispatch({
-                    type: MenuActionTypes.OPEN_TAB,
+                    type: TabsActionTypes.OPEN_TAB,
                     payload: {
                         id,
                         name: name,
@@ -83,7 +83,7 @@ export const createConfigs = (config: Configs) => {
                     },
                 });
                 dispatch({
-                    type: MenuActionTypes.OPEN_TAB,
+                    type: TabsActionTypes.OPEN_TAB,
                     payload: {
                         id: config.id,
                         name: config.name,
@@ -113,7 +113,7 @@ export const updateConfig = (config: Configs) => {
             );
             if (resp.status === 200) {
                 dispatch({
-                    type: MenuActionTypes.EDIT_CONFIG_ROW,
+                    type: TabsActionTypes.EDIT_CONFIG_ROW,
                     payload: { config },
                 });
                 dispatch({

@@ -9,7 +9,7 @@ interface SelectProps {
     setSelectedType: (type: any) => void;
 }
 
-const SelectItem: FC<SelectProps> = ({
+const SelectComponent: FC<SelectProps> = ({
     setSelectedType,
     selectItems,
     initValue,
@@ -43,4 +43,4 @@ const SelectItem: FC<SelectProps> = ({
     );
 };
 
-export default SelectItem;
+export default SelectComponent;

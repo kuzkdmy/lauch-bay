@@ -31,7 +31,6 @@ $selectedTabColor: #0e0e0e;
       .menu-sub-header {
         display: flex;
         align-items: center;
-        margin-left: 10px;
         cursor: default;
       }
     }
@@ -78,9 +77,6 @@ $selectedTabColor: #0e0e0e;
       .table-edit-icons {
         display: flex;
 
-        .table-delete-row-icon {
-
-        }
       }
     }
   }
