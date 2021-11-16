@@ -6,6 +6,7 @@ Global / concurrentRestrictions += Tags.limit(Tags.Test, 1)
 ThisBuild / parallelExecution := false
 
 lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
   .settings(
     name := "launch-bay",
     addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.13.0" cross CrossVersion.full),
