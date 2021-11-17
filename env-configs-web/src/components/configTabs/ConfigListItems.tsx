@@ -6,37 +6,39 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
-import { Configs, ConfigType, MenuItemType } from '../../types/types';
+import { Configs, ConfigType, TabItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { Alert, ListItem, Tooltip } from '@mui/material';
-import { collapsiblePanelClick } from '../../redux/actions/menuActions';
+import { collapsiblePanelClick } from '../../redux/actions/tabActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import _ from 'lodash';
 
-interface MenuItemsProps {
+interface ConfigListItemsProps {
     project: Configs;
     pl: number;
     isTopLevel?: boolean;
     additionalClass?: string;
-    menuItem: MenuItemType;
+    tabItem: TabItemType;
     index: number;
     showCreateNewDialog: () => void;
 }
 
-const ProjectItems: FC<MenuItemsProps> = ({
+const ConfigListItems: FC<ConfigListItemsProps> = ({
     project,
     pl,
     additionalClass,
     index,
-    menuItem,
+    tabItem,
     showCreateNewDialog,
 }) => {
-    const { collapsiblePanelClick, fetchConfigs, openMenu } = useActions();
+    const { collapsiblePanelClick, fetchConfigs, openTab } = useActions();
 
     const { configs } = useTypedSelector((state) => state.configsState);
-    const { collapsiblePanelState } = useTypedSelector((state) => state.menu);
+    const { collapsiblePanelState } = useTypedSelector(
+        (state) => state.tabState
+    );
     const [isOpen, setIsOpen] = useState(false);
     // const [applications, setApplications] = useMemo(() => {}, [project]);
 
@@ -162,4 +164,4 @@ const ProjectItems: FC<MenuItemsProps> = ({
     );
 };
 
-export default ProjectItems;
+export default ConfigListItems;

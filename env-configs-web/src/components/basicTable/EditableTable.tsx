@@ -10,33 +10,33 @@ import TableRow from '@mui/material/TableRow';
 import { Checkbox, Input, Switch, Tooltip } from '@mui/material';
 import { columnsConfig } from './tableConfig';
 import CloseIcon from '@mui/icons-material/Close';
-import SelectItem from '../listItem/SelectItem';
+import SelectComponent from '../selectComponent/SelectComponent';
 import { useActions } from '../../redux/hooks/useActions';
 import { getColUpdateValue } from './utils/tableUtils';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { Config, ConfigType, MenuItemType } from '../../types/types';
+import { Config, TabItemType } from '../../types/types';
 
 interface EditableTableProps {
     onRowsRemove?: any;
-    menuItem: MenuItemType;
+    tabItem: TabItemType;
     sx?: any;
 }
 
 const EditableTable: FC<EditableTableProps> = ({
     sx,
     onRowsRemove,
-    menuItem,
+    tabItem,
 }) => {
     const [rowType, setRowType] = useState('text');
     const [isEdit, setIsEdit] = useState(false);
 
-    const { editTabs, activeTabId, openedTabs } = useTypedSelector(
-        (state) => state.menu
+    const { editTabs, activeTabId } = useTypedSelector(
+        (state) => state.tabState
     );
     const { configs } = useTypedSelector((state) => state.configsState);
 
     const [tableRows, setTableRows] = useState(
-        configs[menuItem.type][activeTabId]?.envConf
+        configs[tabItem.type][activeTabId]?.envConf
     );
     const [editingRow, setEditingRow] = useState({ idx: 0, isEdit: false });
 
@@ -49,7 +49,7 @@ const EditableTable: FC<EditableTableProps> = ({
     const onEditingRowChange = (updatedRows?: Config[]) => {
         editConfigItem(
             {
-                ...configs[menuItem.type][activeTabId],
+                ...configs[tabItem.type][activeTabId],
                 id: activeTabId,
                 envConf: updatedRows || tableRows,
                 confType: editTabs[activeTabId].confType,
@@ -63,9 +63,9 @@ const EditableTable: FC<EditableTableProps> = ({
         if (editTabs[activeTabId]) {
             setTableRows(editTabs[activeTabId]?.envConf);
         } else {
-            setTableRows(configs[menuItem.type][activeTabId]?.envConf);
+            setTableRows(configs[tabItem.type][activeTabId]?.envConf);
         }
-    }, [activeTabId, configs, editTabs, menuItem.type]);
+    }, [activeTabId, configs, editTabs, tabItem.type]);
 
     const onRowsChange = (value: any, colId: string) => {
         const updatedRows = [...tableRows];
@@ -118,7 +118,7 @@ const EditableTable: FC<EditableTableProps> = ({
                     : renderValue(col, idx);
             case col.id === 'type':
                 return isRowInEditState(idx) ? (
-                    <SelectItem
+                    <SelectComponent
                         setSelectedType={setRowType}
                         label="Type"
                         initValue={col.getValue(tableRows[idx])}

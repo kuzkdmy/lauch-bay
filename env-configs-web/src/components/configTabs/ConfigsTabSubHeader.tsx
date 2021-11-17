@@ -10,7 +10,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/HighlightOff';
 import AddIcon from '@mui/icons-material/Add';
-import { Configs, ConfigType, MenuItemType } from '../../types/types';
+import { ConfigType, TabItemType } from '../../types/types';
 import { getEmptyConfigRow } from './utils/configTabsUtils';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
@@ -22,23 +22,19 @@ interface ConfigsSubHeaderProps {
     setIsEdit?: any;
     onAddNewRow?: any;
     onSave: any;
-    menuItem: MenuItemType;
-    showGlobal?: boolean;
-    setShowGlobal?: any;
-    setShowProject?: any;
-    showProject?: boolean;
+    tabItem: TabItemType;
+    showInherited?: boolean;
+    setShowInherited?: any;
 }
 
 const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
     isEdit,
     setIsEdit,
-    menuItem,
+    tabItem,
     onSave,
     onAddNewRow,
-    showGlobal,
-    setShowGlobal,
-    setShowProject,
-    showProject,
+    showInherited,
+    setShowInherited,
 }: any) => {
     const { editConfigItem } = useActions();
     const { configs } = useTypedSelector((state) => state.configsState);
@@ -100,8 +96,8 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
                                         editConfigItem(
                                             {
                                                 ...getEmptyConfigRow(),
-                                                id: menuItem.id,
-                                                confType: menuItem.type,
+                                                id: tabItem.id,
+                                                confType: tabItem.type,
                                             },
                                             !isEdit
                                         );
@@ -122,13 +118,13 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
                                 sx={{ marginRight: '10px' }}
                                 onClick={() => {
                                     const configToEdit =
-                                        configs[menuItem.type][menuItem.id];
+                                        configs[tabItem.type][tabItem.id];
                                     if (!_.isEmpty(configToEdit)) {
                                         editConfigItem(
                                             {
                                                 ...configToEdit,
-                                                id: menuItem.id,
-                                                confType: menuItem.type,
+                                                id: tabItem.id,
+                                                confType: tabItem.type,
                                             },
                                             true
                                         );
@@ -140,36 +136,16 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
                             </IconButton>
                         </Tooltip>
                     )}
-                    {menuItem?.type === ConfigType.PROJECT ? (
+                    {tabItem?.type !== ConfigType.GLOBAL && (
                         <FormControlLabel
                             className="check-box"
                             onChange={() => {
-                                setShowGlobal(!showGlobal);
+                                setShowInherited(!showInherited);
                             }}
                             control={<Checkbox />}
-                            label="Show global"
+                            label="Show Inherited Configs"
                         />
-                    ) : null}
-                    {menuItem?.type === ConfigType.APPLICATION ? (
-                        <>
-                            <FormControlLabel
-                                className="check-box"
-                                control={<Checkbox />}
-                                onChange={() => {
-                                    setShowGlobal(!showGlobal);
-                                }}
-                                label="Show global"
-                            />
-                            <FormControlLabel
-                                className="check-box"
-                                control={<Checkbox />}
-                                onChange={() => {
-                                    setShowProject(!showProject);
-                                }}
-                                label="Show project"
-                            />
-                        </>
-                    ) : null}
+                    )}
                 </>
             </FormGroup>
         </>

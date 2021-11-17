@@ -1,5 +1,5 @@
 import { AnyAction } from 'redux';
-import { MenuActionTypes } from '../../types/types';
+import { TabsActionTypes } from '../../types/types';
 import { getEmptyEnvConf } from '../../components/configTabs/utils/configTabsUtils';
 import createReducer from '../hooks/createReducer';
 
@@ -10,8 +10,8 @@ const initialState = {
     collapsiblePanelState: {},
 };
 
-const menuReducer = {
-    [MenuActionTypes.ADD_NEW_ROW_TO_CONFIG]: (
+const tabsReducer = {
+    [TabsActionTypes.ADD_NEW_ROW_TO_CONFIG]: (
         state: any,
         action: AnyAction
     ) => {
@@ -29,7 +29,7 @@ const menuReducer = {
             },
         };
     },
-    [MenuActionTypes.EDIT_CONFIG_ROW]: (state: any, action: AnyAction) => {
+    [TabsActionTypes.EDIT_CONFIG_ROW]: (state: any, action: AnyAction) => {
         if (!action.payload.isEdit) {
             const stateEditTabs = { ...state.editTabs };
             delete stateEditTabs[action.payload.config.id];
@@ -46,7 +46,7 @@ const menuReducer = {
             },
         };
     },
-    [MenuActionTypes.OPEN_TAB]: (state: any, action: AnyAction) => {
+    [TabsActionTypes.OPEN_TAB]: (state: any, action: AnyAction) => {
         if (
             !state.openedTabs
                 .map((item: any) => item.id)
@@ -60,7 +60,7 @@ const menuReducer = {
         }
         return { ...state, activeTabId: action.payload.id };
     },
-    [MenuActionTypes.COLLAPSIBLE_ITEM_CLICK]: (
+    [TabsActionTypes.COLLAPSIBLE_ITEM_CLICK]: (
         state: any,
         action: AnyAction
     ) => {
@@ -72,7 +72,7 @@ const menuReducer = {
             },
         };
     },
-    [MenuActionTypes.CLOSE_TAB]: (state: any, action: AnyAction) => {
+    [TabsActionTypes.CLOSE_TAB]: (state: any, action: AnyAction) => {
         return {
             ...state,
             collapsiblePanelState:
@@ -84,9 +84,9 @@ const menuReducer = {
             }),
         };
     },
-    [MenuActionTypes.SET_ACTIVE_TAB]: (state: any, action: AnyAction) => {
+    [TabsActionTypes.SET_ACTIVE_TAB]: (state: any, action: AnyAction) => {
         return { ...state, activeTabId: action.payload };
     },
 };
 
-export default createReducer(menuReducer, initialState);
+export default createReducer(tabsReducer, initialState);

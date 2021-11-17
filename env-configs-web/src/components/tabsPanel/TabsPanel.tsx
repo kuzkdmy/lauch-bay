@@ -44,7 +44,7 @@ const TabsPanel: FC<TabsPanelProps> = ({
     onTabClick,
 }) => {
     const { closeTab } = useActions();
-    const { openedTabs } = useTypedSelector((state) => state.menu);
+    const { openedTabs } = useTypedSelector((state) => state.tabState);
     const { setActiveTabId, removeConfigFromState, removeTabFromEditState } =
         useActions();
     const [value, setValue] = useState(0);

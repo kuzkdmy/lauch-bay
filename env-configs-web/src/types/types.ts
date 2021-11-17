@@ -44,7 +44,7 @@ export enum ConfigsActionTypes {
     CREATE_NEW_SUCCESS = 'CREATE_NEW_SUCCESS',
 }
 
-export enum MenuActionTypes {
+export enum TabsActionTypes {
     OPEN_TAB = 'OPEN_TAB',
     OPEN_CREATE_NEW_CONFIG = 'OPEN_CREATE_NEW_CONFIG',
     COLLAPSIBLE_ITEM_CLICK = 'COLLAPSIBLE_ITEM_CLICK',
@@ -57,7 +57,7 @@ export enum MenuActionTypes {
     SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
 }
 
-export interface MenuItemType {
+export interface TabItemType {
     id: string;
     projectId?: string;
     name: string;
@@ -72,8 +72,8 @@ export interface TabContent {
     content: any;
 }
 
-export interface MenuActions {
-    type: MenuActionTypes;
+export interface TabsActions {
+    type: TabsActionTypes;
     payload: any;
 }
 
@@ -112,12 +112,6 @@ interface RefreshProjectConfigsAction {
         config: Configs;
     };
 }
-interface SetIsErrorAction {
-    type: ConfigsActionTypes.SET_HAS_ERRORS;
-    payload: {
-        isError: boolean;
-    };
-}
 
 export type ConfigsActions =
     | CreateNewConfig
@@ -127,5 +121,5 @@ export type ConfigsActions =
     | FetchConfigsAction
     | FetchConfigsSuccessAction
     | ConfigRequestsErrorAction
-    | MenuActions
+    | TabsActions
     | RefreshProjectConfigsAction;

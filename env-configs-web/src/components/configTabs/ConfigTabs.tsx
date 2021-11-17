@@ -1,26 +1,28 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import TabsPanel from '../tabsPanel/TabsPanel';
-import { ConfigType, MenuItemType } from '../../types/types';
+import { ConfigType, TabItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import EditableTable from '../basicTable/EditableTable';
-import ProjectItems from './ProjectItems';
+import ConfigListItems from './ConfigListItems';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
 import ConfigsTabSubHeader from './ConfigsTabSubHeader';
-import { addNewRowToConfig } from '../../redux/actions/menuActions';
+import { addNewRowToConfig } from '../../redux/actions/tabActions';
 
 const ConfigTabs = () => {
-    const { openedTabs, activeTabId } = useTypedSelector((state) => state.menu);
+    const { openedTabs, activeTabId } = useTypedSelector(
+        (state) => state.tabState
+    );
 
     const [isEdit, setIsEdit] = useState(false);
     const [isDialogOpened, setIsDialogOpened] = useState(false);
     const [confToCreate, setConfToCreate] = useState<any>();
-    const [showGlobal, setShowGlobal] = useState(false);
+    const [showInherited, setShowInherited] = useState(false);
     const [showProject, setShowProject] = useState(false);
     const { addNewRowToConfig, fetchConfigs, updateConfig } = useActions();
 
-    const { editTabs } = useTypedSelector((state) => state.menu);
+    const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
 
     const tabsContent = useMemo(() => openedTabs, [openedTabs]);
@@ -28,7 +30,7 @@ const ConfigTabs = () => {
     const resetState = () => {
         setIsEdit(false);
         setShowProject(false);
-        setShowGlobal(false);
+        setShowInherited(false);
     };
 
     useEffect(() => {
@@ -48,25 +50,23 @@ const ConfigTabs = () => {
     //     );
     // };
 
-    const renderTableTabsContent = (menuItem: MenuItemType) => {
+    const renderTableTabsContent = (tabItem: TabItemType) => {
         return (
             <div className="tabs-content-container">
                 <ConfigsTabSubHeader
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
-                    showGlobal={showGlobal}
+                    showInherited={showInherited}
                     onAddNewRow={() => {
-                        addNewRowToConfig(menuItem.id);
+                        addNewRowToConfig(tabItem.id);
                     }}
-                    onSave={() => updateConfig(editTabs[menuItem.id])}
-                    setShowGlobal={setShowGlobal}
-                    showProject={showProject}
-                    setShowProject={setShowProject}
-                    menuItem={menuItem}
+                    onSave={() => updateConfig(editTabs[tabItem.id])}
+                    setShowInherited={setShowInherited}
+                    tabItem={tabItem}
                 />
                 <EditableTable
                     sx={{ marginBottom: '25px', maxHeight: '60vh' }}
-                    menuItem={menuItem}
+                    tabItem={tabItem}
                 />
                 {/* {item.hasGlobalConfigType && */}
                 {/*    showGlobal && */}
@@ -84,7 +84,7 @@ const ConfigTabs = () => {
         );
     };
 
-    const renderListTabsContent = (menuItem: MenuItemType) => {
+    const renderListTabsContent = (tabItem: TabItemType) => {
         return (
             <>
                 <CreateNewDialog
@@ -105,18 +105,18 @@ const ConfigTabs = () => {
                     Add New Project
                 </Button>
                 {configs[ConfigType.PROJECT]['projects-id']?.map(
-                    (item, index) => (
-                        <ProjectItems
-                            project={item}
+                    (config, index) => (
+                        <ConfigListItems
+                            project={config}
                             key={index}
                             pl={2}
                             isTopLevel
                             index={index}
-                            menuItem={menuItem}
+                            tabItem={tabItem}
                             showCreateNewDialog={() => {
                                 setConfToCreate({
                                     type: ConfigType.APPLICATION,
-                                    projectId: item.id,
+                                    projectId: config.id,
                                 });
                                 setIsDialogOpened(true);
                             }}
@@ -128,7 +128,7 @@ const ConfigTabs = () => {
     };
 
     const getTabItems = () => {
-        return tabsContent.map((item: MenuItemType): any => {
+        return tabsContent.map((item: TabItemType): any => {
             if (!configs[item.type][activeTabId]) {
                 return {};
             }
