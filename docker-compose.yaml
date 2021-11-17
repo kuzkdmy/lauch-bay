@@ -10,10 +10,10 @@ services:
       context: ./nginx
     ports:
       - '3050:80'
-  api:
+  backend:
    image: tools/launch-bay
    # optional port mapping (for swagger purpose) - ports: - _:_
-  client:
+  frontend:
     build:
       dockerfile: Dockerfile
       context: ./env-configs-web
