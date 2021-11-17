@@ -21,13 +21,29 @@ const configsReducer = {
         state: any,
         action: AnyAction
     ) => {
+        let resultConfigs;
+        if (Array.isArray(action.payload.configs)) {
+            resultConfigs = action.payload.configs.reduce(function (
+                acc,
+                curVal
+            ) {
+                return {
+                    ...acc,
+                    ...{ [curVal.id]: curVal },
+                };
+            },
+            {});
+        } else {
+            resultConfigs = { [action.payload.id]: action.payload.configs };
+        }
+
         return {
             ...state,
             configs: {
                 ...state.configs,
                 [action.payload.confType]: {
                     ...state.configs[action.payload.confType],
-                    [action.payload.id]: action.payload.configs,
+                    ...resultConfigs,
                 },
             },
         };
@@ -46,14 +62,15 @@ const configsReducer = {
             },
         };
     },
-    [ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE]: (
-        state: any,
-        action: AnyAction
-    ) => {
-        const stateConfigs = { ...state };
-        delete stateConfigs.configs[action.payload.type][action.payload.id];
-
-        return { ...stateConfigs };
+    [ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE]: (state: any) => {
+        return {
+            ...state,
+            configs: {
+                ...state.configs,
+                [ConfigType.PROJECT]: {},
+                [ConfigType.APPLICATION]: {},
+            },
+        };
     },
     [ConfigsActionTypes.CONFIG_REQUEST_ERROR]: (state: any) => {
         return { ...state, isLoading: false, hasErrors: true };

@@ -14,17 +14,19 @@ import SelectComponent from '../selectComponent/SelectComponent';
 import { useActions } from '../../redux/hooks/useActions';
 import { getColUpdateValue } from './utils/tableUtils';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { Config, TabItemType } from '../../types/types';
+import { Config, Configs, TabItemType } from '../../types/types';
 
 interface EditableTableProps {
     onRowsRemove?: any;
     tabItem: TabItemType;
+    config?: Configs;
     sx?: any;
 }
 
 const EditableTable: FC<EditableTableProps> = ({
     sx,
     onRowsRemove,
+    config,
     tabItem,
 }) => {
     const [rowType, setRowType] = useState('text');
@@ -59,11 +61,16 @@ const EditableTable: FC<EditableTableProps> = ({
     };
 
     useEffect(() => {
+        console.log(config);
         setIsEdit(!!editTabs[activeTabId]);
         if (editTabs[activeTabId]) {
             setTableRows(editTabs[activeTabId]?.envConf);
         } else {
-            setTableRows(configs[tabItem.type][activeTabId]?.envConf);
+            setTableRows(
+                config
+                    ? config.envConf
+                    : configs[tabItem.type][activeTabId]?.envConf
+            );
         }
     }, [activeTabId, configs, editTabs, tabItem.type]);
 
@@ -189,6 +196,8 @@ const EditableTable: FC<EditableTableProps> = ({
             </TableCell>
         );
     };
+
+    console.log(config, '!!!!!');
 
     return (
         <Paper sx={{ ...sx, width: '100%', overflow: 'hidden' }}>

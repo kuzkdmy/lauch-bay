@@ -157,9 +157,11 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
                     </Tooltip>
                 </div>
             </StyledListItemButton>
-            {Array.isArray(configs[ConfigType.APPLICATION][project.id])
-                ? getCollapsedItems(configs[ConfigType.APPLICATION][project.id])
-                : null}
+            {getCollapsedItems(
+                Object.keys(configs[ConfigType.APPLICATION])
+                    .map((key) => configs[ConfigType.APPLICATION][key])
+                    .filter((conf) => conf.projectId === project.id)
+            )}
         </>
     );
 };

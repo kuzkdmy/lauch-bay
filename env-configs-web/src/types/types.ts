@@ -101,9 +101,6 @@ interface FetchConfigsSuccessAction {
 }
 interface RemoveConfigFromState {
     type: ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE;
-    payload: {
-        id: string;
-    };
 }
 interface RefreshProjectConfigsAction {
     type: ConfigsActionTypes.REFRESH_CONFIGS;

@@ -7,11 +7,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import { useActions } from '../../redux/hooks/useActions';
 import { Alert } from '@mui/material';
-import { TabContent } from '../../types/types';
+import { TabContent, TabItemType } from '../../types/types';
 import _ from 'lodash';
 
 interface TabsPanelProps {
     tabsContent: () => any[];
+    tabs: any[];
     onChange: () => void;
     activeTabId: string;
     onTabClick: any;
@@ -40,29 +41,26 @@ const TabPanel = (props: any) => {
 const TabsPanel: FC<TabsPanelProps> = ({
     tabsContent,
     activeTabId,
+    tabs,
     onChange,
     onTabClick,
 }) => {
     const { closeTab } = useActions();
-    const { openedTabs } = useTypedSelector((state) => state.tabState);
-    const { setActiveTabId, removeConfigFromState, removeTabFromEditState } =
-        useActions();
+    const { setActiveTabId, removeTabFromEditState } = useActions();
     const [value, setValue] = useState(0);
 
     useEffect(() => {
-        const activeTabIndex = openedTabs.findIndex(
-            (el) => el.id === activeTabId
-        );
+        const activeTabIndex = tabs.findIndex((el) => el.id === activeTabId);
         setValue(activeTabIndex === -1 ? 0 : activeTabIndex);
-    }, [openedTabs, activeTabId]);
+    }, [tabs, activeTabId]);
 
     const handleChange = (event: any, index: number) => {
-        setActiveTabId(openedTabs[index].id);
+        setActiveTabId(tabs[index].id);
         setValue(index);
         onChange();
     };
 
-    return openedTabs?.length ? (
+    return tabs?.length ? (
         <Box sx={{ maxWidth: '600' }}>
             <Box sx={{ borderColor: 'divider', backgroundColor: '#d8e6f5' }}>
                 <Tabs
@@ -76,7 +74,7 @@ const TabsPanel: FC<TabsPanelProps> = ({
                     aria-label="scrollable auto tabs"
                     onChange={handleChange}
                 >
-                    {openedTabs.map((tab: any, index: number) => (
+                    {tabs.map((tab: any, index: number) => (
                         <Tab
                             sx={{ '&.Mui-selected': { color: '#0e0e0e' } }}
                             label={tab.name}
@@ -87,13 +85,8 @@ const TabsPanel: FC<TabsPanelProps> = ({
                                 <CloseIcon
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        if (
-                                            activeTabId ===
-                                            openedTabs[index]?.id
-                                        ) {
-                                            setActiveTabId(
-                                                openedTabs[index - 1]?.id
-                                            );
+                                        if (activeTabId === tabs[index]?.id) {
+                                            setActiveTabId(tabs[index - 1]?.id);
                                         }
                                         closeTab({
                                             name: tab.name,
@@ -101,7 +94,6 @@ const TabsPanel: FC<TabsPanelProps> = ({
                                             type: tab.type,
                                         });
                                         removeTabFromEditState(tab.id);
-                                        removeConfigFromState(tab);
                                         onChange();
                                     }}
                                     sx={{
