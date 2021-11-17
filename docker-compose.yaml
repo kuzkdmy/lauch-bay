@@ -1,0 +1,19 @@
+version: '3'
+services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - '3050:80'
+  api:
+   image: tools/launch-bay
+   # optional port mapping (for swagger purpose) - ports: - _:_
+  client:
+    build:
+      dockerfile: Dockerfile
+      context: ./env-configs-web
