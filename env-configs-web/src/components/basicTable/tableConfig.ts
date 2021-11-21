@@ -4,7 +4,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'envKey',
         getLabel: (row?: Config) => 'Name',
-        minWidth: 210,
+        minWidth: 600,
         align: 'left',
         paddingLeft: 0,
         getValue: (row: any) => row.envKey || '',
@@ -54,7 +54,7 @@ export const getDeployConfigColumns = (): any[] => [
     {
         id: 'deployConfType',
         getLabel: (row: any) => 'Type',
-        minWidth: 70,
+        minWidth: 250,
         align: 'left',
         paddingLeft: 0,
         getValue: (row: any) => row.type?.toUpperCase(),

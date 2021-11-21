@@ -15,6 +15,7 @@ export const getEmptyEnvConf = () => ({
     envKey: '',
     type: 'string',
     default: null,
+    isDisabled: true,
     envOverride: {
         dev: null,
         stage: null,
@@ -110,4 +111,11 @@ export const addEmptyDeployments = (deploymentConf: Config[]) => {
             type: 'empty_dir_memory',
         },
     ];
+};
+
+export const replaceDeployConf = (conf, deployConf: Config[]) => {
+    const confIdx = _.findIndex(deployConf, { type: conf.type });
+    deployConf.splice(confIdx, 1, conf);
+
+    return deployConf;
 };

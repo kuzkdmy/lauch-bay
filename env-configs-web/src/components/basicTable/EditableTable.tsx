@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Checkbox, Input, Switch, Tooltip } from '@mui/material';
+import { Input, Switch, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SelectComponent from '../selectComponent/SelectComponent';
 import { useActions } from '../../redux/hooks/useActions';
@@ -101,7 +101,7 @@ const EditableTable: FC<EditableTableProps> = ({
             <Input
                 sx={{
                     fontSize: 14,
-                    width: '95%',
+                    width: col.minWidth,
                     paddingLeft: col.paddingLeft,
                 }}
                 autoFocus={autoFocus}
@@ -148,6 +148,7 @@ const EditableTable: FC<EditableTableProps> = ({
             case tableRows[idx].type === 'boolean':
                 return (
                     <Switch
+                        size="small"
                         disabled={!isRowInEditState(idx)}
                         value={col.getValue(tableRows[idx])}
                         checked={!!col.getValue(tableRows[idx])}
@@ -163,40 +164,21 @@ const EditableTable: FC<EditableTableProps> = ({
 
     const getEditRowCell = (idx: number) => {
         return (
-            <TableCell size="small" sx={{ width: '5%' }}>
-                <div className="table-edit-icons">
+            <TableCell size="small" sx={{ width: '5px', padding: '5px 3px' }}>
+                {isRowInEditState(idx) && isDeletable && (
                     <Tooltip
-                        placement={'left'}
-                        title="Edit Row"
-                        sx={{ padding: 0 }}
+                        placement={'top'}
+                        title="Delete Row"
+                        sx={{ '& .MuiSvgIcon-root': { marginTop: '5px' } }}
                     >
-                        <Checkbox
-                            sx={{
-                                '& .MuiSvgIcon-root': { fontSize: 21 },
-                                '&': { padding: '0 10px 0 0' },
-                            }}
-                            checked={isRowInEditState(idx)}
-                            onChange={(e) => {
-                                onRowEdit(e.target.checked, idx);
-                                onEditingRowChange();
+                        <CloseIcon
+                            color={'warning'}
+                            onClick={() => {
+                                onRowDelete();
                             }}
                         />
                     </Tooltip>
-                    {isRowInEditState(idx) && isDeletable && (
-                        <Tooltip
-                            placement={'top'}
-                            title="Delete Row"
-                            sx={{ '& .MuiSvgIcon-root': { marginTop: '5px' } }}
-                        >
-                            <CloseIcon
-                                color={'warning'}
-                                onClick={() => {
-                                    onRowDelete();
-                                }}
-                            />
-                        </Tooltip>
-                    )}
-                </div>
+                )}
             </TableCell>
         );
     };
@@ -216,8 +198,9 @@ const EditableTable: FC<EditableTableProps> = ({
                                     align="center"
                                     size="small"
                                     style={{
-                                        width: '5%',
+                                        width: '5px',
                                         backgroundColor: '#585959',
+                                        padding: '0',
                                         color: 'white',
                                         fontSize: 10,
                                     }}
@@ -232,6 +215,7 @@ const EditableTable: FC<EditableTableProps> = ({
                                         width: column.minWidth,
                                         backgroundColor: '#585959',
                                         color: 'white',
+                                        padding: '0',
                                         fontSize: 16,
                                     }}
                                 >

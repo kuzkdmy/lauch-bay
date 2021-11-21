@@ -28,6 +28,7 @@ const SelectComponent: FC<SelectProps> = ({
             <InputLabel id="type-select-label">{label}</InputLabel>
             <Select
                 labelId="type-select-label"
+                sx={{ height: '30px' }}
                 id="type-select"
                 label={label}
                 value={value}

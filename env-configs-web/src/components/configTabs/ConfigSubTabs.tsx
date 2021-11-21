@@ -13,6 +13,7 @@ import {
 } from '../basicTable/utils/tableUtils';
 import { getEmptyConfigRow, getEmptyEnvConf } from './utils/configTabsUtils';
 import _ from 'lodash';
+import DeploymentsConfigsTab from './deploymentsConfigsTab/DeploymentsConfigTab';
 
 interface ConfigSubTabsProps {
     parentTab: TabItemType;
@@ -59,7 +60,6 @@ const ConfigSubTabs: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
             getEnvConfigColumns(),
             config.envConf,
             {
-                // marginBottom: '25px',
                 maxHeight: maxHeight,
                 width: '100%',
             },
@@ -81,7 +81,7 @@ const ConfigSubTabs: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
             {
                 marginBottom: '25px',
                 maxHeight: '60vh',
-                width: '100%',
+                width: '700px',
             },
             updateDeploymentConfColValue,
             {
@@ -96,7 +96,9 @@ const ConfigSubTabs: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
     const getTableCont = () => {
         return [
             { content: getEnvConfTable('74vh') },
-            { content: getDeploymentsConfTable() },
+            {
+                content: <DeploymentsConfigsTab parentTab={parentTab} />,
+            },
         ];
     };
 

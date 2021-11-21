@@ -27,19 +27,19 @@ $selectedTabColor: #0e0e0e;
       margin-right: 10px;
     }
 
-      .side-bar-menu {
-        border: 1px solid $bdColor;
-        background-color: $bgColor;
-        border-radius: 5px;
-        height: 97vh;
-        overflow-y: scroll;
+    .side-bar-menu {
+      border: 1px solid $bdColor;
+      background-color: $bgColor;
+      border-radius: 5px;
+      height: 97vh;
+      overflow-y: scroll;
 
-        .menu-sub-header {
-          display: flex;
-          align-items: center;
-          cursor: default;
-        }
+      .menu-sub-header {
+        display: flex;
+        align-items: center;
+        cursor: default;
       }
+    }
 
     .content {
       background-color: $bgColor;
@@ -86,10 +86,46 @@ $selectedTabColor: #0e0e0e;
       }
     }
 
-    .conf-deployments-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+    .deployment-confs-tab {
+      width: 1500px;
+      margin: auto;
+
+      .deployment-confs-tab-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 90%;
+
+        .deployment-confs {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          height: 250px;
+          justify-content: space-around;
+
+          .deploy-conf-type {
+            width: 140px;
+          }
+
+          .deploy-conf-value {
+            width: 90px;
+          }
+        }
+      }
+
+      .deployment-config {
+        border: 1px solid #cecbcb;
+        border-radius: 5px;
+      }
+
+      .full-width {
+        flex-grow: 1;
+        margin-top: 10px;
+
+        .deploy-conf-value {
+          width: 250px;
+        }
+      }
     }
   }
 }

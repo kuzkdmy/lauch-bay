@@ -93,6 +93,7 @@ export const createConfigs = (config: Configs) => {
                 });
             }
         } catch (e) {
+            console.log(e);
             dispatch({
                 type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
             });
@@ -105,12 +106,19 @@ export const setHasErrors = (isError: boolean) => ({
     payload: isError,
 });
 
+const removeDisabledDeployConf = (config: Configs) => {
+    return {
+        ...config,
+        deployConf: config.deployConf.filter((conf) => !conf.isDisabled),
+    };
+};
+
 export const updateConfig = (config: Configs) => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            const resp = await updateConfigRequest(config)[config.confType](
-                config.id
-            );
+            const resp = await updateConfigRequest(
+                removeDisabledDeployConf(config)
+            )[config.confType](config.id);
             if (resp.status === 200) {
                 dispatch({
                     type: TabsActionTypes.EDIT_CONFIG_ROW,
@@ -125,6 +133,7 @@ export const updateConfig = (config: Configs) => {
                 });
             }
         } catch (e) {
+            console.log(e);
             dispatch({
                 type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
                 payload: config.id,

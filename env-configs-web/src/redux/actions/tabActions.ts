@@ -4,6 +4,7 @@ import {
     TabsActions,
     TabsActionTypes,
     TabItemType,
+    Config,
 } from '../../types/types';
 
 export const openTab = (content: TabItemType): TabsActions => ({
@@ -32,6 +33,15 @@ export const editConfigItem = (
 ): TabsActions => ({
     type: TabsActionTypes.EDIT_CONFIG_ROW,
     payload: { config: config, isEdit },
+});
+
+export const editDeploymentConfigItem = (
+    config: Configs,
+    deployConf: Config,
+    isEdit: boolean
+): TabsActions => ({
+    type: TabsActionTypes.EDIT_DEPLOYMENTS_CONFIG_ROW,
+    payload: { config: config, deployConf, isEdit },
 });
 
 export const removeTabFromEditState = (id: string): TabsActions => ({

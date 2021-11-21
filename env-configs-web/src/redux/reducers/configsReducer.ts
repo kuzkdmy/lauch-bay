@@ -78,7 +78,12 @@ const configsReducer = {
                 ...state.configs,
                 [action.payload.config.confType]: {
                     ...state.configs[action.payload.config.confType],
-                    [action.payload.config.id]: action.payload.config,
+                    [action.payload.id]: {
+                        ...action.payload.config,
+                        deployConf: addEmptyDeployments(
+                            action.payload.config.deployConf
+                        ),
+                    },
                 },
             },
         };
