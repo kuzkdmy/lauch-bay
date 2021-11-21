@@ -5,62 +5,406 @@ Content-Type: application/json
 {
   "envConf": [
     {
-      "envKey": "POSTGRES_PORT",
-      "type": "integer",
+      "envKey": "AEROSPIKE_SERVERS_DSP",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "aerospike-us-east-1.gdpr-dev.demandbase.com"
+        },
+        "stage": {
+          "value": "aerospike-us-east-1.stg.demandbase.com"
+        },
+        "prod": {
+          "value": "aerospike-us-east-1.dsp.demandbase.com"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AEROSPIKE_PORT_DSP",
+      "default": {
+        "value": 3000
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "AEROSPIKE_NAMESPACE_DSP",
+      "default": {
+        "value": "dsp"
+      },
+      "envOverride": {
+        "dev": {
+          "value": "ssd"
+        },
+        "stage": {
+          "value": "ssd"
+        },
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AEROSPIKE_SERVERS",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "aerospike-us-east-1.gdpr-dev.demandbase.com"
+        },
+        "stage": {
+          "value": "aerospike-us-east-1.stg.demandbase.com"
+        },
+        "prod": {
+          "value": "aerospike-us-east-1.demandbase.com"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AEROSPIKE_PORT",
+      "default": {
+        "value": 3000
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "AEROSPIKE_NAMESPACE",
+      "default": {
+        "value": "ssd"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "PULSAR_ADMIN_URL",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "http://pulsar-broker.pulsar.svc.cluster.local:8080"
+        },
+        "stage": {
+          "value": "http://pulsar-broker.pulsar.svc.cluster.local:8080"
+        },
+        "prod": {
+          "value": "http://pulsar-broker.pulsar.svc.cluster.local:8080"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "PULSAR_CLIENT_URL",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "pulsar://pulsar-broker.pulsar.svc.cluster.local:6650"
+        },
+        "stage": {
+          "value": "pulsar://pulsar-broker.pulsar.svc.cluster.local:6650"
+        },
+        "prod": {
+          "value": "pulsar://pulsar-broker.pulsar.svc.cluster.local:6650"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AUTH_DB_SERVER",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "auth-pgbouncer"
+        },
+        "stage": {
+          "value": "auth-stg-0-rds-us-east-1.stg.demandbase.com"
+        },
+        "prod": {
+          "value": "auth-prod-0-rds-us-east-1.demandbase.com"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "SHARED_DB_SERVER",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "platform-common-rds-rw-us-east-1.gdpr-dev.demandbase.com"
+        },
+        "stage": {
+          "value": "platform-common-rds-rw-us-east-1.stg.demandbase.com"
+        },
+        "prod": {
+          "value": "platform-common-rds-rw-us-east-1.demandbase.com"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "TENANT_DB_SERVER",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "platform-tenant{SERVER_INDEX}-rds-rw-us-east-1.gdpr-dev.demandbase.com"
+        },
+        "stage": {
+          "value": "platform-tenant{SERVER_INDEX}-rds-rw-us-east-1.stg.demandbase.com"
+        },
+        "prod": {
+          "value": "platform-tenant{SERVER_INDEX}-rds-rw-us-east-1.demandbase.com"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "TENANT_DB_SERVERS_POOL",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": nu
+
+        ll
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "TENANT_DB_SERVERS_PORT",
       "default": {
         "value": 5432
       },
       "envOverride": {
-        "dev": {
-          "value": 25432
-        },
-        "stage": {
-          "value": 15432
-        },
+        "dev": null,
+        "stage": null,
         "prod": null
-      }
+      },
+      "type": "integer"
     },
     {
-      "envKey": "PULSAR_HOST",
-      "default": null,
-      "type": "string",
-      "envOverride": {
-        "dev": {
-          "value": "pulsar.dev"
-        },
-        "stage": {
-          "value": "pulsar.stage"
-        },
-        "prod": {
-          "value": "pulsar.prod"
-        }
-      }
-    },
-    {
-      "envKey": "ZIPKIN_TRACE_LOGS",
-      "type": "boolean",
+      "envKey": "TENANT_DB_READONLY_USER",
       "default": {
-        "value": true
+        "value": "readonly"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "TENANT_DB_USER",
+      "default": {
+        "value": "tenant"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "TENANT_DB_DATABASE",
+      "default": {
+        "value": "tenant"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "SHARED_DB_USER",
+      "default": {
+        "value": "shared"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "SHARED_DB_SCHEMA",
+      "default": {
+        "value": "shared"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "SHARED_DB_DATABASE",
+      "default": {
+        "value": "common"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AUTH_DB_USER",
+      "default": {
+        "value": "auth"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AUTH_DB_SCHEMA",
+      "default": {
+        "value": "auth"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AUTH_DB_DATABASE",
+      "default": {
+        "value": "auth"
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "AEROSPIKE_EVENT_LOOP_SIZE",
+      "default": {
+        "value": 2
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "AEROSPIKE_MAX_COMMAND_IN_PROCESS",
+      "default": {
+        "value": 30
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "AEROSPIKE_WRITE_POLICY_SEND_KEY",
+      "default": {
+        "value": false
       },
       "envOverride": {
         "dev": {
-          "value": false
+          "value": true
         },
         "stage": {
-          "value": false
+          "value": true
         },
         "prod": null
-      }
-    }
-  ],
-  "deployConf": [
+      },
+      "type": "boolean"
+    },
     {
-      "default": 1,
-      "envOverride": null,
-      "type": "replica"
+      "envKey": "AEROSPIKE_CONNECTIONS_PER_NODE_SUB_COMMANDS_BUDGE",
+      "default": {
+        "value": 5
+      },
+      "envOverride": {
+        "dev": null,
+        "stage": null,
+        "prod": null
+      },
+      "type": "integer"
+    },
+    {
+      "envKey": "SERVICES_TENANT_CONFIGURATION_HOST_URL",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "http://tenant-configuration.default.svc.cluster.local:9000"
+        },
+        "stage": {
+          "value": "http://tenant-configuration.analytics.svc.cluster.local:9000"
+        },
+        "prod": {
+          "value": "http://tenant-configuration.analytics.svc.cluster.local:9000"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "SERVICES_PERSONALIZATION_HOST_URL",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "http://personalization-service.default.svc.cluster.local:9001"
+        },
+        "stage": {
+          "value": "http://personalization-service.analytics.svc.cluster.local:9001"
+        },
+        "prod": {
+          "value": "http://personalization-service.analytics.svc.cluster.local:9001"
+        }
+      },
+      "type": "string"
+    },
+    {
+      "envKey": "SERVICES_OBJECT_SYNC_CONFIGURATION_URL",
+      "default": null,
+      "envOverride": {
+        "dev": {
+          "value": "http://object-sync-configuration.default.svc.cluster.local:9000"
+        },
+        "stage": {
+          "value": "http://object-sync-configuration.analytics.svc.cluster.local:9000"
+        },
+        "prod": {
+          "value": "http://object-sync-configuration.analytics.svc.cluster.local:9000"
+        }
+      },
+      "type": "string"
     }
   ],
-  "version": 0
+  "deployConf": [],
+  "version": 2
 }
 
 ###

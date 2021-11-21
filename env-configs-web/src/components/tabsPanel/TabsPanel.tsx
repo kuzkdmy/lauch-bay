@@ -13,7 +13,10 @@ import _ from 'lodash';
 interface TabsPanelProps {
     tabsContent: () => any[];
     tabs: any[];
-    onChange: () => void;
+    sx?: any;
+    onTabChange: (event: any, tabIndex: number) => void;
+    isClosable?: boolean;
+    isTitleUpperCase?: boolean;
     activeTabId: string;
     onTabClick: any;
 }
@@ -42,7 +45,10 @@ const TabsPanel: FC<TabsPanelProps> = ({
     tabsContent,
     activeTabId,
     tabs,
-    onChange,
+    isClosable,
+    sx,
+    isTitleUpperCase,
+    onTabChange,
     onTabClick,
 }) => {
     const { closeTab } = useActions();
@@ -54,15 +60,14 @@ const TabsPanel: FC<TabsPanelProps> = ({
         setValue(activeTabIndex === -1 ? 0 : activeTabIndex);
     }, [tabs, activeTabId]);
 
-    const handleChange = (event: any, index: number) => {
-        setActiveTabId(tabs[index].id);
-        setValue(index);
-        onChange();
-    };
-
     return tabs?.length ? (
         <Box sx={{ maxWidth: '600' }}>
-            <Box sx={{ borderColor: 'divider', backgroundColor: '#d8e6f5' }}>
+            <Box
+                sx={{
+                    borderColor: 'divider',
+                    backgroundColor: '#d8e6f5',
+                }}
+            >
                 <Tabs
                     value={value}
                     sx={{
@@ -72,11 +77,17 @@ const TabsPanel: FC<TabsPanelProps> = ({
                     scrollButtons="auto"
                     variant="scrollable"
                     aria-label="scrollable auto tabs"
-                    onChange={handleChange}
+                    onChange={onTabChange}
                 >
                     {tabs.map((tab: any, index: number) => (
                         <Tab
-                            sx={{ '&.Mui-selected': { color: '#0e0e0e' } }}
+                            sx={{
+                                ...sx,
+                                '&.Mui-selected': { color: '#0e0e0e' },
+                                textTransform: isTitleUpperCase
+                                    ? 'uppercase'
+                                    : 'inherit',
+                            }}
                             label={tab.name}
                             onClick={() => {
                                 onTabClick(tab.type, tab.name, tab.id);
@@ -94,9 +105,9 @@ const TabsPanel: FC<TabsPanelProps> = ({
                                             type: tab.type,
                                         });
                                         removeTabFromEditState(tab.id);
-                                        onChange();
                                     }}
                                     sx={{
+                                        display: isClosable ? 'blocks' : 'none',
                                         fontSize: 14,
                                         marginLeft: 0,
                                         marginBottom: 2,

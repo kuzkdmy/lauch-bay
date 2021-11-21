@@ -13,14 +13,12 @@ import { collapsiblePanelClick } from '../../redux/actions/tabActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import _ from 'lodash';
 
 interface ConfigListItemsProps {
     project: Configs;
     pl: number;
     isTopLevel?: boolean;
     additionalClass?: string;
-    tabItem: TabItemType;
     index: number;
     showCreateNewDialog: () => void;
 }
@@ -30,7 +28,6 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
     pl,
     additionalClass,
     index,
-    tabItem,
     showCreateNewDialog,
 }) => {
     const { collapsiblePanelClick, fetchConfigs, openTab } = useActions();
@@ -94,7 +91,7 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
                                 }
                             }}
                             sx={{
-                                pl: 6,
+                                pl: 8,
                                 cursor: 'pointer',
                                 '&:hover': {
                                     backgroundColor: app ? '#f1f1f1' : '',

@@ -2,10 +2,13 @@ import { AnyAction } from 'redux';
 import createReducer from '../hooks/createReducer';
 import { ConfigsActionTypes, ConfigType } from '../../types/types';
 import _ from 'lodash';
+import { addEmptyDeployments } from '../../components/configTabs/utils/configTabsUtils';
 
 const initialState = {
     isLoading: false,
     hasErrors: false,
+    successfullyCreated: false,
+    successfullyUpdated: false,
     configs: {
         [ConfigType.GLOBAL]: {},
         [ConfigType.PROJECT]: {},
@@ -34,7 +37,14 @@ const configsReducer = {
             },
             {});
         } else {
-            resultConfigs = { [action.payload.id]: action.payload.configs };
+            resultConfigs = {
+                [action.payload.id]: {
+                    ...action.payload.configs,
+                    deployConf: addEmptyDeployments(
+                        action.payload.configs.deployConf
+                    ),
+                },
+            };
         }
 
         return {
@@ -48,15 +58,26 @@ const configsReducer = {
             },
         };
     },
+    [ConfigsActionTypes.CREATE_NEW_CONFIG_SUCCESS]: (
+        state: any,
+        action: AnyAction
+    ) => {
+        return {
+            ...state,
+            successfullyCreated: true,
+        };
+    },
     [ConfigsActionTypes.CONFIG_UPDATE_SUCCESS]: (
         state: any,
         action: AnyAction
     ) => {
         return {
             ...state,
+            successfullyUpdated: true,
             configs: {
                 ...state.configs,
                 [action.payload.config.confType]: {
+                    ...state.configs[action.payload.config.confType],
                     [action.payload.config.id]: action.payload.config,
                 },
             },
@@ -76,7 +97,12 @@ const configsReducer = {
         return { ...state, isLoading: false, hasErrors: true };
     },
     [ConfigsActionTypes.SET_HAS_ERRORS]: (state: any, action: AnyAction) => {
-        return { ...state, hasErrors: action.payload.isError };
+        return {
+            ...state,
+            successfullyCreated: false,
+            successfullyUpdated: false,
+            hasErrors: action.payload.isError,
+        };
     },
 };
 

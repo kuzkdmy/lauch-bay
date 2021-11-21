@@ -71,3 +71,43 @@ export const mergeConfigs = (
 
     return { ...parentConfigs, envConf: overriddenEnvConf };
 };
+
+export const addEmptyDeployments = (deploymentConf: Config[]) => {
+    return [
+        {
+            ...(_.find(deploymentConf, { type: 'replica' }) ||
+                getEmptyEnvConf()),
+            type: 'replica',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'request_cpu' }) ||
+                getEmptyEnvConf()),
+            type: 'request_cpu',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'limit_cpu' }) ||
+                getEmptyEnvConf()),
+            type: 'limit_cpu',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'request_ram' }) ||
+                getEmptyEnvConf()),
+            type: 'request_ram',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'limit_ram' }) ||
+                getEmptyEnvConf()),
+            type: 'limit_ram',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'java_opts' }) ||
+                getEmptyEnvConf()),
+            type: 'java_opts',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'empty_dir_memory' }) ||
+                getEmptyEnvConf()),
+            type: 'empty_dir_memory',
+        },
+    ];
+};

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './App.scss';
 import MenuBar from './menuBar/MenuBar';
 import ConfigTabs from './configTabs/ConfigTabs';
-import NotificationComponent from './alert/NotificationComponent';
+import NotificationAlert from './alert/NotificationAlert';
 import { useActions } from '../redux/hooks/useActions';
 import { useTypedSelector } from '../redux/hooks/useTypedSelector';
 import _ from 'lodash';
@@ -26,14 +26,7 @@ const App = () => {
                     <MenuBar />
                 </div>
                 <div className="content">
-                    <NotificationComponent
-                        alertSeverity={'error'}
-                        visibilityState={{
-                            setVisible: setHasErrors,
-                            isVisible: hasErrors,
-                        }}
-                        message="Something went wrong !"
-                    />
+                    <NotificationAlert />
 
                     <ConfigTabs />
                 </div>

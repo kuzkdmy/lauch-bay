@@ -25,7 +25,7 @@ export interface Configs {
     projectId?: string;
     name: string;
     envConf: Config[];
-    deployConf: Config[] | null;
+    deployConf: Config[];
     confType: ConfigType;
     version: number;
 }
@@ -41,7 +41,7 @@ export enum ConfigsActionTypes {
 
     CONFIG_UPDATE_SUCCESS = 'CONFIG_UPDATE_SUCCESS',
     CREATE_NEW_CONFIG = 'CREATE_NEW_CONFIG',
-    CREATE_NEW_SUCCESS = 'CREATE_NEW_SUCCESS',
+    CREATE_NEW_CONFIG_SUCCESS = 'CREATE_NEW_CONFIG_SUCCESS',
 }
 
 export enum TabsActionTypes {
@@ -84,7 +84,7 @@ interface CreateNewConfig {
     type: ConfigsActionTypes.CREATE_NEW_CONFIG;
 }
 interface CreatedNewConfig {
-    type: ConfigsActionTypes.CREATE_NEW_SUCCESS;
+    type: ConfigsActionTypes.CREATE_NEW_CONFIG_SUCCESS;
     payload: any;
 }
 interface ConfigUpdateSuccess {

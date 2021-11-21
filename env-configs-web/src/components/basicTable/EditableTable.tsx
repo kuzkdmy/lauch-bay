@@ -8,38 +8,45 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Checkbox, Input, Switch, Tooltip } from '@mui/material';
-import { columnsConfig } from './tableConfig';
 import CloseIcon from '@mui/icons-material/Close';
 import SelectComponent from '../selectComponent/SelectComponent';
 import { useActions } from '../../redux/hooks/useActions';
-import { getColUpdateValue } from './utils/tableUtils';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { Config, Configs, TabItemType } from '../../types/types';
+import { Config, TabItemType } from '../../types/types';
 
 interface EditableTableProps {
-    onRowsRemove?: any;
     tabItem: TabItemType;
-    config?: Configs;
+    activeTabId: string;
+    config: Config[];
+    columns: any[];
+    isDeletable?: boolean;
+    updateColValue: (val: any, config: Config, colId: string) => any;
+    tableEditableRows: {
+        name: string;
+        configs: Config[];
+        dependentConfName: string;
+        dependentConf: Config[];
+    };
     sx?: any;
 }
 
 const EditableTable: FC<EditableTableProps> = ({
     sx,
-    onRowsRemove,
+    activeTabId,
     config,
+    columns,
+    isDeletable,
+    updateColValue,
+    tableEditableRows,
     tabItem,
 }) => {
     const [rowType, setRowType] = useState('text');
     const [isEdit, setIsEdit] = useState(false);
 
-    const { editTabs, activeTabId } = useTypedSelector(
-        (state) => state.tabState
-    );
+    const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
 
-    const [tableRows, setTableRows] = useState(
-        configs[tabItem.type][activeTabId]?.envConf
-    );
+    const [tableRows, setTableRows] = useState(config);
     const [editingRow, setEditingRow] = useState({ idx: 0, isEdit: false });
 
     const { editConfigItem } = useActions();
@@ -53,7 +60,9 @@ const EditableTable: FC<EditableTableProps> = ({
             {
                 ...configs[tabItem.type][activeTabId],
                 id: activeTabId,
-                envConf: updatedRows || tableRows,
+                [tableEditableRows.dependentConfName]:
+                    tableEditableRows.dependentConf,
+                [tableEditableRows.name]: updatedRows || tableRows,
                 confType: editTabs[activeTabId].confType,
             },
             isEdit
@@ -61,22 +70,17 @@ const EditableTable: FC<EditableTableProps> = ({
     };
 
     useEffect(() => {
-        console.log(config);
         setIsEdit(!!editTabs[activeTabId]);
         if (editTabs[activeTabId]) {
-            setTableRows(editTabs[activeTabId]?.envConf);
+            setTableRows(tableEditableRows.configs || []);
         } else {
-            setTableRows(
-                config
-                    ? config.envConf
-                    : configs[tabItem.type][activeTabId]?.envConf
-            );
+            setTableRows(config || []);
         }
     }, [activeTabId, configs, editTabs, tabItem.type]);
 
     const onRowsChange = (value: any, colId: string) => {
         const updatedRows = [...tableRows];
-        const configRow = getColUpdateValue(
+        const configRow = updateColValue(
             value,
             tableRows[editingRow.idx],
             colId
@@ -178,7 +182,7 @@ const EditableTable: FC<EditableTableProps> = ({
                             }}
                         />
                     </Tooltip>
-                    {isRowInEditState(idx) && (
+                    {isRowInEditState(idx) && isDeletable && (
                         <Tooltip
                             placement={'top'}
                             title="Delete Row"
@@ -197,10 +201,8 @@ const EditableTable: FC<EditableTableProps> = ({
         );
     };
 
-    console.log(config, '!!!!!');
-
     return (
-        <Paper sx={{ ...sx, width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{ ...sx, overflow: 'hidden' }}>
             <TableContainer
                 sx={{
                     maxHeight: sx.maxHeight || '40vh',
@@ -221,19 +223,19 @@ const EditableTable: FC<EditableTableProps> = ({
                                     }}
                                 />
                             )}
-                            {columnsConfig().map((column, idx) => (
+                            {columns.map((column, idx) => (
                                 <TableCell
                                     key={column.id + idx}
                                     align="center"
                                     size="small"
                                     style={{
-                                        minWidth: column.minWidth,
+                                        width: column.minWidth,
                                         backgroundColor: '#585959',
                                         color: 'white',
                                         fontSize: 16,
                                     }}
                                 >
-                                    {column.label}
+                                    {column.getLabel(tableRows[idx])}
                                 </TableCell>
                             ))}
                         </TableRow>
@@ -261,16 +263,20 @@ const EditableTable: FC<EditableTableProps> = ({
                                     }}
                                     sx={{
                                         cursor: 'pointer',
+                                        height: '30px',
                                         backgroundColor:
                                             idx % 2 !== 0 ? '#f5f5f5' : '',
                                     }}
                                 >
                                     {isEdit && getEditRowCell(idx)}
-                                    {columnsConfig().map((col) => {
+                                    {columns.map((col) => {
                                         return (
                                             <TableCell
+                                                size="small"
                                                 key={col.id + idx}
                                                 sx={{
+                                                    width: col.minWidth,
+                                                    padding: '10px',
                                                     paddingLeft: isEdit
                                                         ? col.paddingLeft
                                                         : 2,

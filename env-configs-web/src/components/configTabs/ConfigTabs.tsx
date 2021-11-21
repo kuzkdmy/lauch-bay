@@ -9,6 +9,7 @@ import ConfigListItems from './ConfigListItems';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
 import ConfigsTabSubHeader from './ConfigsTabSubHeader';
 import { addNewRowToConfig } from '../../redux/actions/tabActions';
+import ConfigSubTabs from './ConfigSubTabs';
 
 const ConfigTabs = () => {
     const { openedTabs, activeTabId } = useTypedSelector(
@@ -71,9 +72,9 @@ const ConfigTabs = () => {
                     setShowInherited={setShowInherited}
                     tabItem={tabItem}
                 />
-                <EditableTable
-                    sx={{ marginBottom: '25px', maxHeight: '60vh' }}
-                    tabItem={tabItem}
+                <ConfigSubTabs
+                    config={configs[tabItem.type][tabItem.id]}
+                    parentTab={tabItem}
                 />
             </div>
         );
@@ -108,7 +109,6 @@ const ConfigTabs = () => {
                             pl={2}
                             isTopLevel
                             index={index}
-                            tabItem={tabItem}
                             showCreateNewDialog={() => {
                                 setConfToCreate({
                                     type: ConfigType.APPLICATION,
@@ -120,6 +120,11 @@ const ConfigTabs = () => {
                     ))}
             </>
         );
+    };
+
+    const onTabChange = (index: number) => {
+        setActiveTabId(openedTabs[index].id);
+        resetState();
     };
 
     const getTabItems = () => {
@@ -144,7 +149,11 @@ const ConfigTabs = () => {
             tabsContent={getTabItems}
             tabs={openedTabs}
             activeTabId={activeTabId}
-            onChange={resetState}
+            isTitleUpperCase={true}
+            onTabChange={(event: any, tabIndex: number) =>
+                onTabChange(tabIndex)
+            }
+            isClosable
             onTabClick={(
                 type = ConfigType.GLOBAL,
                 name: string,

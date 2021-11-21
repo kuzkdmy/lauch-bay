@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import {
+    Config,
     Configs,
     ConfigsActions,
     ConfigsActionTypes,
@@ -70,7 +71,7 @@ export const createConfigs = (config: Configs) => {
             );
             if (post.status === 200) {
                 dispatch({
-                    type: ConfigsActionTypes.CREATE_NEW_SUCCESS,
+                    type: ConfigsActionTypes.CREATE_NEW_CONFIG_SUCCESS,
                     payload: { name: config.name, type: config.confType },
                 });
                 dispatch({
@@ -129,6 +130,34 @@ export const updateConfig = (config: Configs) => {
                 payload: config.id,
             });
         }
+    };
+};
+
+const getNullOnEmpty = (configs: Config[]) => {
+    return configs.map((conf) => {
+        return {
+            ...conf,
+            envOverride: {
+                dev:
+                    conf.envOverride.dev?.value || conf.envOverride.dev || null,
+                stage:
+                    conf.envOverride.stage?.value ||
+                    conf.envOverride.stage ||
+                    null,
+                prod:
+                    conf.envOverride.prod?.value ||
+                    conf.envOverride.prod ||
+                    null,
+            },
+        };
+    });
+};
+
+const setNullToEmptyProps = (body: Configs) => {
+    return {
+        ...body,
+        envConf: getNullOnEmpty(body.envConf),
+        deployConf: getNullOnEmpty(body.deployConf),
     };
 };
 

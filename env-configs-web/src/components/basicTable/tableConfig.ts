@@ -1,9 +1,9 @@
 import { Config } from '../../types/types';
 
-export const columnsConfig = (): any[] => [
+export const getEnvConfigColumns = (): any[] => [
     {
         id: 'envKey',
-        label: 'Name',
+        getLabel: (row?: Config) => 'Name',
         minWidth: 210,
         align: 'left',
         paddingLeft: 0,
@@ -11,14 +11,14 @@ export const columnsConfig = (): any[] => [
     },
     {
         id: 'type',
-        label: 'Type',
+        getLabel: (row?: Config) => 'Type',
         minWidth: 80,
         align: 'center',
         getValue: (row: Config) => row.type || '',
     },
     {
         id: 'default',
-        label: 'Default',
+        getLabel: (row?: Config) => 'Default',
         minWidth: 150,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
@@ -26,7 +26,7 @@ export const columnsConfig = (): any[] => [
     },
     {
         id: 'dev',
-        label: 'Dev',
+        getLabel: (row?: Config) => 'Dev',
         minWidth: 150,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
@@ -34,7 +34,7 @@ export const columnsConfig = (): any[] => [
     },
     {
         id: 'stage',
-        label: 'Stage',
+        getLabel: (row?: Config) => 'Stage',
         minWidth: 150,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
@@ -42,10 +42,55 @@ export const columnsConfig = (): any[] => [
     },
     {
         id: 'prod',
-        label: 'Prod',
+        getLabel: (row?: Config) => 'Prod',
         minWidth: 150,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
         getValue: (row: Config) => row.envOverride.prod?.value || '',
+    },
+];
+
+export const getDeployConfigColumns = (): any[] => [
+    {
+        id: 'deployConfType',
+        getLabel: (row: any) => 'Type',
+        minWidth: 70,
+        align: 'left',
+        paddingLeft: 0,
+        getValue: (row: any) => row.type?.toUpperCase(),
+    },
+    {
+        id: 'default',
+        getLabel: (row?: any) => 'Default',
+        minWidth: 50,
+        align: 'center',
+        format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: any) => {
+            return row.default || '';
+        },
+    },
+    {
+        id: 'dev',
+        getLabel: (row?: Config) => 'Dev',
+        minWidth: 50,
+        align: 'center',
+        format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.envOverride.dev || '',
+    },
+    {
+        id: 'stage',
+        getLabel: (row?: any) => 'Stage',
+        minWidth: 50,
+        align: 'center',
+        format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.envOverride.stage || '',
+    },
+    {
+        id: 'prod',
+        getLabel: (row?: any) => 'Prod',
+        minWidth: 50,
+        align: 'center',
+        format: (value: any) => value.toLocaleString('en-US'),
+        getValue: (row: Config) => row.envOverride.prod || '',
     },
 ];
