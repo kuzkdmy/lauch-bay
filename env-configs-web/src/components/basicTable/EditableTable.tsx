@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Input, Switch, Tooltip } from '@mui/material';
+import { Checkbox, Input, Switch, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SelectComponent from '../selectComponent/SelectComponent';
 import { useActions } from '../../redux/hooks/useActions';
@@ -165,20 +165,39 @@ const EditableTable: FC<EditableTableProps> = ({
     const getEditRowCell = (idx: number) => {
         return (
             <TableCell size="small" sx={{ width: '5px', padding: '5px 3px' }}>
-                {isRowInEditState(idx) && isDeletable && (
+                <div className="table-edit-icons">
                     <Tooltip
-                        placement={'top'}
-                        title="Delete Row"
-                        sx={{ '& .MuiSvgIcon-root': { marginTop: '5px' } }}
+                        placement={'left'}
+                        title="Edit Row"
+                        sx={{ padding: 0 }}
                     >
-                        <CloseIcon
-                            color={'warning'}
-                            onClick={() => {
-                                onRowDelete();
+                        <Checkbox
+                            sx={{
+                                '& .MuiSvgIcon-root': { fontSize: 21 },
+                                '&': { padding: '0 5px 0 10px' },
+                            }}
+                            checked={isRowInEditState(idx)}
+                            onChange={(e) => {
+                                onRowEdit(e.target.checked, idx);
+                                onEditingRowChange();
                             }}
                         />
                     </Tooltip>
-                )}
+                    {isRowInEditState(idx) && isDeletable && (
+                        <Tooltip
+                            placement={'top'}
+                            title="Delete Row"
+                            sx={{ '& .MuiSvgIcon-root': { marginTop: '5px' } }}
+                        >
+                            <CloseIcon
+                                color={'warning'}
+                                onClick={() => {
+                                    onRowDelete();
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                </div>
             </TableCell>
         );
     };

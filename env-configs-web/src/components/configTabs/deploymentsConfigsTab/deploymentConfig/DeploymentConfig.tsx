@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Box, Checkbox } from '@mui/material';
+import { Box, Checkbox, Switch } from '@mui/material';
 import { TextField } from '@material-ui/core';
 import { Config } from '../../../../types/types';
+import _ from 'lodash';
 
 interface DeploymentConfigProps {
     className: string;
@@ -35,10 +36,33 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
         });
     };
 
-    const getTextInput = (
-        value = '',
+    const renderValue = (
+        value,
         label: string,
         onChange: (e) => void,
+        className?: string
+    ) => {
+        return _.isBoolean(config.default) ? (
+            <Switch
+                sx={{ '&.MuiSwitch-root': { marginLeft: '40px' } }}
+                size="small"
+                value={value}
+                disabled={disabled}
+                checked={value}
+                onChange={(e) => {
+                    onChange(e.target.checked);
+                    editConfig(disabled);
+                }}
+            />
+        ) : (
+            getTextInputField(value, label, onChange, className)
+        );
+    };
+
+    const getTextInputField = (
+        value: any,
+        label: string,
+        onChange: any,
         className?: string
     ) => {
         return (
@@ -49,7 +73,7 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
                 disabled={disabled}
                 value={value}
                 label={label}
-                onChange={(e) => onChange(e)}
+                onChange={(e) => onChange(e.target.value)}
                 onBlur={() => editConfig(disabled)}
                 variant="outlined"
             />
@@ -61,6 +85,9 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
             component="form"
             className={className}
             sx={{
+                display: 'flex',
+                flexWrap: 'nowrap',
+                alignItems: 'center',
                 '& > :not(style)': { m: 1 },
             }}
             noValidate
@@ -75,23 +102,23 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
                     editConfig(!e.target.checked);
                 }}
             />
-            {getTextInput(
+            {getTextInputField(
                 config?.type || '',
                 'Type',
-                (e) => {},
+                () => {},
                 'deploy-conf-type'
             )}
-            {getTextInput(defaultVal, 'Default', (e) => {
-                setDefaultVal(e.target.value);
+            {renderValue(defaultVal, 'Default', (val) => {
+                setDefaultVal(val);
             })}
-            {getTextInput(dev, 'Dev', (e) => {
-                setDev(e.target.value);
+            {renderValue(dev, 'Dev', (val) => {
+                setDev(val);
             })}
-            {getTextInput(stage, 'Stage', (e) => {
-                setStage(e.target.value);
+            {renderValue(stage, 'Stage', (val) => {
+                setStage(val);
             })}
-            {getTextInput(prod, 'Prod', (e) => {
-                setProd(e.target.value);
+            {renderValue(prod, 'Prod', (val) => {
+                setProd(val);
             })}
         </Box>
     );

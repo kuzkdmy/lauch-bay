@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import DeploymentConfig from './deploymentConfig/DeploymentConfig';
-import { ConfigType, TabItemType } from '../../../types/types';
+import { Config, ConfigType, TabItemType } from '../../../types/types';
 import _ from 'lodash';
 import { editDeploymentConfigItem } from '../../../redux/actions/tabActions';
 import { useActions } from '../../../redux/hooks/useActions';
@@ -69,49 +69,31 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
         );
     };
 
+    const renderDeploymentConfig = (config: Config, className?: string) => {
+        return (
+            <DeploymentConfig
+                config={config}
+                onConfigEdit={onEdit}
+                className="deployment-config"
+            />
+        );
+    };
+
     return (
         <div className="deployment-confs-tab">
             <div className="deployment-confs-tab-content">
                 <div className="deployment-confs">
-                    <DeploymentConfig
-                        config={replica}
-                        onConfigEdit={onEdit}
-                        className="deployment-config"
-                    />
-                    <DeploymentConfig
-                        onConfigEdit={onEdit}
-                        config={requestCpu}
-                        className="deployment-config"
-                    />
-                    <DeploymentConfig
-                        onConfigEdit={onEdit}
-                        config={limitCpu}
-                        className="deployment-config"
-                    />
+                    {renderDeploymentConfig(replica)}
+                    {renderDeploymentConfig(requestCpu)}
+                    {renderDeploymentConfig(limitCpu)}
                 </div>
                 <div className="deployment-confs">
-                    <DeploymentConfig
-                        onConfigEdit={onEdit}
-                        config={requestRam}
-                        className="deployment-config"
-                    />
-                    <DeploymentConfig
-                        onConfigEdit={onEdit}
-                        config={limitRam}
-                        className="deployment-config"
-                    />
-                    <DeploymentConfig
-                        onConfigEdit={onEdit}
-                        config={emptyDirMem}
-                        className="deployment-config"
-                    />
+                    {renderDeploymentConfig(requestRam)}
+                    {renderDeploymentConfig(limitRam)}
+                    {renderDeploymentConfig(emptyDirMem)}
                 </div>
                 <div className="full-width">
-                    <DeploymentConfig
-                        onConfigEdit={onEdit}
-                        config={javaOpts}
-                        className="deployment-config"
-                    />
+                    {renderDeploymentConfig(javaOpts)}
                 </div>
             </div>
         </div>

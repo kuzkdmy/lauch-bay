@@ -87,30 +87,35 @@ $selectedTabColor: #0e0e0e;
     }
 
     .deployment-confs-tab {
-      width: 1500px;
+      max-width: 1500px;
       margin: auto;
 
       .deployment-confs-tab-content {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        width: 90%;
+        max-width: 90%;
 
         .deployment-confs {
           display: flex;
           flex-direction: column;
           flex-wrap: nowrap;
           height: 250px;
+          min-width: 460px;
           justify-content: space-around;
 
           .deploy-conf-type {
-            width: 140px;
+            max-width: 140px;
           }
 
           .deploy-conf-value {
-            width: 90px;
+            max-width: 90px;
           }
         }
+      }
+
+      .empty-dir-deployment-block {
+        display: flex;
       }
 
       .deployment-config {
@@ -121,6 +126,10 @@ $selectedTabColor: #0e0e0e;
       .full-width {
         flex-grow: 1;
         margin-top: 10px;
+
+        .deployment-config {
+          flex-wrap: wrap;
+        }
 
         .deploy-conf-value {
           width: 250px;
