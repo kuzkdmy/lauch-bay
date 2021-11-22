@@ -79,37 +79,31 @@ export const addEmptyDeployments = (deploymentConf: Config[]) => {
             ...(_.find(deploymentConf, { type: 'replica' }) ||
                 getEmptyEnvConf()),
             type: 'replica',
-            default: 0,
         },
         {
             ...(_.find(deploymentConf, { type: 'request_cpu' }) ||
                 getEmptyEnvConf()),
             type: 'request_cpu',
-            default: 0,
         },
         {
             ...(_.find(deploymentConf, { type: 'limit_cpu' }) ||
                 getEmptyEnvConf()),
             type: 'limit_cpu',
-            default: 0,
         },
         {
             ...(_.find(deploymentConf, { type: 'request_ram' }) ||
                 getEmptyEnvConf()),
             type: 'request_ram',
-            default: 0,
         },
         {
             ...(_.find(deploymentConf, { type: 'limit_ram' }) ||
                 getEmptyEnvConf()),
             type: 'limit_ram',
-            default: 0,
         },
         {
             ...(_.find(deploymentConf, { type: 'java_opts' }) ||
                 getEmptyEnvConf()),
             type: 'java_opts',
-            default: '',
         },
         {
             ...(_.find(deploymentConf, { type: 'empty_dir_memory' }) ||
