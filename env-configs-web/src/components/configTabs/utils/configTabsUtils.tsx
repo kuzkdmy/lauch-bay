@@ -109,7 +109,6 @@ export const addEmptyDeployments = (deploymentConf: Config[]) => {
             ...(_.find(deploymentConf, { type: 'empty_dir_memory' }) ||
                 getEmptyEnvConf()),
             type: 'empty_dir_memory',
-            default: false,
         },
     ];
 };

@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { Box, Checkbox, Switch } from '@mui/material';
 import { TextField } from '@material-ui/core';
 import { Config } from '../../../../types/types';
-import _ from 'lodash';
 
 interface DeploymentConfigProps {
     className: string;
@@ -15,29 +14,19 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
     config,
     onConfigEdit,
 }) => {
-    const [defaultVal, setDefaultVal] = useState(config?.default);
-    const [dev, setDev] = useState(config?.envOverride.dev);
-    const [stage, setStage] = useState(config?.envOverride.stage);
-    const [prod, setProd] = useState(config?.envOverride.prod);
-
     const [disabled, setDisabled] = useState(config?.isDisabled || false);
     const [checked, setChecked] = useState(!config?.isDisabled);
+    const [confDeployment, setConfDeployment] = useState(config);
 
     useEffect(() => {
         setChecked(!config?.isDisabled);
         setDisabled(!!config?.isDisabled);
-        setDefaultVal(config.default);
-        setDev(config.envOverride.dev);
-        setStage(config.envOverride.stage);
-        setProd(config.envOverride.prod);
     }, [config]);
 
     const editConfig = (disabled: boolean) => {
         onConfigEdit({
-            ...config,
+            ...confDeployment,
             isDisabled: disabled,
-            default: defaultVal,
-            envOverride: { dev, stage, prod },
         });
     };
 
@@ -47,16 +36,16 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
         onChange: (e) => void,
         className?: string
     ) => {
-        return _.isBoolean(config.default) ? (
+        return config.type === 'empty_dir_memory' ? (
             <Switch
                 sx={{ '&.MuiSwitch-root': { marginLeft: '40px' } }}
                 size="small"
                 value={value}
                 disabled={disabled}
                 checked={value}
+                onBlur={() => editConfig(disabled)}
                 onChange={(e) => {
                     onChange(e.target.checked);
-                    editConfig(disabled);
                 }}
             />
         ) : (
@@ -113,17 +102,26 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
                 () => {},
                 'deploy-conf-type'
             )}
-            {renderValue(defaultVal, 'Default', (val) => {
-                setDefaultVal(val);
+            {renderValue(confDeployment.default, 'Default', (val) => {
+                setConfDeployment({ ...confDeployment, default: val });
             })}
-            {renderValue(dev, 'Dev', (val) => {
-                setDev(val);
+            {renderValue(confDeployment.envOverride.dev, 'Dev', (val) => {
+                setConfDeployment({
+                    ...confDeployment,
+                    envOverride: { ...confDeployment.envOverride, dev: val },
+                });
             })}
-            {renderValue(stage, 'Stage', (val) => {
-                setStage(val);
+            {renderValue(confDeployment.envOverride.stage, 'Stage', (val) => {
+                setConfDeployment({
+                    ...confDeployment,
+                    envOverride: { ...confDeployment.envOverride, stage: val },
+                });
             })}
-            {renderValue(prod, 'Prod', (val) => {
-                setProd(val);
+            {renderValue(confDeployment.envOverride.prod, 'Prod', (val) => {
+                setConfDeployment({
+                    ...confDeployment,
+                    envOverride: { ...confDeployment.envOverride, prod: val },
+                });
             })}
         </Box>
     );
