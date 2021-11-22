@@ -64,7 +64,7 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
         );
     };
 
-    const renderDeploymentConfig = (config: Config, className?: string) => {
+    const renderDeploymentConfig = (config: Config) => {
         return (
             <DeploymentConfig
                 config={config}

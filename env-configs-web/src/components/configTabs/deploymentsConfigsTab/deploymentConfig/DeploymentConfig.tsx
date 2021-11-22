@@ -36,7 +36,7 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
         onChange: (e) => void,
         className?: string
     ) => {
-        return config.type === 'empty_dir_memory' ? (
+        return config?.type === 'empty_dir_memory' ? (
             <Switch
                 sx={{ '&.MuiSwitch-root': { marginLeft: '40px' } }}
                 size="small"
@@ -102,22 +102,22 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
                 () => {},
                 'deploy-conf-type'
             )}
-            {renderValue(confDeployment.default, 'Default', (val) => {
+            {renderValue(confDeployment?.default, 'Default', (val) => {
                 setConfDeployment({ ...confDeployment, default: val });
             })}
-            {renderValue(confDeployment.envOverride.dev, 'Dev', (val) => {
+            {renderValue(confDeployment?.envOverride.dev, 'Dev', (val) => {
                 setConfDeployment({
                     ...confDeployment,
                     envOverride: { ...confDeployment.envOverride, dev: val },
                 });
             })}
-            {renderValue(confDeployment.envOverride.stage, 'Stage', (val) => {
+            {renderValue(confDeployment?.envOverride.stage, 'Stage', (val) => {
                 setConfDeployment({
                     ...confDeployment,
                     envOverride: { ...confDeployment.envOverride, stage: val },
                 });
             })}
-            {renderValue(confDeployment.envOverride.prod, 'Prod', (val) => {
+            {renderValue(confDeployment?.envOverride.prod, 'Prod', (val) => {
                 setConfDeployment({
                     ...confDeployment,
                     envOverride: { ...confDeployment.envOverride, prod: val },
