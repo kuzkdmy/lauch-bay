@@ -6,7 +6,7 @@ const getDefaultValue = () => ({
     boolean: () => false,
 });
 
-export const getColUpdateValue = (
+export const updateEnvConfColValue = (
     value: any,
     configRow: Config,
     colId: string
@@ -50,5 +50,45 @@ export const getColUpdateValue = (
             };
         default:
             return { ...configRow, [colId]: value };
+    }
+};
+
+export const updateDeploymentConfColValue = (
+    value: any,
+    configRow: Config,
+    colId: string
+): Config => {
+    switch (colId) {
+        case 'dev':
+            return {
+                ...configRow,
+                envOverride: {
+                    ...configRow.envOverride,
+                    dev: value,
+                },
+            };
+        case 'stage':
+            return {
+                ...configRow,
+                envOverride: {
+                    ...configRow.envOverride,
+                    stage: value,
+                },
+            };
+        case 'prod':
+            return {
+                ...configRow,
+                envOverride: {
+                    ...configRow.envOverride,
+                    prod: value,
+                },
+            };
+        case 'default':
+            return {
+                ...configRow,
+                [colId]: value,
+            };
+        default:
+            return configRow;
     }
 };

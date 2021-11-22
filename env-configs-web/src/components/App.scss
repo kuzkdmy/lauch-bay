@@ -6,6 +6,14 @@ $selectedTabColor: #0e0e0e;
   display: flex;
   justify-content: space-around;
 
+  tr {
+    height: 10px;
+  }
+
+  tr td {
+    height: auto !important;
+  }
+
   .main-content {
     padding: 10px;
     display: flex;
@@ -19,14 +27,12 @@ $selectedTabColor: #0e0e0e;
       margin-right: 10px;
     }
 
-    .side-bar {
-      .side-bar-menu {
-        border: 1px solid $bdColor;
-        background-color: $bgColor;
-        border-radius: 5px;
-        height: 97vh;
-        overflow-y: scroll;
-      }
+    .side-bar-menu {
+      border: 1px solid $bdColor;
+      background-color: $bgColor;
+      border-radius: 5px;
+      height: 97vh;
+      overflow-y: scroll;
 
       .menu-sub-header {
         display: flex;
@@ -77,6 +83,57 @@ $selectedTabColor: #0e0e0e;
       .table-edit-icons {
         display: flex;
 
+      }
+    }
+
+    .deployment-confs-tab {
+      max-width: 1500px;
+      margin: auto;
+
+      .deployment-confs-tab-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 90%;
+
+        .deployment-confs {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          height: 250px;
+          min-width: 460px;
+          justify-content: space-around;
+
+          .deploy-conf-type {
+            max-width: 140px;
+          }
+
+          .deploy-conf-value {
+            max-width: 90px;
+          }
+        }
+      }
+
+      .empty-dir-deployment-block {
+        display: flex;
+      }
+
+      .deployment-config {
+        border: 1px solid #cecbcb;
+        border-radius: 5px;
+      }
+
+      .full-width {
+        flex-grow: 1;
+        margin-top: 10px;
+
+        .deployment-config {
+          flex-wrap: wrap;
+        }
+
+        .deploy-conf-value {
+          width: 250px;
+        }
       }
     }
   }

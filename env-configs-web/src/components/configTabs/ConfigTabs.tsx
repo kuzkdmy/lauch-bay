@@ -9,6 +9,7 @@ import ConfigListItems from './ConfigListItems';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
 import ConfigsTabSubHeader from './ConfigsTabSubHeader';
 import { addNewRowToConfig } from '../../redux/actions/tabActions';
+import ConfigSubTabs from './ConfigSubTabs';
 
 const ConfigTabs = () => {
     const { openedTabs, activeTabId } = useTypedSelector(
@@ -20,7 +21,14 @@ const ConfigTabs = () => {
     const [confToCreate, setConfToCreate] = useState<any>();
     const [showInherited, setShowInherited] = useState(false);
     const [showProject, setShowProject] = useState(false);
-    const { addNewRowToConfig, fetchConfigs, updateConfig } = useActions();
+    const {
+        addNewRowToConfig,
+        fetchConfigs,
+        updateConfig,
+        removeTabFromEditState,
+        closeTab,
+        setActiveTabId,
+    } = useActions();
 
     const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
@@ -64,22 +72,10 @@ const ConfigTabs = () => {
                     setShowInherited={setShowInherited}
                     tabItem={tabItem}
                 />
-                <EditableTable
-                    sx={{ marginBottom: '25px', maxHeight: '60vh' }}
-                    tabItem={tabItem}
+                <ConfigSubTabs
+                    config={configs[tabItem.type][tabItem.id]}
+                    parentTab={tabItem}
                 />
-                {/* {item.hasGlobalConfigType && */}
-                {/*    showGlobal && */}
-                {/*    getParentConfigs(config, configs.GLOBAL, ConfigType.GLOBAL)} */}
-                {/* {item.hasProjectConfigType && */}
-                {/*    showProject && */}
-                {/*    getParentConfigs( */}
-                {/*        config as Configs, */}
-                {/*        _.find(configs.PROJECT, (el) => { */}
-                {/*            return el.id === config.projectId; */}
-                {/*        }) as Configs, */}
-                {/*        ConfigType.PROJECT */}
-                {/*    )} */}
             </div>
         );
     };
@@ -104,15 +100,15 @@ const ConfigTabs = () => {
                 >
                     Add New Project
                 </Button>
-                {configs[ConfigType.PROJECT]['projects-id']?.map(
-                    (config, index) => (
+                {Object.keys(configs[ConfigType.PROJECT])
+                    .map((key) => configs[ConfigType.PROJECT][key])
+                    .map((config, index) => (
                         <ConfigListItems
                             project={config}
                             key={index}
                             pl={2}
                             isTopLevel
                             index={index}
-                            tabItem={tabItem}
                             showCreateNewDialog={() => {
                                 setConfToCreate({
                                     type: ConfigType.APPLICATION,
@@ -121,35 +117,43 @@ const ConfigTabs = () => {
                                 setIsDialogOpened(true);
                             }}
                         />
-                    )
-                )}
+                    ))}
             </>
         );
     };
 
+    const onTabChange = (index: number) => {
+        setActiveTabId(openedTabs[index].id);
+        resetState();
+    };
+
     const getTabItems = () => {
         return tabsContent.map((item: TabItemType): any => {
-            if (!configs[item.type][activeTabId]) {
-                return {};
-            }
             if (item.isTableContent) {
                 return {
                     tabName: item.name,
                     content: renderTableTabsContent(item),
                 };
             }
-            return {
-                tabName: item.name,
-                content: renderListTabsContent(item),
-            };
+            if (item.id === 'projects-id') {
+                return {
+                    tabName: item.name,
+                    content: renderListTabsContent(item),
+                };
+            }
         });
     };
 
     return (
         <TabsPanel
             tabsContent={getTabItems}
+            tabs={openedTabs}
             activeTabId={activeTabId}
-            onChange={resetState}
+            isTitleUpperCase={true}
+            onTabChange={(event: any, tabIndex: number) =>
+                onTabChange(tabIndex)
+            }
+            isClosable
             onTabClick={(
                 type = ConfigType.GLOBAL,
                 name: string,

@@ -11,12 +11,13 @@ export interface ConfigItem {
 export interface Config {
     envKey: string | null;
     confType?: ConfigType;
-    default: ConfigItem | null;
+    isDisabled?: boolean;
+    default: any;
     type: string | null;
     envOverride: {
-        dev: ConfigItem | null;
-        stage: ConfigItem | null;
-        prod: ConfigItem | null;
+        dev: any;
+        stage: any;
+        prod: any;
     };
 }
 
@@ -25,7 +26,7 @@ export interface Configs {
     projectId?: string;
     name: string;
     envConf: Config[];
-    deployConf: Config[] | null;
+    deployConf: Config[];
     confType: ConfigType;
     version: number;
 }
@@ -41,7 +42,7 @@ export enum ConfigsActionTypes {
 
     CONFIG_UPDATE_SUCCESS = 'CONFIG_UPDATE_SUCCESS',
     CREATE_NEW_CONFIG = 'CREATE_NEW_CONFIG',
-    CREATE_NEW_SUCCESS = 'CREATE_NEW_SUCCESS',
+    CREATE_NEW_CONFIG_SUCCESS = 'CREATE_NEW_CONFIG_SUCCESS',
 }
 
 export enum TabsActionTypes {
@@ -53,6 +54,7 @@ export enum TabsActionTypes {
 
     ADD_NEW_ROW_TO_CONFIG = 'ADD_NEW_ROW_TO_CONFIG',
     EDIT_CONFIG_ROW = 'EDIT_CONFIG_ROW',
+    EDIT_DEPLOYMENTS_CONFIG_ROW = 'EDIT_DEPLOYMENTS_CONFIG_ROW',
 
     SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
 }
@@ -84,7 +86,7 @@ interface CreateNewConfig {
     type: ConfigsActionTypes.CREATE_NEW_CONFIG;
 }
 interface CreatedNewConfig {
-    type: ConfigsActionTypes.CREATE_NEW_SUCCESS;
+    type: ConfigsActionTypes.CREATE_NEW_CONFIG_SUCCESS;
     payload: any;
 }
 interface ConfigUpdateSuccess {
@@ -101,9 +103,6 @@ interface FetchConfigsSuccessAction {
 }
 interface RemoveConfigFromState {
     type: ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE;
-    payload: {
-        id: string;
-    };
 }
 interface RefreshProjectConfigsAction {
     type: ConfigsActionTypes.REFRESH_CONFIGS;

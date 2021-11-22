@@ -15,6 +15,7 @@ export const getEmptyEnvConf = () => ({
     envKey: '',
     type: 'string',
     default: null,
+    isDisabled: true,
     envOverride: {
         dev: null,
         stage: null,
@@ -70,4 +71,58 @@ export const mergeConfigs = (
     }) as Config[];
 
     return { ...parentConfigs, envConf: overriddenEnvConf };
+};
+
+export const addEmptyDeployments = (deploymentConf: Config[]) => {
+    return [
+        {
+            ...(_.find(deploymentConf, { type: 'replica' }) ||
+                getEmptyEnvConf()),
+            type: 'replica',
+            default: 0,
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'request_cpu' }) ||
+                getEmptyEnvConf()),
+            type: 'request_cpu',
+            default: 0,
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'limit_cpu' }) ||
+                getEmptyEnvConf()),
+            type: 'limit_cpu',
+            default: 0,
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'request_ram' }) ||
+                getEmptyEnvConf()),
+            type: 'request_ram',
+            default: 0,
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'limit_ram' }) ||
+                getEmptyEnvConf()),
+            type: 'limit_ram',
+            default: 0,
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'java_opts' }) ||
+                getEmptyEnvConf()),
+            type: 'java_opts',
+            default: '',
+        },
+        {
+            ...(_.find(deploymentConf, { type: 'empty_dir_memory' }) ||
+                getEmptyEnvConf()),
+            type: 'empty_dir_memory',
+            default: false,
+        },
+    ];
+};
+
+export const replaceDeployConf = (conf, deployConf: Config[]) => {
+    const confIdx = _.findIndex(deployConf, { type: conf.type });
+    deployConf.splice(confIdx, 1, conf);
+
+    return deployConf;
 };

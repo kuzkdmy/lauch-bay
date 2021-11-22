@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import {
+    Config,
     Configs,
     ConfigsActions,
     ConfigsActionTypes,
@@ -57,9 +58,8 @@ export const fetchConfigs = ({
     };
 };
 
-export const removeConfigFromState = (configTab: any): ConfigsActions => ({
+export const removeConfigFromState = (): ConfigsActions => ({
     type: ConfigsActionTypes.REMOVE_CONFIG_FROM_STATE,
-    payload: configTab,
 });
 
 export const createConfigs = (config: Configs) => {
@@ -71,7 +71,7 @@ export const createConfigs = (config: Configs) => {
             );
             if (post.status === 200) {
                 dispatch({
-                    type: ConfigsActionTypes.CREATE_NEW_SUCCESS,
+                    type: ConfigsActionTypes.CREATE_NEW_CONFIG_SUCCESS,
                     payload: { name: config.name, type: config.confType },
                 });
                 dispatch({
@@ -93,6 +93,7 @@ export const createConfigs = (config: Configs) => {
                 });
             }
         } catch (e) {
+            console.log(e);
             dispatch({
                 type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
             });
@@ -105,12 +106,19 @@ export const setHasErrors = (isError: boolean) => ({
     payload: isError,
 });
 
+const removeDisabledDeployConf = (config: Configs) => {
+    return {
+        ...config,
+        deployConf: config.deployConf.filter((conf) => !conf.isDisabled),
+    };
+};
+
 export const updateConfig = (config: Configs) => {
     return async (dispatch: Dispatch<ConfigsActions>) => {
         try {
-            const resp = await updateConfigRequest(config)[config.confType](
-                config.id
-            );
+            const resp = await updateConfigRequest(
+                removeDisabledDeployConf(config)
+            )[config.confType](config.id);
             if (resp.status === 200) {
                 dispatch({
                     type: TabsActionTypes.EDIT_CONFIG_ROW,
@@ -125,11 +133,40 @@ export const updateConfig = (config: Configs) => {
                 });
             }
         } catch (e) {
+            console.log(e);
             dispatch({
                 type: ConfigsActionTypes.CONFIG_REQUEST_ERROR,
                 payload: config.id,
             });
         }
+    };
+};
+
+const getNullOnEmpty = (configs: Config[]) => {
+    return configs.map((conf) => {
+        return {
+            ...conf,
+            envOverride: {
+                dev:
+                    conf.envOverride.dev?.value || conf.envOverride.dev || null,
+                stage:
+                    conf.envOverride.stage?.value ||
+                    conf.envOverride.stage ||
+                    null,
+                prod:
+                    conf.envOverride.prod?.value ||
+                    conf.envOverride.prod ||
+                    null,
+            },
+        };
+    });
+};
+
+const setNullToEmptyProps = (body: Configs) => {
+    return {
+        ...body,
+        envConf: getNullOnEmpty(body.envConf),
+        deployConf: getNullOnEmpty(body.deployConf),
     };
 };
 

@@ -1,6 +1,9 @@
 import { AnyAction } from 'redux';
 import { TabsActionTypes } from '../../types/types';
-import { getEmptyEnvConf } from '../../components/configTabs/utils/configTabsUtils';
+import {
+    getEmptyEnvConf,
+    replaceDeployConf,
+} from '../../components/configTabs/utils/configTabsUtils';
 import createReducer from '../hooks/createReducer';
 
 const initialState = {
@@ -43,6 +46,26 @@ const tabsReducer = {
             editTabs: {
                 ...state.editTabs,
                 [action.payload.config.id]: action.payload.config,
+            },
+        };
+    },
+    [TabsActionTypes.EDIT_DEPLOYMENTS_CONFIG_ROW]: (
+        state: any,
+        action: AnyAction
+    ) => {
+        const configToEdit =
+            state.editTabs[action.payload.config.id] || action.payload.config;
+
+        return {
+            ...state,
+            editTabs: {
+                ...state.editTabs,
+                [action.payload.config.id]: {
+                    ...action.payload.config,
+                    deployConf: replaceDeployConf(action.payload.deployConf, [
+                        ...configToEdit.deployConf,
+                    ]),
+                },
             },
         };
     },
