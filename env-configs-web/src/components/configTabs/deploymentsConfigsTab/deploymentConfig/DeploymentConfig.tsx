@@ -25,6 +25,11 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
 
     useEffect(() => {
         setChecked(!config?.isDisabled);
+        setDisabled(!!config?.isDisabled);
+        setDefaultVal(config.default);
+        setDev(config.envOverride.dev);
+        setStage(config.envOverride.stage);
+        setProd(config.envOverride.prod);
     }, [config]);
 
     const editConfig = (disabled: boolean) => {
