@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import DeploymentConfig from './deploymentConfig/DeploymentConfig';
 import { Config, ConfigType, TabItemType } from '../../../types/types';
 import _ from 'lodash';
@@ -14,9 +14,12 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
     const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
 
-    const [appConfig, setAppConfig] = useState(
-        configs[ConfigType.APPLICATION][parentTab.id]
-    );
+    const appConfig = useMemo(() => {
+        return (
+            editTabs[parentTab.id] ||
+            configs[ConfigType.APPLICATION][parentTab.id]
+        );
+    }, [configs, editTabs, parentTab.id]);
 
     const replica = useMemo(
         () => _.find(appConfig.deployConf, { type: 'replica' }),
@@ -49,14 +52,6 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
 
     const { editDeploymentConfigItem } = useActions();
 
-    useEffect(() => {
-        if (editTabs[parentTab.id]) {
-            setAppConfig(editTabs[parentTab.id]);
-        } else {
-            setAppConfig(configs[ConfigType.APPLICATION][parentTab.id]);
-        }
-    }, [configs, editTabs, parentTab.id]);
-
     const onEdit = (conf) => {
         const appConfig = configs[ConfigType.APPLICATION][parentTab.id];
         editDeploymentConfigItem(
@@ -69,7 +64,7 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
         );
     };
 
-    const renderDeploymentConfig = (config: Config, className?: string) => {
+    const renderDeploymentConfig = (config: Config) => {
         return (
             <DeploymentConfig
                 config={config}
