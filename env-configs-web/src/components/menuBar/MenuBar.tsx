@@ -8,7 +8,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ListIcon from '@mui/icons-material/List';
 import { useActions } from '../../redux/hooks/useActions';
 import { ConfigType } from '../../types/types';
-import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
 
 const MenuBar = () => {
     const { fetchConfigs } = useActions();

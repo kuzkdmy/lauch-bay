@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/HighlightOff';
 import AddIcon from '@mui/icons-material/Add';
 import { ConfigType, TabItemType } from '../../types/types';
-import { getEmptyConfigRow } from './utils/configTabsUtils';
+import { getEmptyConfigRow } from '../utils/configTabsUtils';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import _ from 'lodash';
@@ -27,7 +27,7 @@ interface ConfigsSubHeaderProps {
     setShowInherited?: any;
 }
 
-const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
+const ConfigsTabHeader: FC<ConfigsSubHeaderProps> = ({
     isEdit,
     setIsEdit,
     tabItem,
@@ -152,4 +152,4 @@ const ConfigsTabSubHeader: FC<ConfigsSubHeaderProps> = ({
     );
 };
 
-export default ConfigsTabSubHeader;
+export default ConfigsTabHeader;

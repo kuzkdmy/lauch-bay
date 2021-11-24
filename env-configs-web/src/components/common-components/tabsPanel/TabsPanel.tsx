@@ -4,11 +4,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CloseIcon from '@mui/icons-material/Close';
-import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { useActions } from '../../redux/hooks/useActions';
+import { useActions } from '../../../redux/hooks/useActions';
 import { Alert } from '@mui/material';
-import { TabContent, TabItemType } from '../../types/types';
-import _ from 'lodash';
+import { TabContent } from '../../../types/types';
 
 interface TabsPanelProps {
     tabsContent: () => any[];

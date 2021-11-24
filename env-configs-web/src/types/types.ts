@@ -57,6 +57,7 @@ export enum TabsActionTypes {
     EDIT_DEPLOYMENTS_CONFIG_ROW = 'EDIT_DEPLOYMENTS_CONFIG_ROW',
 
     SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
+    SET_ACTIVE_SUB_TAB = 'SET_ACTIVE_SUB_TAB',
 }
 
 export interface TabItemType {

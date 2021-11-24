@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
-import TabsPanel from '../tabsPanel/TabsPanel';
+import TabsPanel from '../common-components/tabsPanel/TabsPanel';
 import { ConfigType, TabItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import EditableTable from '../basicTable/EditableTable';
 import ConfigListItems from './ConfigListItems';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
-import ConfigsTabSubHeader from './ConfigsTabSubHeader';
+import ConfigsTabHeader from './ConfigsTabHeader';
 import { addNewRowToConfig } from '../../redux/actions/tabActions';
 import ConfigSubTabs from './ConfigSubTabs';
 
@@ -20,15 +19,8 @@ const ConfigTabs = () => {
     const [isDialogOpened, setIsDialogOpened] = useState(false);
     const [confToCreate, setConfToCreate] = useState<any>();
     const [showInherited, setShowInherited] = useState(false);
-    const [showProject, setShowProject] = useState(false);
-    const {
-        addNewRowToConfig,
-        fetchConfigs,
-        updateConfig,
-        removeTabFromEditState,
-        closeTab,
-        setActiveTabId,
-    } = useActions();
+    const { addNewRowToConfig, fetchConfigs, updateConfig, setActiveTabId } =
+        useActions();
 
     const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
@@ -37,7 +29,6 @@ const ConfigTabs = () => {
 
     const resetState = () => {
         setIsEdit(false);
-        setShowProject(false);
         setShowInherited(false);
     };
 
@@ -61,7 +52,7 @@ const ConfigTabs = () => {
     const renderTableTabsContent = (tabItem: TabItemType) => {
         return (
             <div className="tabs-content-container">
-                <ConfigsTabSubHeader
+                <ConfigsTabHeader
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
                     showInherited={showInherited}
@@ -80,7 +71,7 @@ const ConfigTabs = () => {
         );
     };
 
-    const renderListTabsContent = (tabItem: TabItemType) => {
+    const renderListTabsContent = () => {
         return (
             <>
                 <CreateNewDialog
@@ -138,7 +129,7 @@ const ConfigTabs = () => {
             if (item.id === 'projects-id') {
                 return {
                     tabName: item.name,
-                    content: renderListTabsContent(item),
+                    content: renderListTabsContent(),
                 };
             }
         });

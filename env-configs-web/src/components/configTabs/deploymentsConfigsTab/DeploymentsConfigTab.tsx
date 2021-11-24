@@ -53,7 +53,9 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
     const { editDeploymentConfigItem } = useActions();
 
     const onEdit = (conf) => {
-        const appConfig = configs[ConfigType.APPLICATION][parentTab.id];
+        const appConfig =
+            editTabs[parentTab.id] ||
+            configs[ConfigType.APPLICATION][parentTab.id];
         editDeploymentConfigItem(
             {
                 ...appConfig,

@@ -7,12 +7,22 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Checkbox, Input, Switch, Tooltip } from '@mui/material';
+import {
+    Box,
+    Checkbox,
+    IconButton,
+    Input,
+    Switch,
+    Tooltip,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowDown from '@mui/icons-material/ArrowDownward';
+import ArrowUp from '@mui/icons-material/ArrowUpward';
 import SelectComponent from '../selectComponent/SelectComponent';
-import { useActions } from '../../redux/hooks/useActions';
-import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { Config, TabItemType } from '../../types/types';
+import { useActions } from '../../../redux/hooks/useActions';
+import { useTypedSelector } from '../../../redux/hooks/useTypedSelector';
+import { Config, TabItemType } from '../../../types/types';
+import _ from 'lodash';
 
 interface EditableTableProps {
     tabItem: TabItemType;
@@ -42,6 +52,7 @@ const EditableTable: FC<EditableTableProps> = ({
 }) => {
     const [rowType, setRowType] = useState('text');
     const [isEdit, setIsEdit] = useState(false);
+    const [colSort, setColSort] = useState('desc');
 
     const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
@@ -106,7 +117,6 @@ const EditableTable: FC<EditableTableProps> = ({
                 }}
                 autoFocus={autoFocus}
                 value={col.getValue(tableRows[idx])}
-                type={col.id === 'envKey' ? 'text' : rowType}
                 name={col.id}
                 onChange={(e) => onRowsChange(e.target.value, col.id)}
             />
@@ -202,6 +212,15 @@ const EditableTable: FC<EditableTableProps> = ({
         );
     };
 
+    const sort = (tableRows, direction) => {
+        !isEdit &&
+            setTableRows(
+                direction === 'asc'
+                    ? _.sortBy(tableRows, ['envKey'])
+                    : _.sortBy(tableRows, ['envKey']).reverse()
+            );
+    };
+
     return (
         <Paper sx={{ ...sx, overflow: 'hidden' }}>
             <TableContainer
@@ -229,15 +248,42 @@ const EditableTable: FC<EditableTableProps> = ({
                                 <TableCell
                                     key={column.id + idx}
                                     align="center"
+                                    sortDirection={'asc'}
                                     size="small"
+                                    onClick={() => {
+                                        if (column.sortable) {
+                                            sort(tableRows, colSort);
+                                            setColSort(
+                                                colSort === 'desc'
+                                                    ? 'asc'
+                                                    : 'desc'
+                                            );
+                                        }
+                                    }}
                                     style={{
                                         width: column.minWidth,
                                         backgroundColor: '#585959',
                                         color: 'white',
                                         padding: '0',
                                         fontSize: 16,
+                                        cursor: column.sortable
+                                            ? 'pointer'
+                                            : 'default',
                                     }}
                                 >
+                                    {column.sortable && (
+                                        <div className="sort-table-col">
+                                            {colSort === 'asc' ? (
+                                                <ArrowDown
+                                                    sx={{ fontSize: 16 }}
+                                                />
+                                            ) : (
+                                                <ArrowUp
+                                                    sx={{ fontSize: 16 }}
+                                                />
+                                            )}
+                                        </div>
+                                    )}
                                     {column.getLabel(tableRows[idx])}
                                 </TableCell>
                             ))}

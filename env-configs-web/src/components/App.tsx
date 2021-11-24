@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './App.scss';
 import MenuBar from './menuBar/MenuBar';
 import ConfigTabs from './configTabs/ConfigTabs';
-import NotificationAlert from './alert/NotificationAlert';
+import NotificationAlert from './notificationAlert/NotificationAlert';
 import { useActions } from '../redux/hooks/useActions';
 import { useTypedSelector } from '../redux/hooks/useTypedSelector';
 import _ from 'lodash';
