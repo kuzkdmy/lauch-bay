@@ -1,8 +1,7 @@
 import { AnyAction } from 'redux';
 import createReducer from '../hooks/createReducer';
 import { ConfigsActionTypes, ConfigType } from '../../types/types';
-import _ from 'lodash';
-import { addEmptyDeployments } from '../../components/configTabs/utils/configTabsUtils';
+import { addEmptyDeployments } from '../../components/utils/configTabsUtils';
 
 const initialState = {
     isLoading: false,

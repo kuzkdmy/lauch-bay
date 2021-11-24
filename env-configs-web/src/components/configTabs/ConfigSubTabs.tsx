@@ -1,18 +1,16 @@
 import React, { FC, useState } from 'react';
-import TabsPanel from '../tabsPanel/TabsPanel';
-import EditableTable from '../basicTable/EditableTable';
-import { Config, Configs, ConfigType, TabItemType } from '../../types/types';
+import TabsPanel from '../common-components/tabsPanel/TabsPanel';
+import EditableTable from '../common-components/editableTable/EditableTable';
+import { Configs, ConfigType, TabItemType } from '../../types/types';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import {
     getDeployConfigColumns,
     getEnvConfigColumns,
-} from '../basicTable/tableConfig';
+} from '../utils/tableConfig';
 import {
     updateDeploymentConfColValue,
     updateEnvConfColValue,
-} from '../basicTable/utils/tableUtils';
-import { getEmptyConfigRow, getEmptyEnvConf } from './utils/configTabsUtils';
-import _ from 'lodash';
+} from '../utils/tableUtils';
 import DeploymentsConfigsTab from './deploymentsConfigsTab/DeploymentsConfigTab';
 
 interface ConfigSubTabsProps {

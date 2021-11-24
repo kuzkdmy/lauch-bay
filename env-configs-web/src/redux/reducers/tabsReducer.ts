@@ -3,11 +3,12 @@ import { TabsActionTypes } from '../../types/types';
 import {
     getEmptyEnvConf,
     replaceDeployConf,
-} from '../../components/configTabs/utils/configTabsUtils';
+} from '../../components/utils/configTabsUtils';
 import createReducer from '../hooks/createReducer';
 
 const initialState = {
     activeTabId: '',
+    activeSubTabId: '',
     openedTabs: [],
     editTabs: {},
     collapsiblePanelState: {},
@@ -19,7 +20,7 @@ const tabsReducer = {
         action: AnyAction
     ) => {
         const conf = state.editTabs[action.payload.id];
-        const envConf = [...conf.envConf, { ...getEmptyEnvConf() }];
+        const envConf = [...conf.envConf, { ...getEmptyEnvConf(null) }];
 
         return {
             ...state,

@@ -1,4 +1,4 @@
-import { Config, Configs, ConfigType, TabItemType } from '../../../types/types';
+import { Config, Configs, ConfigType, TabItemType } from '../../types/types';
 import _ from 'lodash';
 
 export const getEmptyConfigRow = (): Configs => ({
@@ -11,10 +11,10 @@ export const getEmptyConfigRow = (): Configs => ({
     version: 0,
 });
 
-export const getEmptyEnvConf = () => ({
+export const getEmptyEnvConf = (defaultVal: any) => ({
     envKey: '',
     type: 'string',
-    default: null,
+    default: defaultVal,
     isDisabled: true,
     envOverride: {
         dev: null,
@@ -77,37 +77,37 @@ export const addEmptyDeployments = (deploymentConf: Config[]) => {
     return [
         {
             ...(_.find(deploymentConf, { type: 'replica' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf(0)),
             type: 'replica',
         },
         {
             ...(_.find(deploymentConf, { type: 'request_cpu' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf(0)),
             type: 'request_cpu',
         },
         {
             ...(_.find(deploymentConf, { type: 'limit_cpu' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf(0)),
             type: 'limit_cpu',
         },
         {
             ...(_.find(deploymentConf, { type: 'request_ram' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf(0)),
             type: 'request_ram',
         },
         {
             ...(_.find(deploymentConf, { type: 'limit_ram' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf(0)),
             type: 'limit_ram',
         },
         {
             ...(_.find(deploymentConf, { type: 'java_opts' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf('')),
             type: 'java_opts',
         },
         {
             ...(_.find(deploymentConf, { type: 'empty_dir_memory' }) ||
-                getEmptyEnvConf()),
+                getEmptyEnvConf(false)),
             type: 'empty_dir_memory',
         },
     ];

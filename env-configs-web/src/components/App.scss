@@ -84,6 +84,11 @@ $selectedTabColor: #0e0e0e;
         display: flex;
 
       }
+
+      table .sort-table-col {
+        display: inline;
+        margin-right: 7px;
+      }
     }
 
     .deployment-confs-tab {

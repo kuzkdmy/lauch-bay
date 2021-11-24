@@ -5,6 +5,7 @@ export const getEnvConfigColumns = (): any[] => [
         id: 'envKey',
         getLabel: (row?: Config) => 'Name',
         minWidth: 600,
+        sortable: true,
         align: 'left',
         paddingLeft: 0,
         getValue: (row: any) => row.envKey || '',

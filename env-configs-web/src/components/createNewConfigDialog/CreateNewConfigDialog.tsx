@@ -10,7 +10,7 @@ import { Box } from '@mui/material';
 import { useActions } from '../../redux/hooks/useActions';
 import { ConfigType } from '../../types/types';
 import { createConfigs } from '../../redux/actions/configsActions';
-import { getEmptyConfigRow } from '../configTabs/utils/configTabsUtils';
+import { getEmptyConfigRow } from '../utils/configTabsUtils';
 
 interface DialogProps {
     configType: { type: ConfigType; projectId: string };
@@ -27,7 +27,7 @@ const CreateNewDialog: FC<DialogProps> = ({
     const [projectName, setProjectName] = useState('');
     const [isValid, setIsValid] = useState(true);
 
-    const { createConfigs, fetchConfigs } = useActions();
+    const { createConfigs } = useActions();
 
     const onCreate = () => {
         const areFieldsNotEmpty = id.length > 0 && projectName.length > 0;
