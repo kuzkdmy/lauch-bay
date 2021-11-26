@@ -6,11 +6,11 @@ interface SelectProps {
     label: string;
     initValue: any;
     onChange: (event: any) => void;
-    setSelectedType: (type: any) => void;
+    // setSelectedType: (type: any) => void;
 }
 
 const SelectComponent: FC<SelectProps> = ({
-    setSelectedType,
+    // setSelectedType,
     selectItems,
     initValue,
     onChange,
@@ -19,18 +19,15 @@ const SelectComponent: FC<SelectProps> = ({
     const [value, setValue] = useState(initValue);
 
     const handleChange = (event: any) => {
-        setSelectedType(event.target.value);
+        // setSelectedType(event.target.value);
         setValue(event.target.value);
         onChange(event.target.value);
     };
     return (
         <FormControl size="small" fullWidth={true}>
-            <InputLabel id="type-select-label">{label}</InputLabel>
             <Select
-                labelId="type-select-label"
-                sx={{ height: '30px' }}
+                sx={{ height: '30px', width: '110px', position: 'relative' }}
                 id="type-select"
-                label={label}
                 value={value}
                 onChange={handleChange}
             >

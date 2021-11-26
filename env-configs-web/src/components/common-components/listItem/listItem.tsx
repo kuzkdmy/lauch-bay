@@ -6,21 +6,19 @@ import React, { FC } from 'react';
 interface ListItemButtonProps {
     onClick: () => void;
     name: string;
+    index: number;
     disabled?: boolean;
 }
 
 const StyledListItemButton: FC<ListItemButtonProps> = ({
     onClick,
     name,
+    index,
     disabled,
 }) => {
     const StyledListItemButton = styled(ListItemButton)(() => ({
-        '&:nth-of-type(odd)': {
-            backgroundColor: '#eef4fb',
-        },
-        '&:hover': {
-            backgroundColor: '#b5d2f3',
-        },
+        backgroundColor: index % 2 ? '#f5f8ff' : '#e5edf8',
+        '&:onclick': { backgroundColor: 'red' },
     }));
 
     return (

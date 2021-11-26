@@ -13,7 +13,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'type',
         getLabel: (row?: Config) => 'Type',
-        minWidth: 80,
+        minWidth: 110,
         align: 'center',
         getValue: (row: Config) => row.type || '',
     },
@@ -48,50 +48,5 @@ export const getEnvConfigColumns = (): any[] => [
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
         getValue: (row: Config) => row.envOverride.prod?.value || '',
-    },
-];
-
-export const getDeployConfigColumns = (): any[] => [
-    {
-        id: 'deployConfType',
-        getLabel: (row: any) => 'Type',
-        minWidth: 250,
-        align: 'left',
-        paddingLeft: 0,
-        getValue: (row: any) => row.type?.toUpperCase(),
-    },
-    {
-        id: 'default',
-        getLabel: (row?: any) => 'Default',
-        minWidth: 50,
-        align: 'center',
-        format: (value: any) => value.toLocaleString('en-US'),
-        getValue: (row: any) => {
-            return row.default || '';
-        },
-    },
-    {
-        id: 'dev',
-        getLabel: (row?: Config) => 'Dev',
-        minWidth: 50,
-        align: 'center',
-        format: (value: any) => value.toLocaleString('en-US'),
-        getValue: (row: Config) => row.envOverride.dev || '',
-    },
-    {
-        id: 'stage',
-        getLabel: (row?: any) => 'Stage',
-        minWidth: 50,
-        align: 'center',
-        format: (value: any) => value.toLocaleString('en-US'),
-        getValue: (row: Config) => row.envOverride.stage || '',
-    },
-    {
-        id: 'prod',
-        getLabel: (row?: any) => 'Prod',
-        minWidth: 50,
-        align: 'center',
-        format: (value: any) => value.toLocaleString('en-US'),
-        getValue: (row: Config) => row.envOverride.prod || '',
     },
 ];

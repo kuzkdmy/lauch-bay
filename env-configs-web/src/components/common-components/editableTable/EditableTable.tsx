@@ -1,42 +1,25 @@
-import * as React from 'react';
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import {
-    Box,
-    Checkbox,
-    IconButton,
-    Input,
-    Switch,
-    Tooltip,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ArrowDown from '@mui/icons-material/ArrowDownward';
-import ArrowUp from '@mui/icons-material/ArrowUpward';
-import SelectComponent from '../selectComponent/SelectComponent';
 import { useActions } from '../../../redux/hooks/useActions';
 import { useTypedSelector } from '../../../redux/hooks/useTypedSelector';
 import { Config, TabItemType } from '../../../types/types';
 import _ from 'lodash';
+import EditableTableCell from './tableCell/EditableTableCell';
+import TableHeaderCell from './tableCell/TableHeaderCell';
+import CloseIcon from '@mui/icons-material/Close';
+import { TableCell, Tooltip } from '@mui/material';
 
 interface EditableTableProps {
     tabItem: TabItemType;
     activeTabId: string;
     config: Config[];
     columns: any[];
-    isDeletable?: boolean;
     updateColValue: (val: any, config: Config, colId: string) => any;
-    tableEditableRows: {
-        name: string;
-        configs: Config[];
-        dependentConfName: string;
-        dependentConf: Config[];
-    };
     sx?: any;
 }
 
@@ -45,51 +28,45 @@ const EditableTable: FC<EditableTableProps> = ({
     activeTabId,
     config,
     columns,
-    isDeletable,
     updateColValue,
-    tableEditableRows,
     tabItem,
 }) => {
-    const [rowType, setRowType] = useState('text');
     const [isEdit, setIsEdit] = useState(false);
-    const [colSort, setColSort] = useState('desc');
-
     const { editTabs } = useTypedSelector((state) => state.tabState);
     const { configs } = useTypedSelector((state) => state.configsState);
-
-    const [tableRows, setTableRows] = useState(config);
-    const [editingRow, setEditingRow] = useState({ idx: 0, isEdit: false });
+    const [tableRows, setTableRows] = useState(config || []);
+    const [editingRow, setEditingRow] = useState({ idx: -1, colId: '' });
 
     const { editConfigItem } = useActions();
 
-    const onRowEdit = (isChecked: boolean, rowIndex: number) => {
-        setEditingRow({ idx: rowIndex, isEdit: isChecked });
+    const onRowEdit = (rowIndex: number, colId: string) => {
+        setEditingRow({ idx: rowIndex, colId });
+        setIsEdit(true);
     };
 
     const onEditingRowChange = (updatedRows?: Config[]) => {
         editConfigItem(
             {
                 ...configs[tabItem.type][activeTabId],
+                envConf: updatedRows || tableRows,
                 id: activeTabId,
-                [tableEditableRows.dependentConfName]:
-                    tableEditableRows.dependentConf,
-                [tableEditableRows.name]: updatedRows || tableRows,
-                confType: editTabs[activeTabId].confType,
+                confType: tabItem.type,
             },
-            isEdit
+            true
         );
     };
 
     useEffect(() => {
         setIsEdit(!!editTabs[activeTabId]);
         if (editTabs[activeTabId]) {
-            setTableRows(tableEditableRows.configs || []);
+            setTableRows(editTabs[activeTabId]?.envConf);
         } else {
+            setEditingRow({ idx: -1, colId: '' });
             setTableRows(config || []);
         }
     }, [activeTabId, configs, editTabs, tabItem.type]);
 
-    const onRowsChange = (value: any, colId: string) => {
+    const editTableRows = (value: any, colId: string) => {
         const updatedRows = [...tableRows];
         const configRow = updateColValue(
             value,
@@ -100,125 +77,24 @@ const EditableTable: FC<EditableTableProps> = ({
         setTableRows(updatedRows);
     };
 
-    const onRowDelete = () => {
+    const onRowDelete = (rowIdx: number) => {
         const updatedTableRows = [...tableRows];
-        updatedTableRows.splice(editingRow.idx, 1);
+        updatedTableRows.splice(rowIdx, 1);
         setTableRows(updatedTableRows);
         onEditingRowChange(updatedTableRows);
     };
 
-    const getSimpleInput = (col: any, idx: number, autoFocus?: boolean) => {
-        return (
-            <Input
-                sx={{
-                    fontSize: 14,
-                    width: col.minWidth,
-                    paddingLeft: col.paddingLeft,
-                }}
-                autoFocus={autoFocus}
-                value={col.getValue(tableRows[idx])}
-                name={col.id}
-                onChange={(e) => onRowsChange(e.target.value, col.id)}
-            />
-        );
-    };
-
-    const renderValue = (col: any, idx: number) => {
-        return <>{col.getValue(tableRows[idx])}</>;
-    };
-
-    const isRowInEditState = (idx: number) => {
-        return isEdit && editingRow.idx === idx && editingRow.isEdit;
-    };
-
-    const getTableCell = (col: any, idx: number) => {
-        switch (true) {
-            case col.id === 'envKey':
-                return isRowInEditState(idx)
-                    ? getSimpleInput(col, idx, true)
-                    : renderValue(col, idx);
-            case col.id === 'type':
-                return isRowInEditState(idx) ? (
-                    <SelectComponent
-                        setSelectedType={setRowType}
-                        label="Type"
-                        initValue={col.getValue(tableRows[idx])}
-                        onChange={(value) => {
-                            onRowsChange(value, col.id);
-                        }}
-                        selectItems={[
-                            { value: 'integer', text: 'integer' },
-                            { value: 'string', text: 'string' },
-                            { value: 'boolean', text: 'boolean' },
-                        ]}
-                    />
-                ) : (
-                    renderValue(col, idx)
-                );
-            case tableRows[idx].type === 'boolean':
-                return (
-                    <Switch
-                        size="small"
-                        disabled={!isRowInEditState(idx)}
-                        value={col.getValue(tableRows[idx])}
-                        checked={!!col.getValue(tableRows[idx])}
-                        onChange={(e) => onRowsChange(e.target.checked, col.id)}
-                    />
-                );
-            default:
-                return isRowInEditState(idx)
-                    ? getSimpleInput(col, idx)
-                    : renderValue(col, idx);
-        }
-    };
-
-    const getEditRowCell = (idx: number) => {
-        return (
-            <TableCell size="small" sx={{ width: '5px', padding: '5px 3px' }}>
-                <div className="table-edit-icons">
-                    <Tooltip
-                        placement={'left'}
-                        title="Edit Row"
-                        sx={{ padding: 0 }}
-                    >
-                        <Checkbox
-                            sx={{
-                                '& .MuiSvgIcon-root': { fontSize: 21 },
-                                '&': { padding: '0 5px 0 10px' },
-                            }}
-                            checked={isRowInEditState(idx)}
-                            onChange={(e) => {
-                                onRowEdit(e.target.checked, idx);
-                                onEditingRowChange();
-                            }}
-                        />
-                    </Tooltip>
-                    {isRowInEditState(idx) && isDeletable && (
-                        <Tooltip
-                            placement={'top'}
-                            title="Delete Row"
-                            sx={{ '& .MuiSvgIcon-root': { marginTop: '5px' } }}
-                        >
-                            <CloseIcon
-                                color={'warning'}
-                                onClick={() => {
-                                    onRowDelete();
-                                }}
-                            />
-                        </Tooltip>
-                    )}
-                </div>
-            </TableCell>
-        );
-    };
-
-    const sort = (tableRows, direction) => {
+    const sortRows = (tableRows, direction) => {
         !isEdit &&
             setTableRows(
                 direction === 'asc'
                     ? _.sortBy(tableRows, ['envKey'])
                     : _.sortBy(tableRows, ['envKey']).reverse()
             );
+    };
+
+    const isRowInEditState = (rowIdx: number) => {
+        return editingRow.idx === rowIdx;
     };
 
     return (
@@ -231,35 +107,14 @@ const EditableTable: FC<EditableTableProps> = ({
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
-                            {isEdit && (
-                                <TableCell
-                                    align="center"
-                                    size="small"
-                                    style={{
-                                        width: '5px',
-                                        backgroundColor: '#585959',
-                                        padding: '0',
-                                        color: 'white',
-                                        fontSize: 10,
-                                    }}
-                                />
-                            )}
                             {columns.map((column, idx) => (
-                                <TableCell
-                                    key={column.id + idx}
-                                    align="center"
-                                    sortDirection={'asc'}
-                                    size="small"
-                                    onClick={() => {
-                                        if (column.sortable) {
-                                            sort(tableRows, colSort);
-                                            setColSort(
-                                                colSort === 'desc'
-                                                    ? 'asc'
-                                                    : 'desc'
-                                            );
-                                        }
-                                    }}
+                                <TableHeaderCell
+                                    key={idx}
+                                    isEdit={isEdit}
+                                    column={column}
+                                    onSort={(order) =>
+                                        sortRows(tableRows, order)
+                                    }
                                     style={{
                                         width: column.minWidth,
                                         backgroundColor: '#585959',
@@ -270,76 +125,93 @@ const EditableTable: FC<EditableTableProps> = ({
                                             ? 'pointer'
                                             : 'default',
                                     }}
-                                >
-                                    {column.sortable && (
-                                        <div className="sort-table-col">
-                                            {colSort === 'asc' ? (
-                                                <ArrowDown
-                                                    sx={{ fontSize: 16 }}
-                                                />
-                                            ) : (
-                                                <ArrowUp
-                                                    sx={{ fontSize: 16 }}
-                                                />
-                                            )}
-                                        </div>
-                                    )}
-                                    {column.getLabel(tableRows[idx])}
-                                </TableCell>
+                                />
                             ))}
+                            <TableHeaderCell
+                                isEdit={isEdit}
+                                style={{
+                                    width: '10px',
+                                    backgroundColor: '#585959',
+                                }}
+                            />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tableRows?.map((row, idx) => {
+                        {tableRows?.map((row, rowIdx) => {
                             return (
                                 <TableRow
                                     hover
                                     role="checkbox"
                                     tabIndex={-1}
-                                    key={idx}
-                                    onBlur={() => {
-                                        if (isEdit) {
-                                            onEditingRowChange();
-                                        }
-                                    }}
-                                    onClick={() => {
-                                        if (isEdit) {
-                                            setEditingRow({
-                                                idx,
-                                                isEdit: true,
-                                            });
-                                        }
-                                    }}
+                                    key={rowIdx}
                                     sx={{
                                         cursor: 'pointer',
                                         height: '30px',
                                         backgroundColor:
-                                            idx % 2 !== 0 ? '#f5f5f5' : '',
+                                            rowIdx % 2 !== 0 ? '#f5f5f5' : '',
                                     }}
                                 >
-                                    {isEdit && getEditRowCell(idx)}
-                                    {columns.map((col) => {
+                                    {columns.map((col: any, index) => {
                                         return (
-                                            <TableCell
-                                                size="small"
-                                                key={col.id + idx}
-                                                sx={{
-                                                    width: col.minWidth,
-                                                    padding: '10px',
-                                                    paddingLeft: isEdit
-                                                        ? col.paddingLeft
-                                                        : 2,
+                                            <EditableTableCell
+                                                config={tableRows[rowIdx]}
+                                                key={index + col.id}
+                                                colIdx={index}
+                                                onRowEdit={() => {
+                                                    onRowEdit(rowIdx, col.id);
                                                 }}
-                                                align={
-                                                    col.align as
-                                                        | 'center'
-                                                        | 'left'
+                                                isRowInEditState={() => {
+                                                    return isRowInEditState(
+                                                        rowIdx
+                                                    );
+                                                }}
+                                                onBlur={() => {
+                                                    if (isEdit) {
+                                                        onEditingRowChange();
+                                                    }
+                                                }}
+                                                autoFocus={
+                                                    editingRow.colId === col.id
                                                 }
-                                            >
-                                                {getTableCell(col, idx)}
-                                            </TableCell>
+                                                onChange={(
+                                                    val: any,
+                                                    colId: string
+                                                ) => {
+                                                    editTableRows(val, colId);
+                                                }}
+                                                column={col}
+                                            />
                                         );
                                     })}
+                                    <TableCell
+                                        size="small"
+                                        sx={{
+                                            width: '10px%',
+                                            padding: '5px',
+                                        }}
+                                    >
+                                        <Tooltip
+                                            placement={'left-start'}
+                                            title="Delete Row"
+                                            sx={{
+                                                '& .MuiSvgIcon-root': {
+                                                    marginTop: '5px',
+                                                },
+                                            }}
+                                        >
+                                            <CloseIcon
+                                                color={
+                                                    isEdit
+                                                        ? 'warning'
+                                                        : 'disabled'
+                                                }
+                                                onClick={() => {
+                                                    if (isEdit)
+                                                        onRowDelete(rowIdx);
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}

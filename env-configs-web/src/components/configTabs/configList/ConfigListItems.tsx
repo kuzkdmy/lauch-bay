@@ -6,19 +6,23 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
-import { Configs, ConfigType, TabItemType } from '../../types/types';
-import { useActions } from '../../redux/hooks/useActions';
+import { Configs, ConfigType, TabItemType } from '../../../types/types';
+import { useActions } from '../../../redux/hooks/useActions';
 import { Alert, ListItem, Tooltip } from '@mui/material';
-import { collapsiblePanelClick } from '../../redux/actions/tabActions';
-import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
+import { collapsiblePanelClick } from '../../../redux/actions/tabActions';
+import { useTypedSelector } from '../../../redux/hooks/useTypedSelector';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import CollapsePanel from '../../common-components/collapsePanel/CollapsePanel';
+import axios from 'axios';
+import { getConfigsUrl } from '../../../redux/actions/configsActions';
 
 interface ConfigListItemsProps {
     project: Configs;
     pl: number;
     isTopLevel?: boolean;
     additionalClass?: string;
+    isOpen: boolean;
     index: number;
     showCreateNewDialog: () => void;
 }
@@ -27,6 +31,7 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
     project,
     pl,
     additionalClass,
+    isOpen,
     index,
     showCreateNewDialog,
 }) => {
@@ -36,15 +41,8 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
     const { collapsiblePanelState } = useTypedSelector(
         (state) => state.tabState
     );
-    const [isOpen, setIsOpen] = useState(false);
-    // const [applications, setApplications] = useMemo(() => {}, [project]);
-
-    useEffect(() => {
-        setIsOpen(collapsiblePanelState[project.id]);
-    }, [collapsiblePanelState, project]);
 
     const handleClick = () => {
-        setIsOpen(!isOpen);
         collapsiblePanelClick(
             {
                 name: project.name,

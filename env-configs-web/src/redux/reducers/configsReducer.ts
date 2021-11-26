@@ -39,6 +39,8 @@ const configsReducer = {
             resultConfigs = {
                 [action.payload.id]: {
                     ...action.payload.configs,
+                    id: action.payload.id,
+                    confType: action.payload.confType,
                     deployConf: addEmptyDeployments(
                         action.payload.configs.deployConf
                     ),

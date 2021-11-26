@@ -4,10 +4,9 @@ import TabsPanel from '../common-components/tabsPanel/TabsPanel';
 import { ConfigType, TabItemType } from '../../types/types';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import ConfigListItems from './ConfigListItems';
+import ConfigListItems from './configList/ConfigListItems';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
 import ConfigsTabHeader from './ConfigsTabHeader';
-import { addNewRowToConfig } from '../../redux/actions/tabActions';
 import ConfigSubTabs from './ConfigSubTabs';
 
 const ConfigTabs = () => {
@@ -15,26 +14,21 @@ const ConfigTabs = () => {
         (state) => state.tabState
     );
 
-    const [isEdit, setIsEdit] = useState(false);
     const [isDialogOpened, setIsDialogOpened] = useState(false);
     const [confToCreate, setConfToCreate] = useState<any>();
     const [showInherited, setShowInherited] = useState(false);
-    const { addNewRowToConfig, fetchConfigs, updateConfig, setActiveTabId } =
-        useActions();
+    const { updateConfig, setActiveTabId, fetchConfigs } = useActions();
 
-    const { editTabs } = useTypedSelector((state) => state.tabState);
+    const { editTabs, collapsiblePanelState } = useTypedSelector(
+        (state) => state.tabState
+    );
     const { configs } = useTypedSelector((state) => state.configsState);
 
     const tabsContent = useMemo(() => openedTabs, [openedTabs]);
 
     const resetState = () => {
-        setIsEdit(false);
         setShowInherited(false);
     };
-
-    useEffect(() => {
-        setIsEdit(!!editTabs[activeTabId]);
-    }, [editTabs, activeTabId]);
 
     // const getParentConfigs = (
     //     config: Configs,
@@ -53,12 +47,7 @@ const ConfigTabs = () => {
         return (
             <div className="tabs-content-container">
                 <ConfigsTabHeader
-                    isEdit={isEdit}
-                    setIsEdit={setIsEdit}
                     showInherited={showInherited}
-                    onAddNewRow={() => {
-                        addNewRowToConfig(tabItem.id);
-                    }}
                     onSave={() => updateConfig(editTabs[tabItem.id])}
                     setShowInherited={setShowInherited}
                     tabItem={tabItem}
@@ -81,6 +70,7 @@ const ConfigTabs = () => {
                 />
                 <Button
                     sx={{ marginBottom: '20px' }}
+                    size="small"
                     variant="outlined"
                     onClick={() => {
                         setConfToCreate({
@@ -96,6 +86,7 @@ const ConfigTabs = () => {
                     .map((config, index) => (
                         <ConfigListItems
                             project={config}
+                            isOpen={collapsiblePanelState[config.id]}
                             key={index}
                             pl={2}
                             isTopLevel
