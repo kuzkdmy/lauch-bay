@@ -1,21 +1,18 @@
 import * as React from 'react';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
-import { Configs, ConfigType, TabItemType } from '../../../types/types';
+import { Configs, ConfigType } from '../../../types/types';
 import { useActions } from '../../../redux/hooks/useActions';
 import { Alert, ListItem, Tooltip } from '@mui/material';
 import { collapsiblePanelClick } from '../../../redux/actions/tabActions';
 import { useTypedSelector } from '../../../redux/hooks/useTypedSelector';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import CollapsePanel from '../../common-components/collapsePanel/CollapsePanel';
-import axios from 'axios';
-import { getConfigsUrl } from '../../../redux/actions/configsActions';
 
 interface ConfigListItemsProps {
     project: Configs;
@@ -35,12 +32,8 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
     index,
     showCreateNewDialog,
 }) => {
-    const { collapsiblePanelClick, fetchConfigs, openTab } = useActions();
-
+    const { collapsiblePanelClick, fetchConfigs } = useActions();
     const { configs } = useTypedSelector((state) => state.configsState);
-    const { collapsiblePanelState } = useTypedSelector(
-        (state) => state.tabState
-    );
 
     const handleClick = () => {
         collapsiblePanelClick(

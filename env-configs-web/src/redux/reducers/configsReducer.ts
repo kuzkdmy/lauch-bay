@@ -31,7 +31,14 @@ const configsReducer = {
             ) {
                 return {
                     ...acc,
-                    ...{ [curVal.id]: curVal },
+                    ...{
+                        [curVal.id]: {
+                            ...curVal,
+                            deployConf: addEmptyDeployments(
+                                action.payload.configs.deployConf
+                            ),
+                        },
+                    },
                 };
             },
             {});
