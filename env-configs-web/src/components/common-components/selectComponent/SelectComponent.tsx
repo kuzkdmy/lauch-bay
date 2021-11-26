@@ -26,7 +26,7 @@ const SelectComponent: FC<SelectProps> = ({
     return (
         <FormControl size="small" fullWidth={true}>
             <Select
-                sx={{ height: '30px', width: '110px', position: 'relative' }}
+                sx={{ height: '35px', width: '110px', position: 'relative' }}
                 id="type-select"
                 value={value}
                 onChange={handleChange}
