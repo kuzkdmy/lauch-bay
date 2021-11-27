@@ -11,7 +11,7 @@ $selectedTabColor: #0e0e0e;
   }
 
   tr td {
-    height: auto !important;
+    height: 15px;
   }
 
   .main-content {
@@ -89,11 +89,15 @@ $selectedTabColor: #0e0e0e;
         display: inline;
         margin-right: 7px;
       }
+
+      .tab-content-block {
+        padding: 15px;
+      }
+
     }
 
     .deployment-confs-tab {
-      max-width: 1500px;
-      margin: auto;
+      max-width: 1480px;
 
       .deployment-confs-tab-content {
         display: flex;
@@ -105,7 +109,7 @@ $selectedTabColor: #0e0e0e;
           display: flex;
           flex-direction: column;
           flex-wrap: nowrap;
-          height: 250px;
+          height: 200px;
           min-width: 460px;
           justify-content: space-around;
 

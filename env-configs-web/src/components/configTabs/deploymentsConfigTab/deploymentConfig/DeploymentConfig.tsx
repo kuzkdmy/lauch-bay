@@ -14,14 +14,7 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
     config,
     onConfigEdit,
 }) => {
-    const [disabled, setDisabled] = useState(config?.isDisabled || false);
-    const [checked, setChecked] = useState(!config?.isDisabled);
     const [confDeployment, setConfDeployment] = useState(config);
-
-    useEffect(() => {
-        setChecked(!config?.isDisabled);
-        setDisabled(!!config?.isDisabled);
-    }, [config]);
 
     const editConfig = (disabled: boolean) => {
         onConfigEdit({
@@ -41,9 +34,9 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
                 sx={{ '&.MuiSwitch-root': { marginLeft: '40px' } }}
                 size="small"
                 value={value}
-                disabled={disabled}
+                disabled={config?.isDisabled}
                 checked={value}
-                onBlur={() => editConfig(disabled)}
+                onBlur={() => editConfig(config?.isDisabled!)}
                 onChange={(e) => {
                     onChange(e.target.checked);
                 }}
@@ -64,11 +57,11 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
                 className={className || 'deploy-conf-value'}
                 size="small"
                 id="outlined-basic"
-                disabled={disabled}
+                disabled={config?.isDisabled}
                 value={value}
                 label={label}
                 onChange={(e) => onChange(e.target.value)}
-                onBlur={() => editConfig(disabled)}
+                onBlur={() => editConfig(config?.isDisabled!)}
                 variant="outlined"
             />
         );
@@ -89,10 +82,8 @@ const DeploymentConfig: FC<DeploymentConfigProps> = ({
         >
             <Checkbox
                 size="small"
-                checked={checked}
+                checked={!config?.isDisabled}
                 onChange={(e) => {
-                    setChecked(e.target.checked);
-                    setDisabled(!e.target.checked);
                     editConfig(!e.target.checked);
                 }}
             />

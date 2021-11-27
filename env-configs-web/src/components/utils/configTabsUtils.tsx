@@ -1,5 +1,7 @@
 import { Config, Configs, ConfigType, TabItemType } from '../../types/types';
 import _ from 'lodash';
+import axios from 'axios';
+import { getConfigsUrl } from '../../redux/actions/configsActions';
 
 export const getEmptyConfigRow = (): Configs => ({
     id: '',
@@ -22,6 +24,17 @@ export const getEmptyEnvConf = (defaultVal: any) => ({
         prod: null,
     },
 });
+
+export const fetchConfig = (configTab: TabItemType) => {
+    if (configTab) {
+        return axios.get(getConfigsUrl()[configTab?.type](configTab?.id));
+    }
+};
+
+export const kubDeploymentsPanelId = (parentTabId: string) =>
+    `${parentTabId}_Kubernetes Deployments`;
+export const envConfPanelId = (parentTabId: string) =>
+    `${parentTabId}_Environment Configs`;
 
 const getConfigValue = (val1: any, val2: any) => {
     if (!val2) {

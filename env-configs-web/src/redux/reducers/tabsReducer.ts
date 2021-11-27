@@ -1,7 +1,9 @@
 import { AnyAction } from 'redux';
-import { TabsActionTypes } from '../../types/types';
+import { ConfigType, TabsActionTypes } from '../../types/types';
 import {
+    envConfPanelId,
     getEmptyEnvConf,
+    kubDeploymentsPanelId,
     replaceDeployConf,
 } from '../../components/utils/configTabsUtils';
 import createReducer from '../hooks/createReducer';
@@ -97,12 +99,22 @@ const tabsReducer = {
         };
     },
     [TabsActionTypes.CLOSE_TAB]: (state: any, action: AnyAction) => {
+        const collapsiblePanelState = { ...state.collapsiblePanelState };
+
+        if (action.payload.type === ConfigType.APPLICATION) {
+            const kubId = kubDeploymentsPanelId(action.payload.id);
+            const envConfId = envConfPanelId(action.payload.id);
+
+            delete collapsiblePanelState[kubId];
+            delete collapsiblePanelState[envConfId];
+        }
+
         return {
             ...state,
             collapsiblePanelState:
                 action.payload.id === 'projects-id'
                     ? []
-                    : state.collapsiblePanelState,
+                    : collapsiblePanelState,
             openedTabs: state.openedTabs.filter((i: any) => {
                 return i.id !== action.payload.id;
             }),

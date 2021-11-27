@@ -109,7 +109,7 @@ export const setHasErrors = (isError: boolean) => ({
 const removeDisabledDeployConf = (config: Configs) => {
     return {
         ...config,
-        deployConf: config.deployConf.filter((conf) => !conf.isDisabled),
+        deployConf: config.deployConf?.filter((conf) => !conf.isDisabled) || [],
     };
 };
 
@@ -182,7 +182,7 @@ const updateConfigRequest = (body: any) => ({
     },
 });
 
-const getConfigsUrl = () => ({
+export const getConfigsUrl = () => ({
     [ConfigType.GLOBAL]: () => `/api/v1.0/global_config`,
     [ConfigType.PROJECT]: (id?: string) => {
         if (id === 'projects-id') return '/api/v1.0/project';
