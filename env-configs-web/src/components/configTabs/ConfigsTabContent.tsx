@@ -38,11 +38,7 @@ const ConfigsTabContent: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
                 />
                 <CollapsePanel
                     name="Environment Configs"
-                    isOpen={
-                        collapsiblePanelState[envConfPanelId] === undefined
-                            ? true
-                            : collapsiblePanelState[envConfPanelId]
-                    }
+                    isOpen={collapsiblePanelState[envConfPanelId]}
                     parentId={parentTab.id}
                     getContent={() => (
                         <EditableTable
