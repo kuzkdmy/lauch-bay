@@ -36,6 +36,8 @@ const tabsReducer = {
         };
     },
     [TabsActionTypes.EDIT_CONFIG_ROW]: (state: any, action: AnyAction) => {
+        const configToEdit =
+            state.editTabs[action.payload.config.id] || action.payload.config;
         if (!action.payload.isEdit) {
             const stateEditTabs = { ...state.editTabs };
             delete stateEditTabs[action.payload.config.id];
@@ -48,7 +50,10 @@ const tabsReducer = {
             ...state,
             editTabs: {
                 ...state.editTabs,
-                [action.payload.config.id]: action.payload.config,
+                [action.payload.config.id]: {
+                    ...action.payload.config,
+                    deployConf: configToEdit.deployConf,
+                },
             },
         };
     },

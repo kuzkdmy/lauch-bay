@@ -121,15 +121,15 @@ export const updateConfig = (config: Configs) => {
             )[config.confType](config.id);
             if (resp.status === 200) {
                 dispatch({
-                    type: TabsActionTypes.EDIT_CONFIG_ROW,
-                    payload: { config },
-                });
-                dispatch({
                     type: ConfigsActionTypes.CONFIG_UPDATE_SUCCESS,
                     payload: {
                         id: config.id,
                         config: { ...config, ...resp.data },
                     },
+                });
+                dispatch({
+                    type: TabsActionTypes.EDIT_CONFIG_ROW,
+                    payload: { config },
                 });
             }
         } catch (e) {
