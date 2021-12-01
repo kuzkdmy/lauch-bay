@@ -62,7 +62,7 @@ const EditableTable: FC<EditableTableProps> = ({
             setTableRows(editTabs[activeTabId]?.envConf);
         } else {
             setEditingRow({ idx: -1, colId: '' });
-            setTableRows(config || []);
+            setTableRows(config);
         }
     }, [activeTabId, configs, editTabs, tabItem.type]);
 

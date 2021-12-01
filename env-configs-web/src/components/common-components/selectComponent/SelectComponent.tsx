@@ -6,15 +6,12 @@ interface SelectProps {
     label: string;
     initValue: any;
     onChange: (event: any) => void;
-    // setSelectedType: (type: any) => void;
 }
 
 const SelectComponent: FC<SelectProps> = ({
-    // setSelectedType,
     selectItems,
     initValue,
     onChange,
-    label,
 }) => {
     const [value, setValue] = useState(initValue);
 
@@ -24,9 +21,17 @@ const SelectComponent: FC<SelectProps> = ({
         onChange(event.target.value);
     };
     return (
-        <FormControl size="small" fullWidth={true}>
+        <FormControl size="small" fullWidth>
             <Select
-                sx={{ height: '35px', width: '110px', position: 'relative' }}
+                sx={{
+                    height: '30px',
+                    position: 'relative',
+                    width: '110px',
+                    '&.MuiInputBase-root': {
+                        fontSize: '14px',
+                        lineHeight: '21px',
+                    },
+                }}
                 id="type-select"
                 value={value}
                 onChange={handleChange}

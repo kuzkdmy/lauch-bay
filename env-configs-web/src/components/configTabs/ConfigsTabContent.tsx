@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import EditableTable from '../common-components/editableTable/EditableTable';
 import { Configs, ConfigType, TabItemType } from '../../types/types';
 import { getEnvConfigColumns } from '../utils/tableConfig';
@@ -12,17 +12,10 @@ interface ConfigSubTabsProps {
     config: Configs;
 }
 
-const ConfigSubTabs: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
+const ConfigsTabContent: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
     const { collapsiblePanelState } = useTypedSelector(
         (state) => state.tabState
     );
-
-    const isCollapsiblePanelOpen = (name: string) => {
-        return (
-            collapsiblePanelState[parentTab.id]?.name === name &&
-            collapsiblePanelState[parentTab.id]
-        );
-    };
 
     const getApplicationContent = () => {
         const kubDeploymentsPanelId = `${parentTab.id}_Kubernetes Deployments`;
@@ -88,4 +81,4 @@ const ConfigSubTabs: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
     );
 };
 
-export default ConfigSubTabs;
+export default ConfigsTabContent;

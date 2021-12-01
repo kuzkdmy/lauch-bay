@@ -17,7 +17,7 @@ export const updateEnvConfColValue = (
                 ...configRow,
                 envOverride: {
                     ...configRow.envOverride,
-                    dev: { value },
+                    dev: value ? { value } : null,
                 },
             };
         case 'stage':
@@ -25,7 +25,7 @@ export const updateEnvConfColValue = (
                 ...configRow,
                 envOverride: {
                     ...configRow.envOverride,
-                    stage: { value },
+                    stage: value ? { value } : null,
                 },
             };
         case 'prod':
@@ -33,13 +33,13 @@ export const updateEnvConfColValue = (
                 ...configRow,
                 envOverride: {
                     ...configRow.envOverride,
-                    prod: { value },
+                    prod: value ? { value } : null,
                 },
             };
         case 'default':
             return {
                 ...configRow,
-                [colId]: { value },
+                [colId]: value ? { value } : null,
             };
         case 'type':
             return {

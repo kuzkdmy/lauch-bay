@@ -7,7 +7,7 @@ import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import ConfigListItems from './configList/ConfigListItems';
 import CreateNewDialog from '../createNewConfigDialog/CreateNewConfigDialog';
 import ConfigsTabHeader from './ConfigsTabHeader';
-import ConfigSubTabs from './ConfigSubTabs';
+import ConfigsTabContent from './ConfigsTabContent';
 
 const ConfigTabs = () => {
     const { openedTabs, activeTabId } = useTypedSelector(
@@ -52,7 +52,7 @@ const ConfigTabs = () => {
                     setShowInherited={setShowInherited}
                     tabItem={tabItem}
                 />
-                <ConfigSubTabs
+                <ConfigsTabContent
                     config={configs[tabItem.type][tabItem.id]}
                     parentTab={tabItem}
                 />
