@@ -25,65 +25,74 @@ export const getEmptyEnvConf = (defaultVal: any) => ({
     },
 });
 
-export const fetchConfig = (configTab: TabItemType) => {
-    if (configTab) {
-        return axios.get(getConfigsUrl()[configTab?.type](configTab?.id));
-    }
-};
-
 export const kubDeploymentsPanelId = (parentTabId: string) =>
     `${parentTabId}_Kubernetes Deployments`;
 export const envConfPanelId = (parentTabId: string) =>
     `${parentTabId}_Environment Configs`;
 
-const getConfigValue = (val1: any, val2: any) => {
+const getConfigValue = (val1 = '', val2: any) => {
     if (!val2) {
         return val1;
     }
-    return `${val1} -> ${val2}`;
+    return val1 ? `${val1} -> ${val2}` : `${val2}`;
+};
+
+const merge = (p: Config, confOverride) => {
+    return {
+        ...p,
+        default: {
+            value: getConfigValue(
+                p.default?.value,
+                confOverride?.default?.value
+            ),
+        },
+        envOverride: {
+            dev: {
+                value: getConfigValue(
+                    p.envOverride.dev?.value,
+                    confOverride?.envOverride.dev?.value
+                ),
+            },
+            prod: {
+                value: getConfigValue(
+                    p.envOverride.prod?.value,
+                    confOverride?.envOverride.prod?.value
+                ),
+            },
+            stage: {
+                value: getConfigValue(
+                    p.envOverride.stage?.value,
+                    confOverride?.envOverride.stage?.value
+                ),
+            },
+        },
+    };
 };
 
 export const mergeConfigs = (
     config: Configs,
-    parentConfigs: any = {}
+    parentConfigs: Configs
 ): Configs => {
-    const overriddenEnvConf = parentConfigs?.envConf.map((p: Config) => {
+    const configUniquePropNames = _.difference(
+        config.envConf.map((prop) => prop.envKey),
+        parentConfigs.envConf.map((prop) => prop.envKey)
+    );
+    const overriddenParentEnvConf = parentConfigs?.envConf?.map((p: Config) => {
         const confOverride = _.find(
             config.envConf,
             (conf: Config) => conf.envKey === p.envKey
         );
-        if (!confOverride) {
-            return p;
-        }
-        return {
-            ...p,
-            envOverride: {
-                dev: {
-                    ...p.envOverride.dev,
-                    value: getConfigValue(
-                        p.envOverride.dev?.value,
-                        confOverride.envOverride.dev?.value
-                    ),
-                },
-                prod: {
-                    ...p.envOverride.dev,
-                    value: getConfigValue(
-                        p.envOverride.prod?.value,
-                        confOverride.envOverride.prod?.value
-                    ),
-                },
-                stage: {
-                    ...p.envOverride.dev,
-                    value: getConfigValue(
-                        p.envOverride.stage?.value,
-                        confOverride.envOverride.stage?.value
-                    ),
-                },
-            },
-        };
+        return merge(p, confOverride);
     }) as Config[];
 
-    return { ...parentConfigs, envConf: overriddenEnvConf };
+    const uniqueConfigEnvConf = configUniquePropNames?.map((propName) => {
+        return merge(_.find(config.envConf, { envKey: propName })!, undefined);
+    }) as Config[];
+
+    return {
+        ...parentConfigs,
+        envConf: [...overriddenParentEnvConf, ...uniqueConfigEnvConf],
+    };
 };
 
 export const addEmptyDeployments = (deploymentConf: Config[]) => {

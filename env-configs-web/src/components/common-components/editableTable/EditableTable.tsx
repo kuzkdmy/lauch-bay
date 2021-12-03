@@ -7,17 +7,19 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useActions } from '../../../redux/hooks/useActions';
 import { useTypedSelector } from '../../../redux/hooks/useTypedSelector';
-import { Config, TabItemType } from '../../../types/types';
+import { Config, ConfigType, TabItemType } from '../../../types/types';
 import _ from 'lodash';
 import EditableTableCell from './tableCell/EditableTableCell';
 import TableHeaderCell from './tableCell/TableHeaderCell';
 import CloseIcon from '@mui/icons-material/Close';
+import CopyToLocalIcon from '@mui/icons-material/Add';
 import { TableCell, Tooltip } from '@mui/material';
 
 interface EditableTableProps {
     tabItem: TabItemType;
     activeTabId: string;
     config: Config[];
+    isParentConfigs?: boolean;
     columns: any[];
     updateColValue: (val: any, config: Config, colId: string) => any;
     sx?: any;
@@ -28,6 +30,7 @@ const EditableTable: FC<EditableTableProps> = ({
     activeTabId,
     config,
     columns,
+    isParentConfigs,
     updateColValue,
     tabItem,
 }) => {
@@ -40,8 +43,10 @@ const EditableTable: FC<EditableTableProps> = ({
     const { editConfigItem } = useActions();
 
     const onRowEdit = (rowIndex: number, colId: string) => {
-        setEditingRow({ idx: rowIndex, colId });
-        setIsEdit(true);
+        if (!isParentConfigs) {
+            setEditingRow({ idx: rowIndex, colId });
+            setIsEdit(!isParentConfigs && true);
+        }
     };
 
     const onEditingRowChange = (updatedRows?: Config[]) => {
@@ -57,12 +62,14 @@ const EditableTable: FC<EditableTableProps> = ({
     };
 
     useEffect(() => {
-        setIsEdit(!!editTabs[activeTabId]);
-        if (editTabs[activeTabId]) {
-            setTableRows(editTabs[activeTabId]?.envConf);
-        } else {
-            setEditingRow({ idx: -1, colId: '' });
-            setTableRows(config);
+        if (!isParentConfigs) {
+            setIsEdit(!!editTabs[activeTabId]);
+            if (editTabs[activeTabId]) {
+                setTableRows(editTabs[activeTabId]?.envConf);
+            } else {
+                setEditingRow({ idx: -1, colId: '' });
+                setTableRows(config);
+            }
         }
     }, [activeTabId, configs, editTabs, tabItem.type]);
 
@@ -82,6 +89,25 @@ const EditableTable: FC<EditableTableProps> = ({
         updatedTableRows.splice(rowIdx, 1);
         setTableRows(updatedTableRows);
         onEditingRowChange(updatedTableRows);
+    };
+
+    const onCopyToLocal = (rowIdx: number) => {
+        const conf = configs[tabItem.type][activeTabId];
+        const envConf = editTabs[activeTabId]?.envConf || conf.envConf;
+
+        if (!_.find(envConf, { envKey: tableRows[rowIdx].envKey })) {
+            const projConf =
+                configs[ConfigType.PROJECT][conf.projectId]?.envConf;
+            const globalConf = configs[ConfigType.GLOBAL]['global-id']?.envConf;
+
+            console.log(_.find(projConf, { envKey: tableRows[rowIdx].envKey }));
+
+            onEditingRowChange([
+                ...envConf,
+                _.find(projConf, { envKey: tableRows[rowIdx].envKey }) ||
+                    _.find(globalConf, { envKey: tableRows[rowIdx].envKey }),
+            ]);
+        }
     };
 
     const sortRows = (tableRows, direction) => {
@@ -190,27 +216,36 @@ const EditableTable: FC<EditableTableProps> = ({
                                             padding: '5px',
                                         }}
                                     >
-                                        <Tooltip
-                                            placement={'left-start'}
-                                            title="Delete Row"
-                                            sx={{
-                                                '& .MuiSvgIcon-root': {
-                                                    marginTop: '5px',
-                                                },
-                                            }}
-                                        >
-                                            <CloseIcon
-                                                color={
-                                                    isEdit
-                                                        ? 'warning'
-                                                        : 'disabled'
-                                                }
-                                                onClick={() => {
-                                                    if (isEdit)
-                                                        onRowDelete(rowIdx);
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        {isParentConfigs ? (
+                                            <Tooltip
+                                                placement={'left-start'}
+                                                title="Copy To Local"
+                                            >
+                                                <CopyToLocalIcon
+                                                    color="info"
+                                                    onClick={() => {
+                                                        onCopyToLocal(rowIdx);
+                                                    }}
+                                                />
+                                            </Tooltip>
+                                        ) : (
+                                            <Tooltip
+                                                placement={'left-start'}
+                                                title="Delete Row"
+                                            >
+                                                <CloseIcon
+                                                    color={
+                                                        isEdit
+                                                            ? 'warning'
+                                                            : 'disabled'
+                                                    }
+                                                    onClick={() => {
+                                                        if (isEdit)
+                                                            onRowDelete(rowIdx);
+                                                    }}
+                                                />
+                                            </Tooltip>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             );

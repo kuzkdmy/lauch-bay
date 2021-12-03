@@ -9,17 +9,16 @@ import { useActions } from '../../../redux/hooks/useActions';
 import { ConfigType } from '../../../types/types';
 
 interface CollapsePanelProps {
-    getContent: () => any;
     isOpen: boolean;
     parentId: string;
     name: string;
 }
 
 const CollapsePanel: FC<CollapsePanelProps> = ({
-    getContent,
     name,
     parentId,
     isOpen,
+    children,
 }) => {
     const { collapsiblePanelClick } = useActions();
 
@@ -44,7 +43,7 @@ const CollapsePanel: FC<CollapsePanelProps> = ({
                 <ListItemText primary={name} sx={{ width: '100px' }} />
             </ListItemButton>
             <Collapse in={isOpen} sx={{ marginBottom: '2px' }}>
-                <Box sx={{ padding: '5px 15px' }}>{getContent()}</Box>
+                <Box sx={{ padding: '5px 15px' }}>{children}</Box>
             </Collapse>
         </>
     );
