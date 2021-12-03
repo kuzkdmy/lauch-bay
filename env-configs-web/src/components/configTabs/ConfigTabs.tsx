@@ -30,19 +30,6 @@ const ConfigTabs = () => {
         setShowInherited(false);
     };
 
-    // const getParentConfigs = (
-    //     config: Configs,
-    //     parentConfigs: any,
-    //     type: ConfigType
-    // ) => {
-    //     return (
-    //         <>
-    //             <div className="parent-config">{type} config</div>
-    //             <EditableTable sx={{ marginBottom: '25px' }} menuItem={menu} />
-    //         </>
-    //     );
-    // };
-
     const renderTableTabsContent = (tabItem: TabItemType) => {
         return (
             <div className="tabs-content-container">
