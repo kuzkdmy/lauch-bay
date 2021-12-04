@@ -2,9 +2,9 @@ import React, { FC, useMemo } from 'react';
 import DeploymentConfig from './deploymentConfig/DeploymentConfig';
 import { Config, ConfigType, TabItemType } from '../../../types/types';
 import _ from 'lodash';
-import { editDeploymentConfigItem } from '../../../redux/actions/tabActions';
 import { useActions } from '../../../redux/hooks/useActions';
 import { useTypedSelector } from '../../../redux/hooks/useTypedSelector';
+import { editConfigItem } from '../../../redux/actions/tabActions';
 
 interface DeploymentsConfigTab {
     parentTab: TabItemType;
@@ -50,16 +50,15 @@ const DeploymentsConfigsTab: FC<DeploymentsConfigTab> = ({ parentTab }) => {
         [appConfig]
     );
 
-    const { editDeploymentConfigItem } = useActions();
+    const { editConfigItem } = useActions();
 
     const onEdit = (conf) => {
-        editDeploymentConfigItem(
+        editConfigItem(
             {
                 ...appConfig,
                 confType: parentTab.type,
             },
-            conf,
-            true
+            conf
         );
     };
 

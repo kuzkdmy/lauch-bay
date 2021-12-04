@@ -1,6 +1,6 @@
 import { Input, Switch, TableCell } from '@mui/material';
 import React, { FC } from 'react';
-import { Config } from '../../../../types/types';
+import { Config, ConfigType } from '../../../../types/types';
 import SelectComponent from '../../selectComponent/SelectComponent';
 
 interface TableCellProps {
@@ -12,6 +12,8 @@ interface TableCellProps {
     autoFocus: boolean;
     onRowEdit: (rowIndex: number, colId: string) => void;
     onChange: (value: any, colId: string) => void;
+    isInheritedConf?: boolean;
+    confType?: ConfigType;
 }
 
 const EditableTableCell: FC<TableCellProps> = ({
@@ -22,6 +24,7 @@ const EditableTableCell: FC<TableCellProps> = ({
     onBlur,
     autoFocus,
     onRowEdit,
+    isInheritedConf,
     onChange,
 }) => {
     const getTableCell = () => {
@@ -45,7 +48,7 @@ const EditableTableCell: FC<TableCellProps> = ({
                 ) : (
                     renderValue()
                 );
-            case config.type === 'boolean':
+            case config.type === 'boolean' && !isInheritedConf:
                 return (
                     <Switch
                         size="small"

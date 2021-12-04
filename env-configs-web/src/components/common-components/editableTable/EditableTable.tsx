@@ -50,15 +50,12 @@ const EditableTable: FC<EditableTableProps> = ({
     };
 
     const onEditingRowChange = (updatedRows?: Config[]) => {
-        editConfigItem(
-            {
-                ...configs[tabItem.type][activeTabId],
-                envConf: updatedRows || tableRows,
-                id: activeTabId,
-                confType: tabItem.type,
-            },
-            true
-        );
+        editConfigItem({
+            ...configs[tabItem.type][activeTabId],
+            envConf: updatedRows || tableRows,
+            id: activeTabId,
+            confType: tabItem.type,
+        });
     };
 
     useEffect(() => {
@@ -99,8 +96,6 @@ const EditableTable: FC<EditableTableProps> = ({
             const projConf =
                 configs[ConfigType.PROJECT][conf.projectId]?.envConf;
             const globalConf = configs[ConfigType.GLOBAL]['global-id']?.envConf;
-
-            console.log(_.find(projConf, { envKey: tableRows[rowIdx].envKey }));
 
             onEditingRowChange([
                 ...envConf,
@@ -183,6 +178,9 @@ const EditableTable: FC<EditableTableProps> = ({
                                                 config={tableRows[rowIdx]}
                                                 key={index + col.id}
                                                 colIdx={index}
+                                                isInheritedConf={
+                                                    isParentConfigs
+                                                }
                                                 onRowEdit={() => {
                                                     onRowEdit(rowIdx, col.id);
                                                 }}

@@ -1,10 +1,18 @@
 import { Config } from '../../types/types';
+import { isBoolean } from 'lodash';
 
 const getDefaultValue = () => ({
     integer: () => 0,
     string: () => '',
     boolean: () => false,
 });
+
+const getValue = (value: any) => {
+    if (isBoolean(value)) {
+        return { value };
+    }
+    return value ? { value } : null;
+};
 
 export const updateEnvConfColValue = (
     value: any,
@@ -17,7 +25,7 @@ export const updateEnvConfColValue = (
                 ...configRow,
                 envOverride: {
                     ...configRow.envOverride,
-                    dev: value ? { value } : null,
+                    dev: getValue(value),
                 },
             };
         case 'stage':
@@ -25,7 +33,7 @@ export const updateEnvConfColValue = (
                 ...configRow,
                 envOverride: {
                     ...configRow.envOverride,
-                    stage: value ? { value } : null,
+                    stage: getValue(value),
                 },
             };
         case 'prod':
@@ -33,13 +41,13 @@ export const updateEnvConfColValue = (
                 ...configRow,
                 envOverride: {
                     ...configRow.envOverride,
-                    prod: value ? { value } : null,
+                    prod: getValue(value),
                 },
             };
         case 'default':
             return {
                 ...configRow,
-                [colId]: value ? { value } : null,
+                [colId]: getValue(value),
             };
         case 'type':
             return {

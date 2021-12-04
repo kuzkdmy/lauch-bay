@@ -29,19 +29,10 @@ export const addNewRowToConfig = (id: string): TabsActions => ({
 
 export const editConfigItem = (
     config: Configs,
-    isEdit: boolean
+    deployConf?: Config
 ): TabsActions => ({
     type: TabsActionTypes.EDIT_CONFIG_ROW,
-    payload: { config: config, isEdit },
-});
-
-export const editDeploymentConfigItem = (
-    config: Configs,
-    deployConf: Config,
-    isEdit: boolean
-): TabsActions => ({
-    type: TabsActionTypes.EDIT_DEPLOYMENTS_CONFIG_ROW,
-    payload: { config: config, deployConf, isEdit },
+    payload: { config: config, isEdit: true, deployConf },
 });
 
 export const removeTabFromEditState = (id: string): TabsActions => ({

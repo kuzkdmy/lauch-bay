@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
-import { Alert, IconButton } from '@mui/material';
+import { Alert } from '@mui/material';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 import { useActions } from '../../redux/hooks/useActions';
-import { Button } from '@material-ui/core';
 import { AlertColor } from '@mui/material/Alert/Alert';
 
 const NotificationAlert = () => {

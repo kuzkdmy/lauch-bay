@@ -6,7 +6,11 @@ import { updateEnvConfColValue } from '../utils/tableUtils';
 import DeploymentsConfigsTab from './deploymentsConfigTab/DeploymentsConfigTab';
 import CollapsePanel from '../common-components/collapsePanel/CollapsePanel';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
-import { mergeConfigs } from '../utils/configTabsUtils';
+import {
+    envConfPanelId,
+    kubDeploymentsPanelId,
+    mergeConfigs,
+} from '../utils/configTabsUtils';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
 interface ConfigSubTabsProps {
@@ -68,8 +72,8 @@ const ConfigsTabContent: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
         },
         [ConfigType.PROJECT]: () => {
             return renderConfWithInheritedConfs(
-                config,
-                configs[ConfigType.GLOBAL]['global-id']
+                config.envConf,
+                configs[ConfigType.GLOBAL]['global-id'].envConf
             );
         },
         [ConfigType.APPLICATION]: () => {
@@ -97,7 +101,7 @@ const ConfigsTabContent: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
                     <EditableTable
                         columns={getEnvConfigColumns()}
                         isParentConfigs
-                        config={mergeConfigs(conf, inheritedConf).envConf}
+                        config={mergeConfigs(conf, inheritedConf)}
                         updateColValue={() => {}}
                         activeTabId={parentTab.id}
                         sx={{
@@ -112,27 +116,27 @@ const ConfigsTabContent: FC<ConfigSubTabsProps> = ({ parentTab, config }) => {
     };
 
     const renderApplicationContent = () => {
-        const kubDeploymentsPanelId = `${parentTab.id}_Kubernetes Deployments`;
-        const envConfPanelId = `${parentTab.id}_Environment Configs`;
+        const kubDepPanelKey = kubDeploymentsPanelId(parentTab.id);
+        const envConfPanelKey = envConfPanelId(parentTab.id);
         const projConf = configs[ConfigType.PROJECT][config.projectId!];
         const globalConf = configs[ConfigType.GLOBAL]['global-id'];
         return (
             <div>
                 <CollapsePanel
-                    parentId={parentTab.id}
-                    isOpen={isCollapsed(kubDeploymentsPanelId)}
+                    parentId={kubDepPanelKey}
+                    isOpen={isCollapsed(kubDepPanelKey)}
                     name="Kubernetes Deployments"
                 >
                     <DeploymentsConfigsTab parentTab={parentTab} />
                 </CollapsePanel>
                 <CollapsePanel
                     name="Environment Configs"
-                    isOpen={isCollapsed(envConfPanelId)}
-                    parentId={parentTab.id}
+                    isOpen={isCollapsed(envConfPanelKey)}
+                    parentId={envConfPanelKey}
                 >
                     {renderConfWithInheritedConfs(
-                        mergeConfigs(config, projConf),
-                        globalConf
+                        mergeConfigs(config.envConf, projConf.envConf),
+                        globalConf.envConf
                     )}
                 </CollapsePanel>
             </div>

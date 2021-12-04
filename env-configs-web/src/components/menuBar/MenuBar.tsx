@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
@@ -10,7 +10,7 @@ import { useActions } from '../../redux/hooks/useActions';
 import { ConfigType } from '../../types/types';
 
 const MenuBar = () => {
-    const { fetchConfigs } = useActions();
+    const { fetchConfigs, openTab } = useActions();
     const [isHidden, setIsHidden] = useState(false);
     const [menuWidth, setMenuWidth] = useState(360);
 
@@ -18,6 +18,15 @@ const MenuBar = () => {
         setMenuWidth(!isHidden ? 60 : 360);
         setIsHidden(hide);
     };
+
+    useEffect(() => {
+        fetchConfigs({
+            type: ConfigType.GLOBAL,
+            id: 'global-id',
+            name: 'Global',
+            isTableContent: true,
+        });
+    }, []);
 
     return (
         <List
@@ -61,12 +70,11 @@ const MenuBar = () => {
                     <Divider />
                     <ListItemButton
                         onClick={() => {
-                            fetchConfigs({
-                                type: ConfigType.GLOBAL,
+                            openTab({
                                 id: 'global-id',
                                 name: 'Global',
                                 isTableContent: true,
-                                openAfterFetching: true,
+                                type: ConfigType.GLOBAL,
                             });
                         }}
                     >
