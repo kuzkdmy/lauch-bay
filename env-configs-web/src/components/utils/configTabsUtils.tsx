@@ -28,7 +28,7 @@ export const kubDeploymentsPanelId = (parentTabId: string) =>
 export const envConfPanelId = (parentTabId: string) =>
     `${parentTabId}_Environment Configs`;
 
-const getConfigValue = (val1 = '', val2: any) => {
+const getConfigValue = (val1, val2: any) => {
     if (isBoolean(val1) || isBoolean(val2)) {
         if (val1 !== undefined && val2 !== undefined) {
             return `${val1} -> ${val2}`;
