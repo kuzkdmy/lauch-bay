@@ -55,6 +55,7 @@ const ConfigsTabHeader: FC<ConfigsSubHeaderProps> = ({
                 <Button
                     variant="outlined"
                     color="error"
+                    disabled={true}
                     sx={{ marginRight: 1, height: 25, width: 160 }}
                 >
                     Delete Config

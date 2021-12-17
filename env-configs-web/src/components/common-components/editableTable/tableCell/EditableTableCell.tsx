@@ -1,4 +1,4 @@
-import { Input, Switch, TableCell } from '@mui/material';
+import { Input, Switch, TableCell, Tooltip } from '@mui/material';
 import React, { FC } from 'react';
 import { Config, ConfigType } from '../../../../types/types';
 import SelectComponent from '../../selectComponent/SelectComponent';
@@ -64,7 +64,18 @@ const EditableTableCell: FC<TableCellProps> = ({
     };
 
     const renderValue = () => {
-        return <>{column.getValue(config)}</>;
+        const value = column.getValue(config) || '';
+
+        return (
+            <Tooltip
+                title={value.length > 30 ? value : ''}
+                placement="top-start"
+            >
+                <div className="col-val" style={{ width: column.minWidth }}>
+                    {value}
+                </div>
+            </Tooltip>
+        );
     };
 
     const getInput = () => {
@@ -72,7 +83,6 @@ const EditableTableCell: FC<TableCellProps> = ({
             <Input
                 autoComplete="off"
                 sx={{
-                    height: '20px',
                     '&': {
                         backgroundColor: 'rgba(186, 187, 187, 0.1)',
                         padding: '5px',

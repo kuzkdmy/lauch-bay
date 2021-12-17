@@ -6,12 +6,11 @@ $selectedTabColor: #0e0e0e;
   display: flex;
   justify-content: space-around;
 
-  tr {
-    height: 10px;
-  }
-
-  tr td {
-    height: 15px;
+  tr .col-val {
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .main-content {

@@ -4,7 +4,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'envKey',
         getLabel: (row?: Config) => 'Name',
-        minWidth: 600,
+        minWidth: 400,
         sortable: true,
         align: 'left',
         paddingLeft: 0,
@@ -20,7 +20,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'default',
         getLabel: (row?: Config) => 'Default',
-        minWidth: 150,
+        minWidth: 250,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
         getValue: (row: Config) => row.default?.value,
@@ -28,7 +28,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'dev',
         getLabel: (row?: Config) => 'Dev',
-        minWidth: 150,
+        minWidth: 250,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
         getValue: (row: Config) => row.envOverride.dev?.value || '',
@@ -36,7 +36,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'stage',
         getLabel: (row?: Config) => 'Stage',
-        minWidth: 150,
+        minWidth: 250,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
         getValue: (row: Config) => row.envOverride.stage?.value || '',
@@ -44,7 +44,7 @@ export const getEnvConfigColumns = (): any[] => [
     {
         id: 'prod',
         getLabel: (row?: Config) => 'Prod',
-        minWidth: 150,
+        minWidth: 250,
         align: 'center',
         format: (value: any) => value.toLocaleString('en-US'),
         getValue: (row: Config) => row.envOverride.prod?.value || '',

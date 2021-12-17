@@ -29,8 +29,14 @@ export const envConfPanelId = (parentTabId: string) =>
     `${parentTabId}_Environment Configs`;
 
 const getConfigValue = (val1 = '', val2: any) => {
-    if (isBoolean(val1) && isBoolean(val2)) {
-        return `${val1} -> ${val2}`;
+    if (isBoolean(val1) || isBoolean(val2)) {
+        if (val1 !== undefined && val2 !== undefined) {
+            return `${val1} -> ${val2}`;
+        }
+        return (
+            (val1 !== undefined && `${val1}`) ||
+            (val2 !== undefined && `${val2}`)
+        );
     }
     if (!val2) {
         return val1;
