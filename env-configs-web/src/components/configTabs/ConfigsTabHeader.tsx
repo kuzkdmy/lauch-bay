@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import { Button, Divider, FormGroup, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { TabItemType } from '../../types/types';
-import { getEmptyConfigRow } from '../utils/configTabsUtils';
 import { useActions } from '../../redux/hooks/useActions';
 import { useTypedSelector } from '../../redux/hooks/useTypedSelector';
 
@@ -17,7 +16,8 @@ const ConfigsTabHeader: FC<ConfigsSubHeaderProps> = ({
     tabItem,
     onSave,
 }: any) => {
-    const { editConfigItem, addNewRowToConfig } = useActions();
+    const { editConfigItem, removeTabFromEditState, addNewRowToConfig } =
+        useActions();
     const { editTabs, activeTabId } = useTypedSelector(
         (state) => state.tabState
     );
@@ -46,14 +46,7 @@ const ConfigsTabHeader: FC<ConfigsSubHeaderProps> = ({
                     variant="outlined"
                     disabled={!editTabs[activeTabId]}
                     onClick={() => {
-                        editConfigItem(
-                            {
-                                ...getEmptyConfigRow(),
-                                id: activeTabId,
-                                confType: tabItem.type,
-                            },
-                            false
-                        );
+                        removeTabFromEditState(tabItem.id);
                     }}
                     sx={{ marginRight: 1, height: 25, width: 80 }}
                 >
@@ -62,6 +55,7 @@ const ConfigsTabHeader: FC<ConfigsSubHeaderProps> = ({
                 <Button
                     variant="outlined"
                     color="error"
+                    disabled={true}
                     sx={{ marginRight: 1, height: 25, width: 160 }}
                 >
                     Delete Config
@@ -70,10 +64,7 @@ const ConfigsTabHeader: FC<ConfigsSubHeaderProps> = ({
                     sx={{ marginRight: '10px' }}
                     onClick={() => {
                         if (!editTabs[activeTabId]) {
-                            editConfigItem(
-                                configs[tabItem.type][tabItem.id],
-                                true
-                            );
+                            editConfigItem(configs[tabItem.type][tabItem.id]);
                         }
                         addNewRowToConfig(activeTabId);
                     }}

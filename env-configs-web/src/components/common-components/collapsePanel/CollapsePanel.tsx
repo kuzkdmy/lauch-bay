@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Box, ListItem, Tooltip } from '@mui/material';
+import React, { FC } from 'react';
+import { Box } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -29,7 +29,7 @@ const CollapsePanel: FC<CollapsePanelProps> = ({
                 onClick={() => {
                     collapsiblePanelClick(
                         {
-                            id: `${parentId}_${name}`,
+                            id: parentId,
                             name: name,
                             type: ConfigType.APPLICATION,
                         },

@@ -8,8 +8,7 @@ import { useTypedSelector } from '../redux/hooks/useTypedSelector';
 import _ from 'lodash';
 
 const App = () => {
-    const { setHasErrors, removeConfigFromState } = useActions();
-    const { hasErrors } = useTypedSelector((state) => state.configsState);
+    const { removeConfigFromState } = useActions();
     const tabState = useTypedSelector((state) => state.tabState);
 
     useEffect(() => {

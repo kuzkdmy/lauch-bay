@@ -1,6 +1,6 @@
-import { Input, Switch, TableCell } from '@mui/material';
+import { Input, Switch, TableCell, Tooltip } from '@mui/material';
 import React, { FC } from 'react';
-import { Config } from '../../../../types/types';
+import { Config, ConfigType } from '../../../../types/types';
 import SelectComponent from '../../selectComponent/SelectComponent';
 
 interface TableCellProps {
@@ -12,6 +12,8 @@ interface TableCellProps {
     autoFocus: boolean;
     onRowEdit: (rowIndex: number, colId: string) => void;
     onChange: (value: any, colId: string) => void;
+    isInheritedConf?: boolean;
+    confType?: ConfigType;
 }
 
 const EditableTableCell: FC<TableCellProps> = ({
@@ -22,6 +24,7 @@ const EditableTableCell: FC<TableCellProps> = ({
     onBlur,
     autoFocus,
     onRowEdit,
+    isInheritedConf,
     onChange,
 }) => {
     const getTableCell = () => {
@@ -45,7 +48,7 @@ const EditableTableCell: FC<TableCellProps> = ({
                 ) : (
                     renderValue()
                 );
-            case config.type === 'boolean':
+            case config.type === 'boolean' && !isInheritedConf:
                 return (
                     <Switch
                         size="small"
@@ -61,7 +64,18 @@ const EditableTableCell: FC<TableCellProps> = ({
     };
 
     const renderValue = () => {
-        return <>{column.getValue(config)}</>;
+        const value = column.getValue(config) || '';
+
+        return (
+            <Tooltip
+                title={value.length > 30 ? value : ''}
+                placement="top-start"
+            >
+                <div className="col-val" style={{ width: column.minWidth }}>
+                    {value}
+                </div>
+            </Tooltip>
+        );
     };
 
     const getInput = () => {
@@ -69,7 +83,6 @@ const EditableTableCell: FC<TableCellProps> = ({
             <Input
                 autoComplete="off"
                 sx={{
-                    height: '20px',
                     '&': {
                         backgroundColor: 'rgba(186, 187, 187, 0.1)',
                         padding: '5px',

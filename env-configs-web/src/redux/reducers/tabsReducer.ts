@@ -52,24 +52,6 @@ const tabsReducer = {
                 ...state.editTabs,
                 [action.payload.config.id]: {
                     ...action.payload.config,
-                    deployConf: configToEdit.deployConf,
-                },
-            },
-        };
-    },
-    [TabsActionTypes.EDIT_DEPLOYMENTS_CONFIG_ROW]: (
-        state: any,
-        action: AnyAction
-    ) => {
-        const configToEdit =
-            state.editTabs[action.payload.config.id] || action.payload.config;
-
-        return {
-            ...state,
-            editTabs: {
-                ...state.editTabs,
-                [action.payload.config.id]: {
-                    ...action.payload.config,
                     deployConf: replaceDeployConf(action.payload.deployConf, [
                         ...configToEdit.deployConf,
                     ]),
@@ -114,12 +96,22 @@ const tabsReducer = {
             delete collapsiblePanelState[envConfId];
         }
 
+        if (action.payload.id === 'projects-id') {
+            Object.keys(collapsiblePanelState).forEach((key) => {
+                if (
+                    !(
+                        key.includes('_Environment Configs') ||
+                        key.includes('_Kubernetes Deployments')
+                    )
+                ) {
+                    delete collapsiblePanelState[key];
+                }
+            });
+        }
+
         return {
             ...state,
-            collapsiblePanelState:
-                action.payload.id === 'projects-id'
-                    ? []
-                    : collapsiblePanelState,
+            collapsiblePanelState: collapsiblePanelState,
             openedTabs: state.openedTabs.filter((i: any) => {
                 return i.id !== action.payload.id;
             }),
