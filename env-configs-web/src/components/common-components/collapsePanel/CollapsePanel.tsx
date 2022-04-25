@@ -30,7 +30,7 @@ const CollapsePanel: FC<CollapsePanelProps> = ({
                     collapsiblePanelClick(
                         {
                             id: parentId,
-                            name: name,
+                            name,
                             type: ConfigType.APPLICATION,
                         },
                         !isOpen

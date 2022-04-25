@@ -44,9 +44,9 @@ export const fetchConfigs = ({
                     type: TabsActionTypes.OPEN_TAB,
                     payload: {
                         id,
-                        name: name,
+                        name,
                         isTableContent,
-                        type: type,
+                        type,
                     },
                 });
         } catch (e) {
