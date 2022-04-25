@@ -105,7 +105,7 @@ const ConfigListItems: FC<ConfigListItemsProps> = ({
         <>
             <StyledListItemButton
                 onClick={handleClick}
-                sx={{ pl: pl }}
+                sx={{ pl }}
                 className={additionalClass}
             >
                 <div className="expand-icon">

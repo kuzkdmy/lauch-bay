@@ -32,7 +32,7 @@ export const editConfigItem = (
     deployConf?: Config
 ): TabsActions => ({
     type: TabsActionTypes.EDIT_CONFIG_ROW,
-    payload: { config: config, isEdit: true, deployConf },
+    payload: { config, isEdit: true, deployConf },
 });
 
 export const removeTabFromEditState = (id: string): TabsActions => ({

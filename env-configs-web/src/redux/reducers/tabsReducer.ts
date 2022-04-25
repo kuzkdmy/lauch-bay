@@ -30,7 +30,7 @@ const tabsReducer = {
                 ...state.editTabs,
                 [action.payload.id]: {
                     ...conf,
-                    envConf: envConf,
+                    envConf,
                 },
             },
         };
@@ -111,7 +111,7 @@ const tabsReducer = {
 
         return {
             ...state,
-            collapsiblePanelState: collapsiblePanelState,
+            collapsiblePanelState,
             openedTabs: state.openedTabs.filter((i: any) => {
                 return i.id !== action.payload.id;
             }),

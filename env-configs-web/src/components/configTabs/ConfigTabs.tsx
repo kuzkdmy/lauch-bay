@@ -98,16 +98,15 @@ const ConfigTabs = () => {
 
     const getTabItems = () => {
         return tabsContent.map((item: TabItemType): any => {
-            if (item.isTableContent) {
-                return {
-                    tabName: item.name,
-                    content: renderTableTabsContent(item),
-                };
-            }
             if (item.id === 'projects-id') {
                 return {
                     tabName: item.name,
                     content: renderListTabsContent(),
+                };
+            } else {
+                return {
+                    tabName: item.name,
+                    content: renderTableTabsContent(item),
                 };
             }
         });
