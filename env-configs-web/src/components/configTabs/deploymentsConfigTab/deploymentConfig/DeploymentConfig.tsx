@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Box, Checkbox, Switch } from '@mui/material';
-import { TextField } from '@material-ui/core';
+import { TextField, Box, Checkbox, Switch } from '@mui/material';
 import { Config } from '../../../../types/types';
 
 interface DeploymentConfigProps {

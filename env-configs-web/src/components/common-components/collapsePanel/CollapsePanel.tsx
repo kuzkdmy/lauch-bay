@@ -12,6 +12,7 @@ interface CollapsePanelProps {
     isOpen: boolean;
     parentId: string;
     name: string;
+    children: any;
 }
 
 const CollapsePanel: FC<CollapsePanelProps> = ({
